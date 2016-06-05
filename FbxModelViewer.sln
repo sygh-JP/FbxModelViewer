@@ -1,0 +1,125 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FbxModelMonitor", "FbxModelMonitor\FbxModelMonitor.vcxproj", "{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{08BFD466-1F43-4466-A46A-0290E5160C37} = {08BFD466-1F43-4466-A46A-0290E5160C37}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWpfGraphLibrary", "MyWpfGraphLibrary\MyWpfGraphLibrary.csproj", "{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyWpfGraphLibMfc", "MyWpfGraphLibMfc\MyWpfGraphLibMfc.vcxproj", "{08BFD466-1F43-4466-A46A-0290E5160C37}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7478D0EC-1AD7-42AB-B085-DE9AF63AC847}"
+	ProjectSection(SolutionItems) = preProject
+		MSBuild_FbxModelMonitor_sln_Rebuild.bat = MSBuild_FbxModelMonitor_sln_Rebuild.bat
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FSharpUtilScripts", "FSharpUtilScripts", "{0D8D31B4-87AB-4C75-9D9B-86528889B02D}"
+	ProjectSection(SolutionItems) = preProject
+		FSharpUtilScripts\copy_dlls_for_exes.fsx = FSharpUtilScripts\copy_dlls_for_exes.fsx
+		FSharpUtilScripts\move_int_files_to_recyclebin.fsx = FSharpUtilScripts\move_int_files_to_recyclebin.fsx
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SharedUtility", "SharedUtility\SharedUtility.vcxproj", "{D9648E08-3CB1-446D-9107-7D6BF5A287CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Notes", "_Notes", "{F1FB3629-EB4A-4B49-84E8-66854D0B1D93}"
+	ProjectSection(SolutionItems) = preProject
+		_Notes\3D_topic_links.txt = _Notes\3D_topic_links.txt
+		_Notes\boot_error_by_missing_d3dcompiler_dll.txt = _Notes\boot_error_by_missing_d3dcompiler_dll.txt
+		_Notes\d3d_note.txt = _Notes\d3d_note.txt
+		_Notes\hlsl_note.txt = _Notes\hlsl_note.txt
+		_Notes\programming_note.txt = _Notes\programming_note.txt
+		_Notes\vc_dotnet_target_fx_version.txt = _Notes\vc_dotnet_target_fx_version.txt
+		_Notes\vulkan_sdk_note.txt = _Notes\vulkan_sdk_note.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfFontBmpWriter", "WpfFontBmpWriter\WpfFontBmpWriter.csproj", "{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}.Debug|Win32.Build.0 = Debug|Win32
+		{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}.Debug|x64.ActiveCfg = Debug|x64
+		{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}.Debug|x64.Build.0 = Debug|x64
+		{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}.Release|Any CPU.ActiveCfg = Release|Win32
+		{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}.Release|Win32.ActiveCfg = Release|Win32
+		{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}.Release|Win32.Build.0 = Release|Win32
+		{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}.Release|x64.ActiveCfg = Release|x64
+		{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}.Release|x64.Build.0 = Release|x64
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Debug|Win32.ActiveCfg = Debug|x86
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Debug|Win32.Build.0 = Debug|x86
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Debug|x64.Build.0 = Debug|Any CPU
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Release|Win32.ActiveCfg = Release|x86
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Release|Win32.Build.0 = Release|x86
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Release|x64.ActiveCfg = Release|Any CPU
+		{AED0671E-6AFD-4A02-BA6D-EA7DC4FFB108}.Release|x64.Build.0 = Release|Any CPU
+		{08BFD466-1F43-4466-A46A-0290E5160C37}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{08BFD466-1F43-4466-A46A-0290E5160C37}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{08BFD466-1F43-4466-A46A-0290E5160C37}.Debug|Win32.ActiveCfg = Debug|Win32
+		{08BFD466-1F43-4466-A46A-0290E5160C37}.Debug|Win32.Build.0 = Debug|Win32
+		{08BFD466-1F43-4466-A46A-0290E5160C37}.Debug|x64.ActiveCfg = Debug|x64
+		{08BFD466-1F43-4466-A46A-0290E5160C37}.Debug|x64.Build.0 = Debug|x64
+		{08BFD466-1F43-4466-A46A-0290E5160C37}.Release|Any CPU.ActiveCfg = Release|Win32
+		{08BFD466-1F43-4466-A46A-0290E5160C37}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{08BFD466-1F43-4466-A46A-0290E5160C37}.Release|Win32.ActiveCfg = Release|Win32
+		{08BFD466-1F43-4466-A46A-0290E5160C37}.Release|Win32.Build.0 = Release|Win32
+		{08BFD466-1F43-4466-A46A-0290E5160C37}.Release|x64.ActiveCfg = Release|x64
+		{08BFD466-1F43-4466-A46A-0290E5160C37}.Release|x64.Build.0 = Release|x64
+		{D9648E08-3CB1-446D-9107-7D6BF5A287CD}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{D9648E08-3CB1-446D-9107-7D6BF5A287CD}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{D9648E08-3CB1-446D-9107-7D6BF5A287CD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D9648E08-3CB1-446D-9107-7D6BF5A287CD}.Debug|Win32.Build.0 = Debug|Win32
+		{D9648E08-3CB1-446D-9107-7D6BF5A287CD}.Debug|x64.ActiveCfg = Debug|x64
+		{D9648E08-3CB1-446D-9107-7D6BF5A287CD}.Debug|x64.Build.0 = Debug|x64
+		{D9648E08-3CB1-446D-9107-7D6BF5A287CD}.Release|Any CPU.ActiveCfg = Release|Win32
+		{D9648E08-3CB1-446D-9107-7D6BF5A287CD}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{D9648E08-3CB1-446D-9107-7D6BF5A287CD}.Release|Win32.ActiveCfg = Release|Win32
+		{D9648E08-3CB1-446D-9107-7D6BF5A287CD}.Release|Win32.Build.0 = Release|Win32
+		{D9648E08-3CB1-446D-9107-7D6BF5A287CD}.Release|x64.ActiveCfg = Release|x64
+		{D9648E08-3CB1-446D-9107-7D6BF5A287CD}.Release|x64.Build.0 = Release|x64
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Debug|Win32.Build.0 = Debug|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Debug|x64.Build.0 = Debug|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Release|Win32.ActiveCfg = Release|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Release|Win32.Build.0 = Release|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Release|x64.ActiveCfg = Release|Any CPU
+		{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0D8D31B4-87AB-4C75-9D9B-86528889B02D} = {7478D0EC-1AD7-42AB-B085-DE9AF63AC847}
+		{F1FB3629-EB4A-4B49-84E8-66854D0B1D93} = {7478D0EC-1AD7-42AB-B085-DE9AF63AC847}
+	EndGlobalSection
+EndGlobal

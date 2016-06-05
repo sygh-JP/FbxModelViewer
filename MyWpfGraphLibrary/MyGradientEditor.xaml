@@ -1,0 +1,87 @@
+﻿<UserControl
+    x:Class="MyWpfGraphLibrary.MyGradientEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:MyWpfGraphLibrary"
+    mc:Ignorable="d" 
+    Background="White"
+    >
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Canvas Grid.Row="1" Name="opacityStopArea"
+                Width="{Binding ElementName=borderGradient, Path=Width}" Height="30" Background="Transparent"/>
+        <Border Grid.Row="2" Name="borderGradient" Width="400" Height="40" BorderBrush="Black" BorderThickness="1" UseLayoutRounding="True" SnapsToDevicePixels="True">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <!-- GradientStops コレクション内の順序は問わず、Offset の昇順にグラデーションが自動作成されるらしい。 -->
+                    <GradientStop Color="Red" Offset="0.0"/>
+                    <GradientStop Color="Yellow" Offset="0.25"/>
+                    <GradientStop Color="Lime" Offset="0.5"/>
+                    <GradientStop Color="Cyan" Offset="0.75"/>
+                    <GradientStop Color="Blue" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <!-- Background の既定値は Transparent ではなく null（{x:Null}）なので、マウスやタッチのイベントを拾えない。 -->
+        <Canvas Grid.Row="3" Name="colorStopArea"
+                Width="{Binding ElementName=borderGradient, Path=Width}"
+                Height="30"
+                Background="Transparent"
+                MouseLeftButtonDown="colorStopArea_MouseLeftButtonDown"
+                MouseLeftButtonUp="colorStopArea_MouseLeftButtonUp"
+                MouseMove="colorStopArea_MouseMove"
+                MouseLeave="colorStopArea_MouseLeave">
+            <local:MyGradientStopPin
+                Canvas.Left="100"
+                />
+        </Canvas>
+        <GroupBox Grid.Row="4" Header="Stops">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Content="Opacity:" HorizontalAlignment="Left"/>
+                <Label Grid.Row="0" Grid.Column="3" Content="Location:" HorizontalAlignment="Left"/>
+                <TextBox Grid.Row="0" Grid.Column="4" Name="textboxCurrentOpacityLocation"
+                         InputMethod.IsInputMethodSuspended="True"
+                         HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Text="50"/>
+                <Label Grid.Row="0" Grid.Column="5" Content="%"/>
+                <Button Grid.Row="0" Grid.Column="8" Content="Delete opacity" Padding="10,0"/>
+                <Label Grid.Row="2" Grid.Column="0" Content="Color:" HorizontalAlignment="Left"/>
+                <Border Grid.Row="2" Grid.Column="1" Name="borderColorPalette" BorderBrush="Black" BorderThickness="1" Background="White"
+                        MouseLeftButtonDown="borderColorPalette_MouseLeftButtonDown"/>
+                <Label Grid.Row="2" Grid.Column="3" Content="Location:" HorizontalAlignment="Left"/>
+                <TextBox Grid.Row="2" Grid.Column="4" Name="textboxCurrentColorLocation"
+                         InputMethod.IsInputMethodSuspended="True"
+                         HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                         Text="{Binding Path=CurrentColorLocation, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=0.0}"/>
+                <Label Grid.Row="2" Grid.Column="5" Content="%"/>
+                <Label Grid.Row="2" Grid.Column="6" Name="labelColorStopCount" HorizontalAlignment="Right" Foreground="Red"
+                       Content="{Binding ElementName=colorStopArea, Path=Children.Count}"/>
+                <Button Grid.Row="2" Grid.Column="8" Content="Delete color" Padding="10,0"/>
+                <!-- HorizontalAlignment や VerticalAlignment を指定しないと、Fill モードになる。Grid 内の要素の幅を、Auto を使ってそろえるときに使える。 -->
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

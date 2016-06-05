@@ -1,0 +1,101 @@
+﻿Direct3D 10.0 のデバイスは、Direct3D 9 までと違って CAPS が廃止されており、
+ハードウェアが全機能を完全サポートしない場合は HAL モードで作成できない。
+Direct3D 10.1 では Feature Level の形（D3D10_FEATURE_LEVEL1）で CAPS が復活し、D3D 9, D3D 10, D3D 10.1 の
+各レベルに応じてデバイスを作成できる（ただし Direct3D 10.1 での D3D10_FEATURE_LEVEL_9_x 対応は
+Direct3D 11 と Direct2D ランタイムが使えるようになっている環境のみらしい。
+Windows 7 以降では普通に使えるが、Vista 環境では SP2 + Platform Update が必要）。
+Feature Level 9_x であれば GeForce 7, Radeon X1300 シリーズでも起動可能。
+Feature Level 10_0 であれば GeForce 8, Radeon HD 2000 シリーズでも起動可能。
+Direct3D 11.0 では、D3D 9, D3D 10, D3D 10.1, D3D 11.0 の
+各レベルに応じてデバイスを作成できる。
+Direct3D 11.1 では、D3D 9, D3D 10, D3D 10.1, D3D 11.0, D3D 11.1 の
+各レベルに応じてデバイスを作成できる。
+ちなみにシェーダーモデル 2.0 互換の機能レベル（level_9_x）は存在するが、
+3.0 互換の機能レベル（Direct3D 9.0c 相当）は存在しない。
+VTF などのシェーダーモデル 3.0 Feature が確実に使用できるのは、4.0 以降の機能レベルとなることに注意。
+
+なお、デバイスは 通常の COM オブジェクトと違って DLL にエクスポートされているファクトリ関数で生成する都合上、
+プログラムのビルドにアーリーバインドを使うのであれば（d3d11.lib をリンクするならば）、
+D3D 11 コンポーネント DLL がシステムにインストールされていない場合、プログラムを起動することさえできない。
+DLL の探索に失敗した場合、ユーザーに D3D 11 のインストール（システムの更新）を促すメッセージを出力するためには
+DLL を遅延ロードする必要があるが、面倒なだけなので今回はそこまでしない。
+
+Windows Vista で D3D 11.0 を使う場合、
+DLL を遅延ロードして、まずシステム チェックするほうがユーザーフレンドリーではある。
+なお、d3d10_1.dll は存在するが、d3d11_1.dll は存在しないことに注意。
+Vista での D3D 11.0 チェックは、
+リンカー指定で delayload して、LoadLibrary() or AfxLoadLibrary() を使って判定すればいい。
+GetProcAddress() を使って D3D11CreateDevice() を動的に取得する必要はない。
+Win7 での D3D 11.1 チェックは、QueryInterface() を使うことになる。
+D3D 10.1 のときとは違って、ID3D11Device1 を直接取得する D3D11CreateDevice1() や、
+IDXGISwapChain1 を直接取得する D3D11CreateDeviceAndSwapChain1() は存在しないことに注意。
+IDXGIDevice1, IDXGISurface1, IDXGISwapChain1, ID3D11Device1, ID3D11DeviceContext1 の機能
+（特に機能レベル 9_1 でも可能となる Direct2D 1.1 との連携）が Win7 で必要な場合、
+QueryInterface() の結果には注意を払う必要がある。
+Direct3D テクスチャ（バック バッファ）に Direct2D を使って描画する場合、DXGI インターフェイス経由の共有が必要になるが、
+Visual Studio 2012 Windows ストア アプリの C++ Direct2D プロジェクト テンプレートをほぼそのまま参考にできる。
+また、D3D 11.2 開発ができる Windows SDK 8.1 でも D3D_FEATURE_LEVEL_11_2 は定義されてないらしい。
+D3D 11.0 の高速ソフトウェア レンダラーである WARP デバイスは、最大で D3D_FEATURE_LEVEL_10_1 対応だが、
+D3D 11.1/11.2 の WARP は最大で D3D_FEATURE_LEVEL_11_1 対応らしい。
+つまり WARP でも（パフォーマンスはともかく）テッセレーション シェーダーやコンピュート シェーダーが使えるらしい？
+http://msdn.microsoft.com/ja-jp/library/ee422081.aspx
+http://msdn.microsoft.com/en-us/library/windows/desktop/ff728764.aspx
+http://msdn.microsoft.com/en-us/library/windows/desktop/hh404562.aspx
+
+
+Windows 7 上で D3D-D2D 相互運用アプリを Visual Studio 2012 の Graphics Diagnostics を使って診断しようとすると、
+起動中にハンドルされない例外（0xc0000005）が発生してアプリが強制終了する。
+Direct3D 11.0 オンリーの場合は Windows 7 でも診断を行なうことができたが、
+Direct3D 11.1 と Direct2D 1.1 との相互運用をする場合は、やはりストア アプリ同様に Windows 8 (DXGI 1.2) が必須らしい。
+Windows 7 への D3D 11.1 のバックポートは完全ではない、という非互換性はこのあたりに影響するため痛い。
+Direct3D 10.1 と Direct2D 1.0 の場合はどうなるのかは未検証。
+http://shobomaru.wordpress.com/2012/11/17/interop-direct3d-and-direct2d-directwrite/
+ちなみに Visual Studio 2012 の GD ではコンピュート シェーダーをデバッグできなかったが、
+VS 2013 の GD ではコンピュート シェーダーの Dispatch をキャプチャできる。
+http://msdn.microsoft.com/ja-jp/library/hh873204.aspx
+
+
+文字列描画はフォント関連のプラットフォーム依存 API とグラフィックス API を組みあわせて実行時にテクスチャ生成するか、
+すべてのテキストをあらかじめ画像ファイル化してテクスチャとして利用する、2通りの実装方法がある。
+Windows 環境では Direct2D を使えば実行時の文字列テクスチャ生成（レンダリング）に GPU を使うことができる。
+GPU 側のメモリーに直接グリフを書き込むことができ、CPU 側のメモリー（DIB バッファ）を介さないので高速になると思われる。
+他のプラットフォームでは Direct2D 相当機能がないので、同じことをしようと思えば CPU 側で OpenGL テクスチャを書き換える必要がある。
+ゲーム HUD は画像ファイルから生成した Direct3D テクスチャもしくは Direct2D ビットマップを直接使ったほうが効率がよいが、
+より柔軟な対応が必要となる日本語の長文などは Direct2D & DirectWrite を使ったほうがよさげ。
+なお、Direct2D ビットマップは 3D ビルボードには厳しいが、完全な 2D の HUD には使える。
+また、Begin-End によるバッチ処理をサポートするので、下手に自前で組むより効率的。
+ただしメッセージの文字送りを実装するんだったら、1文字ずつ分解して描画できないとダメ。
+ID2D1RenderTarget::DrawText() を使うか、もしくは ID2D1RenderTarget::DrawTextLayout() を使って
+Direct3D テクスチャに一定のチャンク（パラグラフ）ごとにメッセージを描画しておいて、
+テクスチャ マッピングにより切り出しながら Direct3D で描画していくとよい。
+テクスチャを毎フレーム書き換えるのはいくら Direct2D を使っていてもコストが高い。
+DrawText() だけでなく、DrawTextLayout() も結構重い。
+高フレームレートが要求されるハイエンド ゲーム用途では、Direct2D はオフスクリーン レンダリング（プロシージャル テクスチャ生成）の
+ヘルパー的な役割にとどめておいたほうがよさげ。
+テキスト ベースなどのあまりパフォーマンスを必要としない 2D ゲーム用途であれば、Direct2D 中心でもいいかもしれない。
+Direct2D 1.1 には便利な各種エフェクト群も追加されている。
+なお、WAM のアニメーション オブジェクトの動的生成もフレームレートを落とす原因となる可能性があるので、
+パフォーマンスを出すにはキャッシングや使いまわしの仕組みがないと厳しいかも。
+
+
+COM のインターフェイス ポインタに対して暗黙のアップキャストやダウンキャストを行ないたい場合、
+ATL::CComQIPtr を使うと、オーバーロードされた代入演算子によって QueryInterface() が自動的に実行される。
+なお、Windows SDK 8.0 では、<wrl/client.h> に Microsoft::WRL::ComPtr が用意されている。
+ストア アプリでも ATL のユーティリティ ライブラリはそのまま使えるものが多いが、
+ストア アプリへの移行やコード共有を視野に入れている場合、WRL を使用しておいたほうが良いかもしれない。
+ATL は有償版 Visual Studio でないと使えないが、WRL は Express 版でも使用可能。
+
+OpenGL や Direct3D 9 はバッファやテクスチャなどのリソース（のハンドル）を直接デバイスにバインドする方式なのに対して、
+Direct3D 10/11 はまずリソースに対して用途に応じたビューを作成し、それらをデバイスにバインドする方式になっている。
+
+・Windows Vista SP2 PU, 7 では Direct3D 11, Direct3D 10.1 + DWrite 1.0 / D2D 1.0 のインターフェイスが使える。
+ID3D10Device1, IDWriteFactory, ID2D1Factory, ID2D1RenderTarget, ID2D1Bitmap など。
+・Windows 7 SP1 PU, 8 では Direct3D 11.1 + DWrite 1.1 / D2D 1.1 のインターフェイスが使える。
+ID3D11Device1, ID3D11DeviceContext1, IDWriteFactory1, ID2D1Factory1, ID2D1Device, ID2D1DeviceContext, ID2D1Bitmap1 など。
+・Windows 8.1 では Direct3D 11.2 + DWrite 1.2 / D2D 1.2 のインターフェイスが使える。
+ID3D11Device2, ID3D11DeviceContext2, IDWriteFactory2, ID2D1Factory2, ID2D1Device1, ID2D1DeviceContext1 など。
+・Windows 10 では Direct3D 12, Direct3D 11.3 + DWrite 1.3 / D2D 1.3 のインターフェイスが使える。
+ID3D11Device3, ID3D11DeviceContext3, IDWriteFactory3, ID2D1Factory3, ID2D1Device2, ID2D1DeviceContext2 など。
+
+新しいプラットフォームではもちろん以前のバージョンのインターフェイスも使える（ただしストア アプリで使える API には制限・制約がある）。
+しかしインターフェイス名末尾のマイナー番号は普通にインクリメントするんじゃなく API のバージョン番号に合わせて欲しかった……

@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Wrappers">
+      <UniqueIdentifier>{8ecff8a7-d53d-446a-acb1-a897534f114e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="_Header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="_Res">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MyWpfGraphLibMfc.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Wrappers\CommonMiscWrapperImpl.cpp">
+      <Filter>Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="Wrappers\ProgressBarWrapperImpl.cpp">
+      <Filter>Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="Wrappers\WebBrowserWrapperImpl.cpp">
+      <Filter>Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="Wrappers\GradientEditorWrapperImpl.cpp">
+      <Filter>Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="Wrappers\HwndSrcHolderBaseImpl.cpp">
+      <Filter>Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="Wrappers\TaskProgressDialogWrapperImpl.cpp">
+      <Filter>Wrappers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MyWpfGraphLibMfc.def">
+      <Filter>_Src</Filter>
+    </None>
+    <None Include="res\MyWpfGraphLibMfc.rc2">
+      <Filter>_Res</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="CppCliInterop.hpp">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="CppCliMisc.hpp">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Wrappers\CommonMiscWrapper.hpp">
+      <Filter>Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="Wrappers\HwndSrcHolderBase.hpp">
+      <Filter>Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="Wrappers\ProgressBarWrapper.hpp">
+      <Filter>Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="Wrappers\WebBrowserWrapper.hpp">
+      <Filter>Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="Wrappers\GradientEditorWrapper.hpp">
+      <Filter>Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="Wrappers\TaskProgressDialogWrapper.hpp">
+      <Filter>Wrappers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MyWpfGraphLibMfc.rc">
+      <Filter>_Res</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

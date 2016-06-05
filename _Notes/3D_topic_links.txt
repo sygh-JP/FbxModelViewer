@@ -1,0 +1,54 @@
+﻿http://software.intel.com/en-us/articles/compute-shader-hdr-and-bloom
+http://game.watch.impress.co.jp/docs/series/3dcg/20110301_430375.html
+http://www.colorzilla.com/gradient-editor/
+http://favoloso-pianeta.com/?p=59985
+http://simplestar.syuriken.jp/lesson/068_TestKimberlite.html
+http://ameblo.jp/xxxxx13ameba/entry-10981120768.html
+http://www.xxxxx13.com/opengl_SkinMesh.html
+http://www.t-pot.com/program/50_edgezn/index.html
+http://codeoncanvas.blogspot.jp/2010/02/xnafps20.html
+
+http://www2.teu.ac.jp/aqua/GS/2011/Paper/Matsuo_2011.pdf
+
+http://miku.sega.jp/info/0387
+
+http://news.nicovideo.jp/watch/nw737345
+
+http://area.autodesk.jp/column/tutorial/3ds_max_kitchen_stadium/5_rgb_level/
+
+http://photoshopvip.net/archives/7238
+
+http://d.hatena.ne.jp/shi3z/20090909/1252478906
+
+http://cycles.wiki.fc2.com/wiki/BSDF%20%E3%81%A8%E3%81%AF
+
+http://dench.flatlib.jp/opengl/glsl_hlsl
+http://dench.flatlib.jp/opengl/texturefileformat
+
+http://blogs.msdn.com/b/chuckw/archive/2013/08/21/living-without-d3dx.aspx
+
+・Real-Time Photon Mapping on GPU
+（NVIDIA OptiX を使ったリアルタイム フォトンマッピングに関する論文らしい）
+http://www.csee.umbc.edu/~olano/635s11/sgupte1.pdf
+
+・Hardware-Accelerated Global Illumination by Image Space Photon Mapping
+（「G3D 8.00 beta 1 を使っている」とあるが、実装例のコードが断片的すぎて不足しているものがあるため再現不能？）
+http://graphics.cs.williams.edu/papers/PhotonHPG09/
+http://sourceforge.jp/projects/sfnet_g3d/releases/
+
+・OpenGLで作る力学アニメーション入門
+　著者: 酒井幸市
+波動シミュレーションの章において、ドップラー効果などが解説されている。
+こちらは波動方程式を近似した差分法による数値解ではなく、解析解の式を利用している模様。
+http://books.google.co.jp/books?id=DgCoBfWZlr4C&printsec=frontcover&hl=ja#v=onepage&q&f=false
+
+・Introduction to Monte Carlo Ray Tracing (CEDEC 2013)
+リアルタイム GI の解として、OpenCL によるモンテカルロ・レイトレーシング実装の紹介。
+http://www.slideshare.net/takahiroharada/introduction-to-monte-carlo-ray-tracing-cedec2013
+
+・Crysis
+http://game.watch.impress.co.jp/docs/20080310/3dcry.htm
+
+・色付き半透明
+http://docs.autodesk.com/3DSMAX/15/JPN/3ds-Max-Help/index.html?url=files/GUID-5032AECC-D496-4588-9ADC-279FB65D71B5.htm,topicNumber=d30e371617
+http://docs.autodesk.com/3DSMAX/16/JPN/3ds-Max-Help/index.html?url=files/GUID-5032AECC-D496-4588-9ADC-279FB65D71B5.htm,topicNumber=d30e472181

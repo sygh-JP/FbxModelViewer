@@ -1,0 +1,33 @@
+﻿<Application x:Class="WpfFontBmpWriter.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <!-- ResourceDictionary を複数指定する場合、MergedDictionaries で入れ子にする。 -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--
+                AeroLite のテーマ アセンブリを Windows 7 上で使う場合、Visual Studio から実行させる場合は
+                [ローカル コピー] が False でも起動できるが、スタンドアロンで実行させる場合は起動できない。
+                アプリを配布するときは [ローカル コピー] を True にしておく必要がある。
+                なお、AeroLite だと TextBox や編集可能な ComboBox などの内部コンテキスト メニューが
+                AeroLite テーマではなくなり、さらにハイライトがおかしくなる（ハイライトされない）模様。
+                ContextMenu を直接明示的に作成した場合はきちんとテーマが適用される。
+                ちなみに Aero2 テーマは Windows 7 では利用できない模様。
+                -->
+                <!--
+                <ResourceDictionary Source="/presentationframework.aerolite;component/themes/aerolite.normalcolor.xaml"/>
+                -->
+                <ResourceDictionary>
+                    <!-- キーを明示的に指定しない場合、TargetType と FraeworkElement.DefaultStyleKeyProperty が一致するすべての要素にこのスタイルが適用される。 -->
+                    <Style TargetType="Label" x:Key="MyWhiteLabelStyle">
+                        <Setter Property="Foreground" Value="WhiteSmoke"/>
+                    </Style>
+                    <Style TargetType="TextBlock" x:Key="MyWhiteTextBlockStyle">
+                        <Setter Property="Foreground" Value="WhiteSmoke"/>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

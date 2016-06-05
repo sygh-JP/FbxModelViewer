@@ -1,0 +1,47 @@
+﻿
+Visual Studio 2015でビルドした、DirectX 11を使ったMFC/WPF混合アプリをWindows 7のエクスプローラーから起動すると、
+起動直後に勝手に終了する現象が出る。Windows 8.1では普通に起動する。
+Windows 7でも、Visual Studio 2015 IDEからデバッグ実行した場合は普通に起動する。
+しかし、終了時にWindowsからクラッシュエラーのタスクダイアログも表示されないし、イベントログにも何も記録が残らない。
+
+まずPowerShell経由で起動して、終了コードを取得してみた。
+
+$result = Start-Process -FilePath "<DX11AppName>.exe" -PassThru -Wait
+Write-Host $result.ExitCode.ToString("X8")
+
+結果は「C0000135」となった。
+これはWindows OSの場合「Unknown Hard Error」らしい？　アプリケーションの場合「Unable To Locate Component」らしい？
+
+DLL依存関係が怪しいと感じたのでDependency Walkerで調べてみたところ、D3DCompiler_47.dllが勝手にリンクされていた。
+もちろん明示的なリンク指定はしていないし、VS2012/2013でビルドしたときは勝手にリンクされていなかった。
+
+Windows 7の場合、Visual Studio 2012や2013/2015をインストールしても、System32やSysWOW64には
+D3DCompiler_46.dllやD3DCompiler_47.dllはインストールされない。
+Windows SDKとDirectX SDKが統合されたWindows SDK 8.0以降では、D3DCompilerのランタイムは
+%ProgramFiles(x86)%\Windows Kits\8.0\bin\x64
+%ProgramFiles(x86)%\Windows Kits\8.1\bin\x64
+%ProgramFiles(x86)%\Windows Kits\10\bin\x64
+といった場所にインストールされる。
+Visual Studio IDEからの起動時には、この場所にパスを通すのでDLL解決できるが、
+エクスプローラーからの起動時にはDLL解決できなくて強制終了させられる模様。
+Windows 8の場合、D3DCompiler_46.dllは標準コンポーネントとしてシステムフォルダーにインストールされていない。
+Windows 8.1の場合、D3DCompiler_46.dllはないが、Windows 8.1版のD3DCompiler_47.dllが標準インストールされている。
+Windows 10の場合、D3DCompiler_46.dllはないが、Windows 10版のD3DCompiler_47.dllが標準インストールされている。
+これにより、Windowsストアアプリ（ユニバーサルWindowsプラットフォームアプリ）を配布する場合は、
+DLLを同梱する必要がなくなる。
+
+ちなみに、Windows SDK 8.1に含まれるD3DCompiler_47.dllのバージョンは「6.3.9600.16384」。
+一方、Windows SDK 10に含まれるD3DCompiler_47.dllのバージョンは「10.0.10240.16384」。
+ファイルサイズも異なるし、SDK 10版のほうはDirectX 12/11.3 API対応（シェーダーモデル5.1対応）が追加されているので、
+前方互換性はない。
+
+Visual Studio 2015でDirectX 11を使ったデスクトップアプリケーションをビルドし、Windows 7/Windows 8.x向けにも配布する場合、
+DLL依存関係には十分注意したほうがいい。
+もしD3DCompiler_47.dllが勝手にリンクされるとなると、Windows SDK 10に含まれる同DLLをアプリケーションに同梱する必要がある。
+もちろんDirectX 12/11.3はWindows 7/Windows 8.1にはバックポートされないので、当然それらの機能を使った場合はアウトだが、
+DirectX 11.1までの機能しか使わず、またD3DCompilerを明示的にリンクしない場合でも、VS2015ではD3DCompilerが勝手にリンクされることがある模様。
+かなり迷惑な仕様変更。
+
+通例、アーリーバインドしたDLLの解決ができない場合は、アプリ起動時に「DLLが見つからない」という旨のエラーメッセージが出るはずだが、
+今回はメッセージが表示されることなく勝手に終了してしまい、イベントも記録されなかったことがエラー原因の発見の遅れにつながった。
+

@@ -1,0 +1,550 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D9648E08-3CB1-446D-9107-7D6BF5A287CD}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>SharedUtility</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SHAREDUTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>./;../;./MyFbx;./MyUtils;./MyD3D;./MyDX;./MyApp;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SHAREDUTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>./;../;./MyFbx;./MyUtils;./MyD3D;./MyDX;./MyApp;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SHAREDUTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>./;../;./MyFbx;./MyUtils;./MyD3D;./MyDX;./MyApp;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SHAREDUTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>./;../;./MyFbx;./MyUtils;./MyD3D;./MyDX;./MyApp;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="DDSTextureLoader\dummy.txt" />
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DebugNew.h" />
+    <ClInclude Include="MyApp\MyAppCommonConsts.hpp" />
+    <ClInclude Include="MyApp\MyAppSettings.hpp" />
+    <ClInclude Include="MyD3D\MyD3D.h" />
+    <ClInclude Include="MyD3D\MyD3DCubeMap.h" />
+    <ClInclude Include="MyD3D\MyD3DDynamicFontRects.hpp" />
+    <ClInclude Include="MyD3D\MyD3DFonTex.h" />
+    <ClInclude Include="MyD3D\MyD3DMesh.h" />
+    <ClInclude Include="MyD3D\MyD3DVertexLayout.hpp" />
+    <ClInclude Include="MyDX\DirectXHelper.h" />
+    <ClInclude Include="MyDX\dxerr.h" />
+    <ClInclude Include="MyDX\GdiTextRenderer.h" />
+    <ClInclude Include="MyDX\MyDDSHelper.h" />
+    <ClInclude Include="MyDX\MyDWriteWrapper.hpp" />
+    <ClInclude Include="MyFbx\FbxAnimTimeInfo.h" />
+    <ClInclude Include="MyFbx\FbxLayerAnalyzer.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="MyFbx\FbxMaterialAnalyzer.h" />
+    <ClInclude Include="MyFbx\FbxMeshAnalyzer.h" />
+    <ClInclude Include="MyFbx\FbxNodeAnalyzerBase.h" />
+    <ClInclude Include="MyFbx\FbxSkeletonAnalyzer.h" />
+    <ClInclude Include="MyFbx\FbxSkinAnalyzer.h" />
+    <ClInclude Include="MyFbx\FbxUVAnalyzer.h" />
+    <ClInclude Include="MyFbx\MyFbx.h" />
+    <ClInclude Include="MyFbx\MyFbxNodeAnaXml.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="MyFbx\MyFbxVMeshBuilder.hpp" />
+    <ClInclude Include="MyFbx\VertexSeparator.h" />
+    <ClInclude Include="MyMisc\GdiPlusUtility.h" />
+    <ClInclude Include="MyMisc\MyXmlProc.hpp" />
+    <ClInclude Include="MyUtils\CustomTrace.hpp" />
+    <ClInclude Include="MyUtils\MyBasicVertexTypes.hpp" />
+    <ClInclude Include="MyUtils\MyBoneMatrixPalettePack.h" />
+    <ClInclude Include="MyUtils\MyCascadedShadowHelpers.hpp" />
+    <ClInclude Include="MyUtils\MyCommon.h" />
+    <ClInclude Include="MyUtils\MyConstantBufferPacks.hpp" />
+    <ClInclude Include="MyUtils\MyCustomVertexTypes.hpp" />
+    <ClInclude Include="MyUtils\MyDesktopHelpers.hpp" />
+    <ClInclude Include="MyUtils\MyMath.hpp" />
+    <ClInclude Include="MyUtils\MyMathConsts.hpp" />
+    <ClInclude Include="MyUtils\MyMathTypes.hpp" />
+    <ClInclude Include="MyUtils\MyStopwatch.hpp" />
+    <ClInclude Include="MyUtils\MyTextureHelper.hpp" />
+    <ClInclude Include="MyUtils\MyTrackball.h" />
+    <ClInclude Include="MyUtils\MyUIAnimCenter.h" />
+    <ClInclude Include="MyUtils\MyUIProjectileAnim.h" />
+    <ClInclude Include="MyUtils\MyUtil.h" />
+    <ClInclude Include="MyUtils\MyUtilTypes.hpp" />
+    <ClInclude Include="PublicInclude\DebugNew.h" />
+    <ClInclude Include="PublicInclude\ForPCHeader.hpp" />
+    <ClInclude Include="PublicInclude\ImportMsXml.hpp" />
+    <ClInclude Include="PublicInclude\MeshIF.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="PublicInclude\MyFbxLinkLibDesc.hpp" />
+    <ClInclude Include="PublicInclude\SuppressWarning.hpp" />
+    <ClInclude Include="SharedUtility.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="MyApp\MyAppSettings.cpp" />
+    <ClCompile Include="MyD3D\MyD3D.cpp" />
+    <ClCompile Include="MyD3D\MyD3DCubeMap.cpp" />
+    <ClCompile Include="MyD3D\MyD3DDynamicFontRects.cpp" />
+    <ClCompile Include="MyD3D\MyD3DFonTex.cpp" />
+    <ClCompile Include="MyD3D\MyD3DMesh.cpp" />
+    <ClCompile Include="MyDX\DDSTextureLoader_Proxy.cpp" />
+    <ClCompile Include="MyDX\dxerr.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="MyDX\GdiTextRenderer.cpp" />
+    <ClCompile Include="MyDX\MyDWriteWrapper.cpp" />
+    <ClCompile Include="MyFbx\FbxAnimTimeInfo.cpp" />
+    <ClCompile Include="MyFbx\FbxLayerAnalyzer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="MyFbx\FbxMaterialAnalyzer.cpp" />
+    <ClCompile Include="MyFbx\FbxMeshAnalyzer.cpp" />
+    <ClCompile Include="MyFbx\FbxNodeAnalyzerBase.cpp" />
+    <ClCompile Include="MyFbx\FbxSkeletonAnalyzer.cpp" />
+    <ClCompile Include="MyFbx\FbxSkinAnalyzer.cpp" />
+    <ClCompile Include="MyFbx\FbxUVAnalyzer.cpp" />
+    <ClCompile Include="MyFbx\MyFbx.cpp" />
+    <ClCompile Include="MyFbx\MyFbxNodeAnaXml.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="MyFbx\MyFbxVMeshBuilder.cpp" />
+    <ClCompile Include="MyMisc\MyXmlProc.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="MyUtils\MyCascadedShadowHelpers.cpp" />
+    <ClCompile Include="MyUtils\MyCommon.cpp" />
+    <ClCompile Include="MyUtils\MyMath.cpp" />
+    <ClCompile Include="MyUtils\MyTrackball.cpp" />
+    <ClCompile Include="MyUtils\MyUIAnimCenter.cpp" />
+    <ClCompile Include="MyUtils\MyUIProjectileAnim.cpp" />
+    <ClCompile Include="MyUtils\MyUtil.cpp" />
+    <ClCompile Include="SharedUtility.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MyHLSL\BilinearFilter.hlsli" />
+    <None Include="MyHLSL\CommonConst.hlsli" />
+    <None Include="MyHLSL\CommonDefs.hlsli" />
+    <None Include="MyHLSL\CommonFuncs.hlsli" />
+    <None Include="MyHLSL\DiffuseSpecularFunc.hlsli" />
+    <None Include="MyHLSL\GaussianBlurFunc.hlsli" />
+    <None Include="MyHLSL\GaussianBlurFuncCS.hlsli" />
+    <None Include="MyHLSL\GaussianWeights.hlsli" />
+    <None Include="MyHLSL\MovingAverageFilter.hlsli" />
+    <None Include="MyHLSL\MovingAverageFilterCS.hlsli" />
+    <None Include="MyHLSL\MsaaAlgTemplates.hlsli" />
+    <None Include="MyHLSL\MyAdaptiveTess.hlsli" />
+    <None Include="MyHLSL\MyConstantBuffers.hlsli" />
+    <None Include="MyHLSL\MyRenderStates.hlsli" />
+    <None Include="MyHLSL\MyTexSamplers.hlsli" />
+    <None Include="MyHLSL\RandomNumHelper.hlsli" />
+    <None Include="MyHLSL\ShadowSampling.hlsli" />
+    <None Include="MyHLSL\Skinning.hlsli" />
+    <CustomBuild Include="MyHLSL\VSInOutStruct.hlsli">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">@echo off
+rem NOTE: If you describe multi-command pipeline by cmd.exe as VC++ Custom Build Tools, you should check each result code after execution.
+rem Otherwise error occurrence may be ignored.
+rem 
+setlocal EnableDelayedExpansion
+echo Now compiling effect file by strict mode...
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexT.vsbin" /E vsLayoutGenDummyT /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexP.vsbin" /E vsLayoutGenDummyP /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPC.vsbin" /E vsLayoutGenDummyPC /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPCT.vsbin" /E vsLayoutGenDummyPCT /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPCNT.vsbin" /E vsLayoutGenDummyPCNT /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPNTIW.vsbin" /E vsLayoutGenDummyPNTIW /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+endlocal
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">@echo off
+rem NOTE: If you describe multi-command pipeline by cmd.exe as VC++ Custom Build Tools, you should check each result code after execution.
+rem Otherwise error occurrence may be ignored.
+rem 
+setlocal EnableDelayedExpansion
+echo Now compiling effect file by strict mode...
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexT.vsbin" /E vsLayoutGenDummyT /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexP.vsbin" /E vsLayoutGenDummyP /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPC.vsbin" /E vsLayoutGenDummyPC /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPCT.vsbin" /E vsLayoutGenDummyPCT /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPCNT.vsbin" /E vsLayoutGenDummyPCNT /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPNTIW.vsbin" /E vsLayoutGenDummyPNTIW /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+endlocal
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">@echo off
+rem NOTE: If you describe multi-command pipeline by cmd.exe as VC++ Custom Build Tools, you should check each result code after execution.
+rem Otherwise error occurrence may be ignored.
+rem 
+setlocal EnableDelayedExpansion
+echo Now compiling effect file by strict mode...
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexT.vsbin" /E vsLayoutGenDummyT /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexP.vsbin" /E vsLayoutGenDummyP /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPC.vsbin" /E vsLayoutGenDummyPC /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPCT.vsbin" /E vsLayoutGenDummyPCT /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPCNT.vsbin" /E vsLayoutGenDummyPCNT /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPNTIW.vsbin" /E vsLayoutGenDummyPNTIW /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+endlocal
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">@echo off
+rem NOTE: If you describe multi-command pipeline by cmd.exe as VC++ Custom Build Tools, you should check each result code after execution.
+rem Otherwise error occurrence may be ignored.
+rem 
+setlocal EnableDelayedExpansion
+echo Now compiling effect file by strict mode...
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexT.vsbin" /E vsLayoutGenDummyT /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexP.vsbin" /E vsLayoutGenDummyP /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPC.vsbin" /E vsLayoutGenDummyPC /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPCT.vsbin" /E vsLayoutGenDummyPCT /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPCNT.vsbin" /E vsLayoutGenDummyPCNT /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+fxc.exe /nologo /Ges "%(Identity)" /Fo "$(OutDir)D3DShaders\MyVertexPNTIW.vsbin" /E vsLayoutGenDummyPNTIW /T vs_4_0_level_9_1
+if "!ERRORLEVEL!"  neq "0" ( exit !ERRORLEVEL! )
+endlocal
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)D3DShaders\MyVertexPC.vsbin</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)D3DShaders\MyVertexPC.vsbin</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)D3DShaders\MyVertexPC.vsbin</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)D3DShaders\MyVertexPC.vsbin</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="MyHLSL\MyComputeShaders.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="MyHLSL\MyScreenShaders.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="MyHLSL\MyShaders.fx">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </AdditionalInputs>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="MyHLSL\MyShadowRender.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)D3DShaders\%(Filename).fxbin</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="MyHLSL\psMainLighting.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)D3DShaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)D3DShaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)D3DShaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)D3DShaders\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,215 @@
+﻿fxc.exe が受け付けるのは BOM なしの UTF-8 あるいは ANSI エンコードのみ。
+ただし Shift_JIS のようなダメ文字を含む ANSI エンコードを使う場合、
+コメントや文字列の末尾が '\' で終わらないように注意する必要がある。
+VS 2013 では BOM なし UTF-8 対応が強化されているらしい？
+
+float4 コンストラクタは (float3, float) のオーバーロードも用意されている。
+https://msdn.microsoft.com/ja-jp/library/cc973422.aspx
+
+頂点シェーダーは、シェーダーモデル 3.0 までは定数レジスタが 256 個までに制限されていたため、
+ボーン数にかなり制限があったが、4.0 以降は 16 x 4096 個となり、事実上ほぼ無制限に定数レジスタを使える。
+しかし、H/W によっては定数レジスタよりもテクスチャ フェッチのほうが高速に動作するものもあるらしい。
+http://msdn.microsoft.com/ja-jp/library/bb172448.aspx
+したがって、ボーン スキニングを行なうのであれば、Direct3D 9 同様に VTF を利用することも検討する。
+Texture2D でなく StructuredBuffer でもよい。
+ちなみに VTF の使用が確実に可能なのはシェーダーモデル 4.0 以降。
+GeForce はシェーダーモデル 3.0 世代でも VTF を使えたが、
+Radeon は使えなかった（Xbox 360 は例外）。
+Direct3D 11 Feature Level 9_x は VTF が保証されないため、
+ボーン行列パレットには定数バッファを使わざるをえない。
+多数のボーンを必要とするパーツはあらかじめ分割するか、平行移動・回転成分のみに制限してスロット数を節約する必要がある。
+
+シェーダー定数シンボル名および関数シンボル名はすべて大文字で始めるものとする。
+・定数バッファのメンバー名プレフィックスは Uni (Uniform)
+・SRV 変数名プレフィックスは Srv
+・UAV 変数名プレフィックスは Uav
+ローカル変数および関数パラメータのシンボル名はすべて小文字で始めるものとする。
+
+Texture2DArray を Sample するとき、UV とスライス番号は float3(uv, n) で指定すればよいらしい。n は正規化などする必要はない。
+
+正規化 A8 テクスチャ（DXGI_FORMAT_A8_UNORM）に対して Texture2D<half> や Texture2D<float> で Sample() しても
+アルファ チャンネルを正しくサンプリングできないので注意。
+正しく自動変換されない。
+Type には half4 もしくは float4 を使い、a メンバーもしくは w メンバーを利用する。
+正規化 R8 テクスチャ（DXGI_FORMAT_R8_UNORM）の場合は、Texture2D<half> や Texture2D<float> でいけるらしい。
+R32G32B32A32_FLOAT (RGBA-FP32), R16G16B16A16_FLOAT (RGBA-FP16) に限らず、
+R8G8B8A8_UNORM や R16G16B16A16_UNORM テクスチャであっても、Texture2D<float4> オブジェクトをバインドできる。
+なお、Texture2D<Type> の Type を省略すると、float4 になるらしい。
+一方で RWTexture2D<Type> の Type は省略できない。
+つまり Type は内包される DXGI フォーマットを指定するのではなく、Load/Store や Sample 時のインターフェイスを指定するものらしい。
+ただし、正しくデータを読み書きするためには、やはり DXGI フォーマットを考慮した上で変換の互換性がある適切な Type を選ぶ必要がある。
+ちなみに Type に整数フォーマットを指定すると、Sample 系メソッドが使えなくなるので注意。
+GPU は float4 単位でアクセス・演算するのが最速で、バイト単位でのアクセス・演算は逆に効率が低下するため、
+テクスチャ ユニットやサンプラーといったハードウェアにフェッチ／サンプリング時変換処理を任せることで高速化を図っているものと思われる。
+HLSL シェーダーコード内で half でなく float ベースで演算する場合、むしろ Type には half4 でなく float4 を使ったほうがよい。
+そもそも DirectX 10/11 の HLSL では half は float 扱いになるらしい。ちなみに物理演算系のストレージには FP16 は向かない。
+http://msdn.microsoft.com/ja-jp/library/ee418354.aspx
+DirectX 11.1 では低精度シェーダーが追加されていて、ハードウェアによっては精度と引き換えに高速化できる可能性がある（モバイルとか）。
+
+Texture2DMS など、シェーダー側の MSAA テクスチャ オブジェクトのサンプル数は、
+バインド ターゲットとなる MSAA テクスチャの作成時に C++ 側で指定したサンプル数（ハードウェア性能に左右される）に合わせる。
+実行時コンパイルが使えない場合は、
+あらかじめサンプル数のパターンをいくつか用意しておいて（1, 2, 4, 8 など）、
+テクスチャ変数およびシェーダー（テクニック）を切り替えるようにする。
+テクスチャ変数のレジスタは同じスロットを割り当てれば良い。共用体のように扱える。
+エフェクト ファイルとして同一ファイル中に複数のシェーダーを記述する場合、
+同じスロットを異なるビュー経由で同時に使用するようなことをしないかぎり、コンパイル エラーにはならない。
+なお、D3D10_MAX_MULTISAMPLE_SAMPLE_COUNT, D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT は現状 32 だが、
+ゲーム目的のリアルタイム品質としては 8 あれば十分。2 はさすがに粗が目立つが、4 でもいいくらい。
+それ以上はほとんど区別が付かないレベル。パフォーマンスへの影響も考慮すると、いたずらにサンプル数を上げるべきではない。
+4K 環境だとまた違ってくるかもしれない。
+アンチエイリアスに SMAA (Subpixels Morphological Anti-Aliasing) を使えば MSAA は要らなくなるか？
+ちなみに SMAA は浮動小数バッファにも適用可能だが、シェーダーモデル 3.0 以上が必須。
+MSAA と併用する高クオリティ SMAA アルゴリズムもある。
+http://www.iryoku.com/smaa/
+MSAA 自体は Direct3D 8 時代からある古い技術だが、
+浮動小数バッファでの MSAA が（仕様として）確実に可能なのは、シェーダーモデル 4.0 以降。
+Radeon はシェーダーモデル 3.0 世代でも浮動小数バッファでの MSAA が可能だったが、
+GeForce は不可能だった。
+なお、DirectX 10.0 では MSAA サポートの保証はない。
+10.1 以降では最低でも 4xMSAA のサポートが保証される（浮動小数バッファに適用できるかどうかは保証されない）。
+結局浮動小数バッファに対する MSAA のサポートは、最大サンプル数同様に実行時に API でハードウェア性能を調べるしかなさそう。
+MSAA はベンダーを問わず簡単に扱える標準化されたアンチエイリアス技術だが、
+実装は必須ではなく、ハードウェアによって品質の差異が生まれることも許可しているし、
+また Deferred レンダリング技術と相性が悪いという欠点もある。
+
+cs_4_0 では、RWStructuredBuffer つまり UAV（UnorderedAccessView）は1個しか使えない。
+ps_4_0 では、UAV を直接扱うことはできない。SRV のみ。
+つまり、レンダーターゲット切替の煩雑さ解消のためにコンピュート シェーダーを導入することはできない。
+また、たとえ DirectX 11 のシェーダーモデル 5.0 でも RWStructuredBuffer をジオメトリ シェーダーなどで直接参照することはできない。
+StructuredBuffer や Texture2D を SRV 経由で参照することはできる。
+DirectX 11.1 では、すべてのシェーダーステージで UAV 経由のアクセスが可能となる。
+
+構造化バッファー StructuredBuffer, RWStructuredBuffer を使うと、フリーフォーマットの構造体配列が使えるようになる。
+ただし float 単位でのアクセスとなるので4バイト アライメントする必要はある。16バイト アライメントする必要はないらしい。
+DirectX 12/11.3 の Typed UAV Load であれば、より柔軟なユーザー定義型を使用できるものと思われる。
+
+構造化バッファーには Texture2D.Load() に相当するインデクサ（[] 演算子）は存在するが、Texture2D.Sample() に相当するものはない。
+UV 座標をもとにバイリニア フィルターなどを使ってサンプリングしたければ、自前で処理を書く必要がある。
+Texture2D は DXGI テクスチャで、読み取り専用だが Load() と Sample() が可能。シェーダーモデル 5.0 ではインデクサもサポートする。
+RWTexture2D は構造化バッファーのようにインデクサを持っているが Load() は不能。ただし Sample() は可能になっている。
+つまり RWTexture2D はフォーマットに DXGI の制約があるが、サンプラーが使えることが利点。
+なお、RWTexture2D からの読み取りを行なう場合、RWTexture2D<float> つまり R32_FLOAT テクスチャしか使えないらしい。
+OpenGL コンピュート シェーダーの image2D はほぼ RWTexture2D 相当と思われる。
+バイト アドレス バッファ ByteAddressBuffer, RWByteAddressBuffer は4バイト単位でのアクセスが可能で、
+浮動小数点数の読み出しには再解釈処理（asfloat）が必要だが、頂点バッファをコンピュート シェーダーなどで直接読み書きできるという利点を持っている。
+BAB は uint 単位でのアクセスとなるので4バイト アライメント必須。
+http://msdn.microsoft.com/ja-jp/library/ee417836.aspx#Structured_Buffer
+ちなみに Direct3D 10 にはバッファの内容を Buffer オブジェクト (SRV) で読み取る機能があり、これが BAB/SB の前身になったようだが、
+OpenGL ではシェーダーで頂点バッファの内容を読み書きするときはともに SSBO を使うのか？
+http://msdn.microsoft.com/ja-jp/library/bb205327.aspx
+なお、メモリーアクセスの速度は、
+[1] グループ共有メモリー
+[2] 定数バッファー
+[3] SRV
+[4] UAV
+の順になっている。
+http://www.slideshare.net/dasyprocta/hello-direct-compute
+
+RWTexture2D<float4> でインデクサを使って読み取りを行なおうとすると、
+「error X3676: typed UAV loads are only allowed for single-component 32-bit element types」
+が発生する。構造化バッファにはそんな制約はない。
+DirectX 12/11.3 の Typed UAV Load では改善される？
+
+
+エフェクトのコンパイルをデスクトップ アプリのビルド時に行なう場合、
+call コマンドを使うことで別途作成しておいた外部バッチ ファイルを起動することもできるが、
+外部ファイルでは Visual Studio の $() を使った環境変数が指定できないので、プロジェクト ファイルの
+カスタム ビルド ツールの[コマンド ライン]設定に直接コマンド群を指定するほうがよさげ。
+なお、[出力ファイル]、[追加の依存ファイル]も適切に設定することで、関連ファイル更新時の自動検出ができるようになる。
+
+Visual Studio 2012 では、Windows 7 上でのデスクトップ アプリ開発であっても
+IDE に HLSL コンパイラ ツールが組み込まれている模様。
+カスタム ビルド ツールの代わりに HLSL コンパイラ ツールを使うと設定が楽になる。
+なお、HLSL コンパイラ ツールの場合、[追加の依存ファイル]を指定できないが、
+依存している関連ファイル（インクルード ヘッダー）のタイムスタンプを C/C++ ヘッダーファイル同様に管理しているらしく、依存性を自動的に解決してくれる？
+中間ディレクトリに出力される「fxc.XXX.tlog」ファイルを見る限り、#include されたファイルをすべて監視している模様。
+また、カスタム ビルド ツールでコンパイルすると、インクルードしたファイル内でコンパイル エラーが発生したとき、
+[エラー一覧] に該当行へのリンク情報が適切に作成されないが、
+HLSL コンパイラ ツールだと作成される。
+なかなか優秀。
+
+実行時コンパイルが使える場合、エフェクトのコンパイル時に確定していないといけない定数は、
+D3DX10CreateEffectFromFile() の第2引数あるいは D3DX10CompileFromFile() / D3DX11CompileFromFile() / D3DCompileFromFile() の第2引数を使って、
+D3D_SHADER_MACRO の配列により実行時に別途指定する（fxc.exe の /D オプションと同じ効果）。
+これにより、実行環境のハードウェア性能に合わせた定数値が使用できる。
+定数バッファを使ってシェーダー定数を実行時に書き換えるよりも効率が良くなることが期待できる。
+Crysis などの有名なゲームでも実行時コンパイルが使用されている。
+ただし Windows 8.0 ストア アプリでは D3DCompiler ランタイムが使用できないため、
+シェーダープログラムの実行時コンパイルはできない。
+デスクトップ アプリや Windows 8.1 では可能。
+
+Effects10 つまり DirectX 10 でも利用可能な xx_4_x, xx_4_0_level_9_x しか使用しないのであれば、Effects11 であっても technique10 を使用可能。
+technique11 が必須となるのは、DirectX 11 で追加された xx_5_0 あるいは cs_4_x を使用する場合。
+
+Visual Studio 2013 で .fx ファイルをコンパイルしようとすると、下記の警告メッセージが表示される。
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+このバージョンではかろうじてコンパイルすることはできるようだが、すでに fxc.exe /? で確認できるプロファイルからも
+fx_4_0 や fx_5_0 がなくなっている。将来的に新しいバージョンの HLSL シェーダーコンパイラではコンパイルもできなくなる可能性が高い。
+
+///////////////////////////////////////////////////////////////////////////////
+●コンピュート シェーダー関連：
+
+Visual Studio 2012 の Graphics Diagnostics ではコンピュート シェーダーのデバッグはサポートされていない。
+NVIDIA GPU の場合は Parallel Nsight が使えそうだが、デュアル GPU もしくはリモート デバッグが必須らしい。
+http://www.nvidia.co.jp/object/parallel-nsight-jp.html
+Visual Studio 2013 の GD ではコンピュート シェーダーもサポートされている。
+http://msdn.microsoft.com/ja-jp/library/hh873204.aspx
+
+SV_GroupThreadID は CUDA の threadIdx に相当する。つまりローカル スレッド ID。
+SV_GroupThreadID の最大値が numthreads 属性で指定する次元（CUDA blockDim）に相当する。つまりローカル スレッド グループ サイズ。
+SV_GroupID は CUDA の blockIdx に相当する。
+SV_GroupID の最大値が ID3D11DeviceContext::Dispatch() で指定する次元（CUDA gridDim）に相当する。
+シェーダーモデル 5.0 すなわち DirectX 11 世代の場合、
+Dispatch() メソッドのパラメータ ThreadGroupCountX, ThreadGroupCountY, ThreadGroupCountZ はそれぞれ 64k 未満である必要がある。
+http://msdn.microsoft.com/ja-jp/library/ee422447.aspx
+また、コンピュート シェーダーのカーネル関数の numthreads(X, Y, Z) 属性において、X * Y * Z <= 1024 である必要がある。
+ちなみに DirectX 10 世代では上限 768 となるが、MSDN 日本語版ヘルプでは2014年5月現在の時点で間違った数値 786 が記載されている。
+MSDN の日本語版にはほかにも致命的なミスが多数あるし、機械翻訳のまま放置されているコンテンツも多数あるので、信用しないほうがいい。
+オリジナルである英語版のほうを併せて読むべし。
+http://msdn.microsoft.com/en-us/library/ff471442.aspx
+http://msdn.microsoft.com/ja-jp/library/ee422317.aspx
+numthreads(1, 1, 1) は通例最も分かりやすいが最もパフォーマンスが出なくなるパターンなので、チューニングする際は注意する必要がある。
+CPU 側で Dispatch(DataCount, 1, 1) として起動する場合、
+ローカル グループ サイズ（1グループあたり、つまり 1 Multiprocessor あたりのスレッド数）として numthreads に (1, 1, 1) を指定する。
+最も理解しやすく、ホスト側で制御しやすいが、代わりにコンピュート シェーダーとしてのパフォーマンスは最も低い。
+groupshared を使ってキャッシングを行ない最適化する場合は、HLSL 側でローカル グループ サイズを指定・制御する必要がある。
+
+なお、OpenGL 4.3 Compute Shader における Dispatch() 相当機能は glDispatchCompute() で、numthreads 相当機能は
+layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
+のような感じだが、OpenGL 4.3 の GL_ARB_compute_variable_group_size 拡張がサポートされていれば、
+glDispatchComputeGroupSizeARB() 関数の引数によって、
+シェーダーにコンパイル時定数による固定値を書き込むことなく実行時に決定できる。
+その場合、スレッド並列性の制御はどちらかというと CUDA や OpenCL 仕様に近くなるように思われる（cf. clEnqueueNDRangeKernel() 関数）。
+DirectX には 11.2 でも GL_ARB_compute_variable_group_size 相当の機能はないらしい。
+NVIDIA CUDA では kernel_func<<<>>>() の引数にコンパイル時定数だけでなく動的な次元数も使えるが、
+当然ハードウェア アーキテクチャに起因する制約は存在する。
+ちなみに Compute Capability の不足などによって CUDA のカーネル実行が失敗したときは
+cudaGetLastError() と cudaGetErrorString() でエラー情報を取得できるらしい。
+しかし CUDA の gridDim, blockDim や、OpenCL の get_num_groups(), get_local_size() に相当するものが HLSL にないのは少しつらい。
+定数バッファなどを使って明示的に情報を渡すしかない。
+OpenGL のコンピュート シェーダーには gl_NumWorkGroups, gl_WorkGroupSize が存在する。
+
+UNDONE: 隣接ピクセル情報が必要なぼかし処理などのタイリングはどうする？
+隣接タイルとオーバーラップする部分をどのスレッドが読み込んで共有メモリにストアするのか、という問題がある。
+ローカル スレッド数に余裕はないけど共有メモリには余裕がある場合、1スレッドで複数ピクセル分の処理を担当し、
+タイル分割をなくす、などの対処が考えられる。
+「Efficient Compute Shader Programming」という AMD の資料で言及されている最適化手法を使えないか？
+ちなみに NVIDIA Fermi 世代においては、OpenCL や CUDA では最大数 1024 スレッドで実行するよりも、
+256 スレッドでタイリング処理したほうが高速になることがある。
+コンピュート シェーダーの場合は 1024 スレッドで実行したほうが若干効率がよい模様？　大差ない？
+3x3 程度のフィルターであっても、ピクセル シェーダーよりコンピュート シェーダーのほうが若干効率がよい？
+また、共有メモリを使わず、素直に直接テクスチャからロードするような処理にしたとしても、ピクセル シェーダーより高速になる模様。
+むしろ下手に共有メモリを使わないほうが高速？
+
+コンピュート シェーダーによるガウスぼかしの元ネタは下記。
+カーネル半径が 7 を超える場合、コンピュート シェーダーのほうが有利になるという傾向が報告されている。
+http://developer.amd.com/gpu_assets/Efficient%20Compute%20Shader%20Programming.pps
+http://developer.amd.com/gpu_assets/DirectCompute%20Accelerated%20Separable%20Filters.pps
+http://developer.amd.com/gpu_assets/Shader%20Model%205-0%20and%20Compute%20Shader.pps
+2013 年現在、スライドのアーカイブは下記に移動されている模様。
+http://developer.amd.com/wordpress/media/2012/10/Efficient%20Compute%20Shader%20Programming.pps
+http://developer.amd.com/wordpress/media/2012/10/DirectCompute%20Accelerated%20Separable%20Filters.pps
+http://developer.amd.com/wordpress/media/2012/10/Shader%20Model%205-0%20and%20Compute%20Shader.pps
+Intel もポスト エフェクトにおけるコンピュート シェーダーの優位性を紹介している。
+http://software.intel.com/en-us/articles/compute-shader-hdr-and-bloom

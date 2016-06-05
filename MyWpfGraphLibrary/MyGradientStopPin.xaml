@@ -1,0 +1,35 @@
+﻿<UserControl
+    x:Class="MyWpfGraphLibrary.MyGradientStopPin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" 
+    >
+    <Canvas UseLayoutRounding="True" SnapsToDevicePixels="True">
+        <!-- 接続部の形状を変える場合、StrokeLineJoin を指定する。 -->
+        <Polygon Name="tipTriangle" Canvas.Left="-6" Fill="White" Stroke="Black" StrokeThickness="1" StrokeLineJoin="Bevel">
+            <Polygon.Points>
+                <Point X="6" Y="0"></Point>
+                <Point X="12" Y="8"></Point>
+                <Point X="0" Y="8"></Point>
+            </Polygon.Points>
+        </Polygon>
+        <Polygon Name="baseRect" Canvas.Left="-6" Canvas.Top="8" Fill="Black" Stroke="Black" StrokeThickness="1">
+            <Polygon.Points>
+                <Point X="0" Y="0"></Point>
+                <Point X="12" Y="0"></Point>
+                <Point X="12" Y="12"></Point>
+                <Point X="0" Y="12"></Point>
+            </Polygon.Points>
+        </Polygon>
+        <Polygon Name="surfaceRect" Canvas.Left="-6" Canvas.Top="8" Fill="RoyalBlue" Stroke="LightGray" StrokeThickness="1">
+            <Polygon.Points>
+                <Point X="1" Y="1"></Point>
+                <Point X="11" Y="1"></Point>
+                <Point X="11" Y="11"></Point>
+                <Point X="1" Y="11"></Point>
+            </Polygon.Points>
+        </Polygon>
+    </Canvas>
+</UserControl>

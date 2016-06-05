@@ -1,0 +1,227 @@
+﻿プログラミングに関しての雑多なメモ。
+処理系や OS のバグに関しても記述しておく。
+キーワードがグローバル検索に引っかかるように、VS ソリューションもしくは VC++/VC# プロジェクトにファイルとして追加しておく。
+
+[★]
+Win7 のエクスプローラーのグラフィックバグなんだけど、左側のツリーと右側のリスト両方が
+アクティブ（半透明のライトブルー）になってるように見えることがある。
+F2 キーで右側のアイテムの名前を変えようとして左側のアイテムの名前変更開始になってしまうことがときどきある。
+
+[★]
+Process Explorer の最新版は Win7 でも GPU 使用率や VRAM 使用量が監視できるようになっている模様。
+グラフにマウスオーバーしたら GPU を使用していたプロセスの名前が分かるようになっている。
+Process Explorer 以外のアプリをすべて閉じた状態だと 64MB くらい VRAM を使用してる。
+これがだいたい OS の WDM によって予約されてる領域と見てもよさげ。
+あとはアプリの起動状況に応じて VRAM がどんどん使用されていく。
+
+CUDA プログラムに限らず、GPU プログラムのマシンコードは VRAM（グローバルメモリ領域）に置かれるはず。
+マルチ GPU 構成で分散処理する場合、それぞれのグローバル メモリにプログラムがコピーされるはず。
+テクスチャや頂点バッファ、RW 配列として使用できる領域はそれを除いた分のはず。
+
+GPU プログラムコード自体はたいしたサイズではなくても、実行中に確保されるローカル変数はレジスタにおさまりきらない場合
+ローカル メモリ（実質グローバル メモリ）にスワップされるので、
+そのあたりも考慮しておかないと本当に使用可能な領域というのは見積もれないはず。
+
+[★]
+ジェル シェーダー（スライム シェーダー）は下記を参考に作成できないか？
+http://developer.download.nvidia.com/SDK/10/direct3d/samples.html
+http://msdn.microsoft.com/ja-jp/library/bb172360.aspx
+メタボールのサンプルは DirectX SDK June 2010 には含まれていないので注意。
+
+Gem (宝石) シェーダーを適用するとスライムっぽく見えるらしい。
+https://www.assetstore.unity3d.com/en/#!/content/3
+
+GPU Gems 3 にはリアルタイム流体シミュレーションのサンプルがある。
+http://http.developer.nvidia.com/GPUGems3/gpugems3_ch30.html
+
+[★]
+ライトニング シェーダー（稲妻シェーダー）は下記を参考に作成できないか？
+http://www.dfx.co.jp/dftalk/?p=7690
+
+[★]
+もしディファード系のレンダリング テクニックを採用する場合、
+G-Buffer として法線・深度バッファを用意するほか、
+下記のセッションにて言及されているようにマテリアル ID バッファを用意する。
+ディフューズ バッファは用意しない。
+MSAA との相性も悪いので、SMAA を採用するなりして対処を考える必要がある。
+http://www.4gamer.net/games/032/G003263/20120929009/
+http://www.4gamer.net/games/032/G003263/20120827022/
+http://www.iryoku.com/smaa/
+
+[★]
+AMD による Forward+ のサンプルは下記。
+http://www.geeks3d.com/20130128/amd-supersample-anti-aliasing11-v1-0-and-forwardplus11-v1-0-direct3d-11-samples/
+
+[★]
+NVIDIA GPU 向けの SVOGI のサンプルは下記。
+http://www.geeks3d.com/20121214/voxel-cone-tracing-global-illumination-in-opengl-4-3/
+http://www.itmedia.co.jp/pcuser/articles/1208/02/news090.html
+
+[★]
+カスケード シャドウ、バリアンス シャドウに関する参考サイト。
+http://msdn.microsoft.com/ja-jp/library/ee416307.aspx
+http://msdn.microsoft.com/ja-jp/library/ee416324.aspx
+http://msdn.microsoft.com/en-us/library/windows/desktop/ee416307.aspx
+http://msdn.microsoft.com/en-us/library/windows/desktop/ee416324.aspx
+http://http.developer.nvidia.com/GPUGems3/gpugems3_ch10.html
+http://http.developer.nvidia.com/GPUGems3/gpugems3_ch08.html
+
+[★]
+DirectX SDK のカスケード シャドウ／バリアンス シャドウのサンプルでは、
+カスケードごとに描画キックを行なっているが、
+2D テクスチャ配列とジオメトリ シェーダーと SV_RenderTargetArrayIndex を使えば
+カスケード シャドウ マップ作成時の描画キック回数を減らせそう。
+これは Direct3D 10 のサンプルでダイナミック キューブマップの6面を1パスでレンダリングするのに使われている技術でもある。
+GPU Gems 3 では Parallel-Split Shadow Maps の実装にジオメトリ シェーダーをやはり使っている。
+http://http.developer.nvidia.com/GPUGems3/gpugems3_ch10.html
+http://msdn.microsoft.com/ja-jp/library/bb205128.aspx
+ジオメトリ シェーダーはシャドウ ボリュームをアクセラレートするのにも有効な技術。
+http://msdn.microsoft.com/ja-jp/library/bb172445.aspx
+http://zerogram.info/?p=975
+
+[★]
+ディファード レンダリングと多光源の影に関する論文が公開されている。
+・Efficient Virtual Shadow Maps for Many Lights
+http://www.cse.chalmers.se/~olaolss/main_frame.php?contents=publication&id=clustered_with_shadows
+
+[★]
+VTF を使って雪のエフェクトを加えるサンプルが旧 NVIDIA SDK に含まれている。
+ディスプレースメント マッピングではなさげ。
+http://developer.download.nvidia.com/SDK/9.5/Samples/samples.html
+
+[★]
+ゲームやアニメで廃墟のシーンによく使われるような、黒い破片がふわふわと宙に舞う、フレーク シェーダーを実装する。
+とりあえず上から降らせて、重力の影響を受けてゆっくりと落下させる？　地面に到達したらパーティクルの寿命が尽きる。
+適当な初速を与えておいて、あとはそれぞれの破片が不規則な自由運動（ブラウン運動）をする。
+まずはその場でランダムにゆっくり自転する三角形ポリゴンを多数描画するところから始める。
+位置および自転軸と回転量を与えるクォータニオンを姿勢情報として持たせる？
+映り込みはともかく、スペキュラー鏡面反射を定義するには両面ポリゴンが必要（裏表の法線が2つ）。
+頂点シェーダーに入力するのは片面のみのデータだが、視線方向を使って、ジオメトリ シェーダーにて視線と逆方向を向いている面は頂点定義を反転させるとか。
+頂点位置に関してはレンダリング ステートでカリングを切って両面レンダリングするようにすればいいが、法線は？
+あるいは破片の大きさを規格化してしまい、姿勢情報のみを入力し、頂点位置と法線はジオメトリ シェーダーで生成する、とか。
+
+[★]
+基本だが、視錐台に関するまとめスライド。分かりやすい図が使われている。
+特に7枚目の右手系／左手系の比較が重要。
+http://www.slideshare.net/todoroki/2-28983890
+
+[★]
+リソース スクリプトの DLGINIT に問題あり。Unicode 対応は不可能。多言語対応も厳しいらしい。やはり時代遅れ。
+https://connect.microsoft.com/VisualStudio/feedback/details/276957/the-resource-edior-in-mfc-applications-corrupts-non-ansi-text-in-combo-box
+http://www.tech-archive.net/Archive/VC/microsoft.public.vc.mfc/2007-09/msg00409.html
+http://social.msdn.microsoft.com/Forums/ja-JP/fa09ec19-0253-478b-849f-9ae2980a3251/unicode?forum=vcgeneralja
+
+[★]
+ドメイン シェーダーを用いたハイパー頂点という概念の導入により、
+頂点シェーダーより高負荷だがピクセル シェーダーより低負荷なシェーディングを実装するという興味深いアイディアもある。
+http://pc.watch.impress.co.jp/docs/column/kaigai/20101028_402814.html
+
+[★]
+Valve は Direct3D から OpenGL への移植を行なうため、
+togl という OpenGL による Direct3D 互換ラッパーを作ったらしい。
+短い HLSL シェーダーコードは、コンパイル→逆アセンブル→逆コンパイルで GLSL コードを自動生成して再利用したらしい？
+結果だけ見ると、Windows + Direct3D は API やドライバーのオーバーヘッドが大きく、
+逆に Linux + OpenGL はそれらのオーバーヘッドが小さいために性能が向上している、と見ることができる。
+これならば Mantle や DirectX 12 でオーバーヘッドを低減する方向に舵を切ったというのもうなずける。
+http://www.4gamer.net/games/107/G010729/20130322107/
+http://blogs.msdn.com/b/directx/archive/2014/08/13/directx-12-high-performance-and-high-power-savings.aspx
+
+[★]
+下記では DirectCompute のベンチマーク結果を使ってさまざまな GPU を比較している。
+ベンチマークの内容がいまいちよく分からない。
+http://www.videocardbenchmark.net/directCompute.html
+
+[★]
+LaTeX 互換の数式を HTML で表示する際、画像化してから表示する仕組みは Wikipedia などでも以前から取り入れられているが、
+MathJax という JavaScript を使った組版システムが存在する。これはかなりすごい。特に何も苦労せず高 DPI 対応できるのがよい。
+もとの LaTeX コマンド テキストを取得する機能も付いているらしい。
+はてなブログにも導入されている。
+http://auewe.hatenablog.com/entry/2013/12/01/062548
+http://auewe.hatenablog.com/entry/2014/05/10/050403
+
+[★]
+Direct2D や WPF では、PPAA（Per Primitive Anti-Aliasing）の適用されたサブピクセル レンダリングが行なわれる。
+http://msdn.microsoft.com/ja-jp/library/windows/desktop/dd756748.aspx
+従来のモニターにおいて、Direct2D や WPF で1ピクセル幅の直線・曲線を引こうと思った場合、アンチエイリアスを有効にしているとぼやける。色も薄くなる。
+アンチエイリアスを有効にする場合、線幅は最低でも2ピクセル幅以上にする。
+水平・垂直の直線しか描画しない場合は、アンチエイリアスを切ってもよい。
+Windows 8 の Modern Style が正方形・長方形のみで構成された直線的な UI 要素を基本にしているのも、
+こういったアンチエイリアスに絡む余計な問題を回避するためでもあると思われる。
+Direct2D や WPF はもともと高 DPI を意識して作られた API なので、
+従来の 2K 未満の環境でアンチエイリアスを有効にして1ピクセル幅の線を描画することは想定されていない設計らしい。
+http://msdn.microsoft.com/ja-jp/library/vstudio/aa970908%28v=vs.90%29.aspx
+非 Retina モニターでの iOS Core Graphics でも似たような現象が起こるらしい。
+http://qiita.com/takabosoft/items/95e1115475b349a7511b
+
+[★]
+以下、CUDA カーネル コードから HLSL へ GPGPU プログラムを移植する際に遭遇した問題に関して
+HLSL コンパイルエラーメッセージとともに言及する。
+[1]
+コンピュート シェーダーでは Texture1D/Texture2D/Texture3D.Sample() メソッドが使えず、
+SampleLevel() メソッドを使ってミップレベルを明示的に指定する必要があるが、
+動的な for ループ内で Sample() メソッドを使用しようとしたときなど、
+（原因特定につながりにくい）不可解なコンパイルエラーメッセージが出力されることがある。
+error X4014: cannot have gradient operations inside loops with divergent flow control.
+[2]
+HLSL では、GroupMemoryBarrierWithGroupSync() などの同期命令用関数を呼び出す前に、
+条件分岐による途中 return などのフロー制御を行なってはいけないらしい。
+error X4026: thread sync operation must be in non-varying flow control, due to a potential race condition this sync is illegal, consider adding a sync after reading any values controlling shader execution at this point.
+ちなみに CUDA では普通に __syncthreads() の前に途中 return を書ける。
+
+
+[★]
+Windows ストア アプリではリモート スクリプト（外部スクリプト）の使用を許可していない。
+ユーザーが後からダウンロードしたスクリプトを使って、アプリのロジックを書き換えるような、いわゆる MOD は禁止ということ。
+その代わり、アプリのインストール時に読み取り専用のスクリプト ファイルを同時にインストールするという形であれば OK のはず。
+http://msdn.microsoft.com/ja-jp/library/windows/apps/hh694083.aspx
+
+
+[★]
+もし FBX SDK 経由で取得した文字列中にマルチバイト文字が含まれる場合、それは ANSI ではなく UTF-8 エンコーディング。
+http://download.autodesk.com/us/fbx/20112/FBX_SDK_HELP/index.html?url=WS1a9193826455f5ff-150b16da11960d83164-68ff.htm,topicNumber=d0e7925
+したがって、安易に MFC/ATL の CString/CStringA/CStringW でそのまま扱わないほうがいい。
+Windows で UTF-8 を扱う場合は、必ず MultiByteToWideChar() を使った UTF-16 への明示的変換を経由する必要がある。
+昔の FBX SDK には KFBX_UTF8_to_WIDECHAR や KFBX_WIDECHAR_to_UTF8 といったマクロが用意されていたらしいが、
+FBX SDK 2014.2 などでは同等機能が見つからない？
+ちなみに CStringA は Windows CP-932 Shift_JIS などの ANSI マルチバイトを扱うためのデータ型であり、UTF-8 は扱えない。
+MBCS 文字列関連の CRT 関数（_ismbcdigit(), _makepath() など）も同様。
+CStringW に用意されている、const char* からの暗黙変換機能は ANSI マルチバイトに対するものであり、UTF-8 は自動変換できない。
+さらに CStringA や MBCS CRT 関数は Windows ストア アプリ開発には使えない。
+なお、std::string 自体はエンコードに依存せず、ANSI/UTF-8 両方に対応可能。
+その代わりリーディング バイト・トレーリング バイトを考慮しないので、部分文字列検索や置換などは不可。
+Windows 上で文字列の検索や置換などを行なう場合、素直にネイティブ エンコーディングである UTF-16 を使ったほうが便利。
+なお、Visual Studio のビジュアル デバッガは ANSI マルチバイトもしくは UTF-16LE ワイド文字にしか対応していない。UTF-8 は不可。
+他 OS への移植性も考慮すると、ファイル読み込み後のデータ保持などには std::string でなく std::wstring を使っておくのが無難。
+ちなみに Android や iOS の Unicode は UTF-16 で、Linux や Mac OS の Unicode は UTF-32 となっている。
+
+
+[★]
+特定のボーンにばね・質量・重力・慣性力などを考慮した運動方程式ベースのシミュレーションを行ない、
+髪・胸・スカートなどの揺れ物を実装する。
+メッシュ頂点に対するシミュレーションではなく、ボーンに対するシミュレーション。
+衝突判定も行なう。不可視の Collider を仕込んでおく。
+コライダー設定されたすべての球もしくはカプセルとの交差判定。ブルートフォース。交差していればギリギリの接触位置まで移動。まず親ボーンから計算。
+拘束条件も考慮する。髪の根元のボーンは頭の動きに追従する。
+http://blog.livedoor.jp/take_z_ultima/archives/51482621.html
+http://tsubakit1.hateblo.jp/entry/2014/11/08/233000
+http://www.4gamer.net/games/105/G010549/20100903012/
+揺れのないオリジナルの静的ボーンアニメーションと、シミュレーションによる揺れをどうブレンドするかが課題。
+揺れの根元までが静的アニメーションと静的ブレンドの対象で、その先はシミュレーションのみ？
+揺れ物にするかどうかのフラグを各ボーンに設定する必要がある。
+慣性力、ばねの復元力、減衰力、重力の釣り合い。
+アニメーションミキサーはボーンの数と同じだけ用意しているので、位置と速度はアニメーションミキサーに保存しておける？
+速度の変化すなわち加速度が慣性力の計算に必要なため、速度の保存も必要。
+親子関係以外で、左右の連結情報（拘束条件）はどう保存する？
+拘束条件と質量、ばね定数（ヤング率、弾性係数）はシリアライズ対象。
+
+
+[★]
+Windows 8以降であれば、デスクトップアプリからもWinRT APIを使うことはできるが、
+C++/CXやC#/VB.NETでユーザーが作成したカスタムWindowsランタイムコンポーネントを使用することはできないらしい。
+WPFなどのデスクトップアプリから使おうとすると、TypeLoadExceptionが発生してしまう。
+C#/VB.NETであればポータブルライブラリという方法もあるが、ポータブルライブラリで使用可能な機能には制約がある。
+結論として、Windowsランタイムコンポーネントとして作成したプロジェクトは、WinRTでしか再利用できない。
+もしC++で書いたコードをC#/VB.NETから利用したいのであれば、
+デスクトップ用にはC++/CLIでマネージコードとしてラップする、ストアアプリ用にはC++/CXでWinRTコードとしてラップする、
+といった使い分けが必要そう。ラッパーの基本構造コードは共通化して、プリプロセッサーでC++/CLIとC++/CXを使い分けるとよいかも。
+http://answers.flyppdevportal.com/categories/metro/csharpvb.aspx?ID=73a6b511-0181-4032-8f72-6bd1f24e45fd

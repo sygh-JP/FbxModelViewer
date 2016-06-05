@@ -1,0 +1,393 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_Src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="_Header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="_Res">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="MyD3D">
+      <UniqueIdentifier>{93eb0553-776b-468a-8f00-225cd557891d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyDX">
+      <UniqueIdentifier>{4f77166a-4a6e-4817-84a5-54b0ad7c70c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyFbx">
+      <UniqueIdentifier>{ccbb7b7f-8329-4aba-a8ae-97bd2ccaf288}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyHLSL">
+      <UniqueIdentifier>{5059e388-9bb1-4fb7-9086-2abaec45af33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyUtils">
+      <UniqueIdentifier>{0c9d5126-7976-4fd8-b00f-fab514285cf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyApp">
+      <UniqueIdentifier>{61bd8dd5-c3a4-4cd9-a34a-0d86d11acd18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PublicInclude">
+      <UniqueIdentifier>{b2aa9a27-3d8c-4283-83e0-4e3062080330}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DDSTextureLoader">
+      <UniqueIdentifier>{230c9eb7-1bf6-4860-baed-b5122f537aad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyMisc">
+      <UniqueIdentifier>{655c8978-8184-4888-bb65-1077950aff2d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+    <Text Include="DDSTextureLoader\dummy.txt">
+      <Filter>DDSTextureLoader</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedUtility.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="MyD3D\MyD3DDynamicFontRects.hpp">
+      <Filter>MyD3D</Filter>
+    </ClInclude>
+    <ClInclude Include="MyD3D\MyD3DVertexLayout.hpp">
+      <Filter>MyD3D</Filter>
+    </ClInclude>
+    <ClInclude Include="MyD3D\MyD3D.h">
+      <Filter>MyD3D</Filter>
+    </ClInclude>
+    <ClInclude Include="MyD3D\MyD3DCubeMap.h">
+      <Filter>MyD3D</Filter>
+    </ClInclude>
+    <ClInclude Include="MyD3D\MyD3DFonTex.h">
+      <Filter>MyD3D</Filter>
+    </ClInclude>
+    <ClInclude Include="MyD3D\MyD3DMesh.h">
+      <Filter>MyD3D</Filter>
+    </ClInclude>
+    <ClInclude Include="MyDX\DirectXHelper.h">
+      <Filter>MyDX</Filter>
+    </ClInclude>
+    <ClInclude Include="MyDX\dxerr.h">
+      <Filter>MyDX</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\CustomTrace.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyBasicVertexTypes.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyCascadedShadowHelpers.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyConstantBufferPacks.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyCustomVertexTypes.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyMath.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyMathConsts.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyMathTypes.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyStopwatch.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyTextureHelper.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyUtilTypes.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyBoneMatrixPalettePack.h">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyCommon.h">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyTrackball.h">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyUIAnimCenter.h">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyUIProjectileAnim.h">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyUtil.h">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugNew.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="MyApp\MyAppCommonConsts.hpp">
+      <Filter>MyApp</Filter>
+    </ClInclude>
+    <ClInclude Include="MyApp\MyAppSettings.hpp">
+      <Filter>MyApp</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbx\MyFbxNodeAnaXml.hpp">
+      <Filter>MyFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbx\MyFbxVMeshBuilder.hpp">
+      <Filter>MyFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbx\FbxAnimTimeInfo.h">
+      <Filter>MyFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbx\FbxLayerAnalyzer.h">
+      <Filter>MyFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbx\FbxMaterialAnalyzer.h">
+      <Filter>MyFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbx\FbxMeshAnalyzer.h">
+      <Filter>MyFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbx\FbxNodeAnalyzerBase.h">
+      <Filter>MyFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbx\FbxSkeletonAnalyzer.h">
+      <Filter>MyFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbx\FbxSkinAnalyzer.h">
+      <Filter>MyFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbx\FbxUVAnalyzer.h">
+      <Filter>MyFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbx\MyFbx.h">
+      <Filter>MyFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbx\VertexSeparator.h">
+      <Filter>MyFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="MyUtils\MyDesktopHelpers.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="PublicInclude\DebugNew.h">
+      <Filter>PublicInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="PublicInclude\ImportMsXml.hpp">
+      <Filter>PublicInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="PublicInclude\MeshIF.hpp">
+      <Filter>PublicInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="PublicInclude\MyFbxLinkLibDesc.hpp">
+      <Filter>PublicInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="PublicInclude\SuppressWarning.hpp">
+      <Filter>PublicInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="PublicInclude\ForPCHeader.hpp">
+      <Filter>PublicInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="MyDX\MyDWriteWrapper.hpp">
+      <Filter>MyDX</Filter>
+    </ClInclude>
+    <ClInclude Include="MyDX\GdiTextRenderer.h">
+      <Filter>MyDX</Filter>
+    </ClInclude>
+    <ClInclude Include="MyDX\MyDDSHelper.h">
+      <Filter>MyDX</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMisc\MyXmlProc.hpp">
+      <Filter>MyMisc</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMisc\GdiPlusUtility.h">
+      <Filter>MyMisc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedUtility.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="MyD3D\MyD3D.cpp">
+      <Filter>MyD3D</Filter>
+    </ClCompile>
+    <ClCompile Include="MyD3D\MyD3DCubeMap.cpp">
+      <Filter>MyD3D</Filter>
+    </ClCompile>
+    <ClCompile Include="MyD3D\MyD3DDynamicFontRects.cpp">
+      <Filter>MyD3D</Filter>
+    </ClCompile>
+    <ClCompile Include="MyD3D\MyD3DFonTex.cpp">
+      <Filter>MyD3D</Filter>
+    </ClCompile>
+    <ClCompile Include="MyD3D\MyD3DMesh.cpp">
+      <Filter>MyD3D</Filter>
+    </ClCompile>
+    <ClCompile Include="MyDX\dxerr.cpp">
+      <Filter>MyDX</Filter>
+    </ClCompile>
+    <ClCompile Include="MyUtils\MyCascadedShadowHelpers.cpp">
+      <Filter>MyUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="MyUtils\MyCommon.cpp">
+      <Filter>MyUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="MyUtils\MyMath.cpp">
+      <Filter>MyUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="MyUtils\MyTrackball.cpp">
+      <Filter>MyUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="MyUtils\MyUIAnimCenter.cpp">
+      <Filter>MyUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="MyUtils\MyUIProjectileAnim.cpp">
+      <Filter>MyUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="MyUtils\MyUtil.cpp">
+      <Filter>MyUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="MyApp\MyAppSettings.cpp">
+      <Filter>MyApp</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFbx\FbxAnimTimeInfo.cpp">
+      <Filter>MyFbx</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFbx\FbxLayerAnalyzer.cpp">
+      <Filter>MyFbx</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFbx\FbxMaterialAnalyzer.cpp">
+      <Filter>MyFbx</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFbx\FbxMeshAnalyzer.cpp">
+      <Filter>MyFbx</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFbx\FbxNodeAnalyzerBase.cpp">
+      <Filter>MyFbx</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFbx\FbxSkeletonAnalyzer.cpp">
+      <Filter>MyFbx</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFbx\FbxSkinAnalyzer.cpp">
+      <Filter>MyFbx</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFbx\FbxUVAnalyzer.cpp">
+      <Filter>MyFbx</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFbx\MyFbx.cpp">
+      <Filter>MyFbx</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFbx\MyFbxNodeAnaXml.cpp">
+      <Filter>MyFbx</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFbx\MyFbxVMeshBuilder.cpp">
+      <Filter>MyFbx</Filter>
+    </ClCompile>
+    <ClCompile Include="MyDX\GdiTextRenderer.cpp">
+      <Filter>MyDX</Filter>
+    </ClCompile>
+    <ClCompile Include="MyDX\MyDWriteWrapper.cpp">
+      <Filter>MyDX</Filter>
+    </ClCompile>
+    <ClCompile Include="MyDX\DDSTextureLoader_Proxy.cpp">
+      <Filter>MyDX</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMisc\MyXmlProc.cpp">
+      <Filter>MyMisc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MyHLSL\BilinearFilter.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\CommonConst.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\CommonDefs.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\CommonFuncs.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\DiffuseSpecularFunc.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\GaussianBlurFunc.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\GaussianBlurFuncCS.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\GaussianWeights.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\MovingAverageFilter.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\MovingAverageFilterCS.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\MsaaAlgTemplates.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\MyAdaptiveTess.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\MyConstantBuffers.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\MyRenderStates.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\MyTexSamplers.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\RandomNumHelper.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\ShadowSampling.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+    <None Include="MyHLSL\Skinning.hlsli">
+      <Filter>MyHLSL</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="MyHLSL\MyComputeShaders.fx">
+      <Filter>MyHLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="MyHLSL\MyScreenShaders.fx">
+      <Filter>MyHLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="MyHLSL\MyShaders.fx">
+      <Filter>MyHLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="MyHLSL\MyShadowRender.fx">
+      <Filter>MyHLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="MyHLSL\psMainLighting.hlsl">
+      <Filter>MyHLSL</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="MyHLSL\VSInOutStruct.hlsli">
+      <Filter>MyHLSL</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

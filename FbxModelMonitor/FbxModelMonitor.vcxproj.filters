@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_Src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="_Header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="_Res">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="MyMfcCtrls">
+      <UniqueIdentifier>{546f146c-7bff-4d74-b443-7a655cb6d6cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyMfcUtils">
+      <UniqueIdentifier>{cdd6f671-003d-4887-a717-5a272005f9ce}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ClassView.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModelMonitor.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModelMonitorDoc.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModelMonitorView.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="FileView.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertiesWnd.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewTree.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="_LinkLibDesc.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputWnd.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxNodeTree.cpp">
+      <Filter>_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMfcCtrls\AutoFileExtUpdateDlg.cpp">
+      <Filter>MyMfcCtrls</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMfcCtrls\CustomPGProperty.cpp">
+      <Filter>MyMfcCtrls</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMfcCtrls\MyComplexPGProps.cpp">
+      <Filter>MyMfcCtrls</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMfcCtrls\MySplitterWnd.cpp">
+      <Filter>MyMfcCtrls</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMfcUtils\MyMfcHelpers.cpp">
+      <Filter>MyMfcUtils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ClassView.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModelMonitor.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModelMonitorDoc.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModelMonitorView.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="FileView.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertiesWnd.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewTree.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugNew.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputWnd.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="UserDefWinMsg.hpp">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxNodeTree.h">
+      <Filter>_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMfcCtrls\AutoFileExtUpdateDlg.h">
+      <Filter>MyMfcCtrls</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMfcCtrls\CustomPGProperty.h">
+      <Filter>MyMfcCtrls</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMfcCtrls\MyComplexPGProps.h">
+      <Filter>MyMfcCtrls</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMfcCtrls\MySplitterWnd.h">
+      <Filter>MyMfcCtrls</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMfcUtils\MfcLocalizeHelper.hpp">
+      <Filter>MyMfcUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMfcUtils\MyMfcHelpers.hpp">
+      <Filter>MyMfcUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMfcUtils\GdiPlusForMfc.h">
+      <Filter>MyMfcUtils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\buttons.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\class_view.ico">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\class_view_hc.ico">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\classview.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\classview_hc.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\explorer.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\explorer_hc.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\FbxModelMonitor.ico">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\FbxModelMonitor.rc2">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\FbxModelMonitorDoc.ico">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\file_view.ico">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\file_view_hc.ico">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\filelarge.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\filesmall.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\fileview.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\fileview_hc.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\info.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\main.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\menuimages.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\menuimages_hc.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\properties.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\properties_hc.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\properties_wnd.ico">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\properties_wnd_hc.ico">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\sort.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\sort_hc.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\Toolbar.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\Toolbar256.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\writelarge.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\writesmall.bmp">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="ReadMe.txt" />
+    <None Include="res\ribbon1.mfcribbon-ms">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\qwp_ribbon_player_large.png">
+      <Filter>_Res</Filter>
+    </None>
+    <None Include="res\qwp_ribbon_player_small.png">
+      <Filter>_Res</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FbxModelMonitor.rc">
+      <Filter>_Res</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\output_wnd.ico">
+      <Filter>_Res</Filter>
+    </Image>
+    <Image Include="res\output_wnd_hc.ico">
+      <Filter>_Res</Filter>
+    </Image>
+    <Image Include="res\log_pane_toolbar.bmp">
+      <Filter>_Res</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

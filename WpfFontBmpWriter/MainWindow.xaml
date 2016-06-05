@@ -1,0 +1,89 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:WpfFontBmpWriter"
+    xmlns:metro="http://schemas.codeplex.com/elysium"
+    xmlns:params="http://schemas.codeplex.com/elysium/params"
+    x:Class="WpfFontBmpWriter.MainWindow"
+    Title="WPF Font Bitmap Writer"
+    x:Name="mainWindow"
+    WindowStartupLocation="CenterScreen"
+    Width="600"
+    Height="400"
+    Background="#303030"
+    Loaded="mainWindow_Loaded"
+    Icon="res/Generic_Application.ico"
+    >
+    <Window.Resources>
+        <ItemsPanelTemplate x:Key="ItemsPanelTemplateVirtualizingStackPanel">
+            <VirtualizingStackPanel/>
+        </ItemsPanelTemplate>
+    </Window.Resources>
+    <DockPanel>
+        <Grid DockPanel.Dock="Top" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="2"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Style="{StaticResource ResourceKey=MyWhiteLabelStyle}">Width:</Label>
+            <Label Grid.Row="2" Style="{StaticResource ResourceKey=MyWhiteLabelStyle}">Height:</Label>
+            <ComboBox Grid.Row="0" Grid.Column="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                      IsEditable="True" Name="comboImageWidth"
+                      Text="{Binding ElementName=fontImageView1, Path=Width, Mode=OneWay}"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                      IsEditable="True" Name="comboImageHeight"
+                      Text="{Binding ElementName=fontImageView1, Path=Height, Mode=OneWay}"/>
+        </Grid>
+        <DockPanel DockPanel.Dock="Top" Margin="10">
+            <Image Source="res\font.ico" Width="24" Height="24"/>
+            <Label VerticalAlignment="Center" Style="{StaticResource ResourceKey=MyWhiteLabelStyle}" Content="フォント:"/>
+            <ComboBox
+				x:Name="comboFonts"
+				MinWidth="300" MaxWidth="300" MinHeight="36"
+                Margin="4,0"
+				IsEditable="True"
+				VerticalAlignment="Center"
+				VerticalContentAlignment="Center"
+				ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}"
+				ItemsPanel="{DynamicResource ItemsPanelTemplateVirtualizingStackPanel}"
+                >
+                <!-- VirtualizingStackPanel を適用しないと、初回表示の応答性が悪くなる。 -->
+                <!-- コンボボックス自体のフォントは変えない（記号系だとフォント フェイス名が分からなくなることもある）。 -->
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Name="innerTextBlock" FontFamily="{Binding .}" Text="{Binding Source}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button HorizontalAlignment="Left" x:Name="buttonRefresh" Click="buttonRefresh_Click">
+                <DockPanel>
+                    <Image Source="res\RefreshArrow_Blue.ico" Width="24" Height="24"/>
+                    <Label Content="更新"/>
+                </DockPanel>
+            </Button>
+            <Button DockPanel.Dock="Right" HorizontalAlignment="Right" x:Name="buttonSave" Click="buttonSave_Click">
+                <DockPanel>
+                    <Image Source="res\FloppyDisk.ico" Width="24" Height="24"/>
+                    <Label Content="保存"/>
+                </DockPanel>
+            </Button>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <TextBlock VerticalAlignment="Center" Style="{StaticResource ResourceKey=MyWhiteTextBlockStyle}" TextWrapping="Wrap"
+                   Text="※イタリック体を指定する場合は &quot;Italic&quot; を、ボールド体を指定する場合は &quot;Bold&quot; をフォント名に付加してください。"/>
+        </DockPanel>
+        <Border BorderBrush="Gray" BorderThickness="1" UseLayoutRounding="True">
+            <!-- SnapsToDevicePixels では解決できない画像のボケを UseLayoutRounding で解消する。 -->
+            <Viewbox StretchDirection="DownOnly">
+                <Border BorderBrush="Gray" BorderThickness="1">
+                    <local:FontImageView x:Name="fontImageView1"/>
+                </Border>
+            </Viewbox>
+        </Border>
+    </DockPanel>
+</Window>

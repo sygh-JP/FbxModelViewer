@@ -1,0 +1,57 @@
+﻿Visual Studioの[カスタム ビルド ツール]でGLSLからSPIR-Vを生成するとき、たとえば下記のように[コマンド ライン]の項目を設定する。
+
+echo Now compiling GLSL source file to SPIR-V...
+"$(VK_SDK_PATH)\Bin32\glslangValidator.exe" -V "%(Identity)" -o "$(OutDir)VKShaders\%(Filename).spv"
+
+[出力ファイル]には「$(OutDir)VKShaders\%(Filename).spv」を指定する。
+例として "VKShaders" サブフォルダーを挟んでいるが、このフォルダーはVisual Studioが勝手に生成してくれるので便利。
+なお、glslangValidatorはBOM付きUTF-8を扱えないので注意。BOMなしのUTF-8もしくはASCIIを使う必要がある。
+
+GLSLは標準で #include ディレクティブをサポートしないが、Google拡張とARB拡張は存在する模様。
+
+#extension GL_GOOGLE_include_directive : enable
+#extension GL_ARB_shading_language_include: enable
+
+しかしVulkan SDK 1.0.13.0付属のglslangValidatorでGoogle拡張を有効にしても、実際に #include を使えるようにはならなかった。
+ARB拡張に至っては有効にすることすらできない模様。これのどこがリファレンスコンパイラーなのか……
+
+なお、Googleは glslc と呼ばれるシェーダーコンパイラーを開発して公開している模様。SPIR-Vにも対応しているらしい。
+試してはいないが、こちらは #include が使えるものと思われる。
+https://github.com/google/shaderc/tree/master/glslc
+
+ちなみにGoogleのGLSLコンパイラー実装では、
+#extension GL_GOOGLE_cpp_style_line_directive : enable
+のようにして拡張を有効にすると、
+#line 1 "test.frag"
+のように #line ディレクティブの第2引数に数値ではなく文字列を使えるようになるらしい。
+この機能はVulkan SDK 1.0.13.0付属のglslangValidatorでも使える模様。
+
+また、#version 400 - #version 450 を指定したシェーダーをコンパイルすると、下記のような警告が出る。
+
+Warning, version 450 is not yet complete; most version-specific features are present, but some are missing.
+
+要するにまだGLSL 4.xすなわちOpenGL 4.xの相当機能を完全に実装しきれていないらしい。
+#version 330 であれば警告は出ない。しかしこれではOpenGL 4.xアプリケーションを満足に移植できない可能性がある。なんとも情けない……
+OpenGL 4.0で標準化されたシェーダーサブルーチン（HLSLでいう動的シェーダーリンク）など、
+本質的にVulkanの仕様と相反する機能であれば使うことができないのも分かるが、Vulkanと互換性のあるGLSL機能までも
+実装しきれていないのはダメすぎる。こんなていたらくではだれも移植を始めてくれないだろ……
+
+ちなみにVulkan SDK 1.0.13.0付属のglslangValidatorでは、-D オプションを付けることで、なんとHLSLが使えるようになる模様。
+確かSDK 1.0.5.0では -D オプションはまだ存在していなかったように思われる。
+
+たとえば下記のような最小のHLSLピクセルシェーダーは、普通にコンパイルが通ることを確認。
+Direct3D 10以降のシステム値セマンティクスも使えるようなので、
+おそらくDirect3D 11およびシェーダーモデル5.0相当の機能は使えるものと思われる。
+
+float4 main() : SV_Target0
+{
+	return float4(0,0,0,0);
+}
+
+ただしソースファイルの拡張子は、GLSLと同様のルールに従う必要がある（*.vert, *.frag など）。
+また、#include も使えない模様。結局ただの劣化移植。fxc.exe の代替にはなれない。
+
+総論としては、やはりVulkanはSDKやドライバーを含めてまだまだ未成熟な模様。
+実績および開発のしやすさでは、Direct3D 11/12とHLSLに軍配が上がるのは火を見るより明らか。
+今後に期待したい。あとC++バインディングがほしい。
+

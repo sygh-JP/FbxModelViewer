@@ -1,0 +1,35 @@
+﻿Visual C++ 2008/2010/2012/2013/2015 では、VC# や VB.NET と違って、
+.NET Framework のターゲット バージョンを変更するための UI が存在しない。
+（2015 には[構成プロパティ]→[全般]→[.NET Framework 対象バージョン]が存在するが、読み取り専用）
+
+VC 2008 では既定で 3.5、2010/2012 では既定で 4.0 になっているが、
+例えば VC 2012 で 4.5 のアセンブリを参照しようとすると、warning MSB3274 が発生する。
+これを回避するためには、.vcxproj ファイルを直接編集する必要がある。
+具体的には、下記の TargetFrameworkVersion タグを編集する。
+つまり、
+<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+を
+<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+と修正する。
+
+もし TargetFrameworkVersion タグが存在しなければ、
+適当なグローバル プロパティ グループに入れるとよいらしい。
+
+<PropertyGroup Label="Globals">
+  <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  ...
+</PropertyGroup>
+
+なお、値を v2.0 にすると .NET 2.0 をターゲットにできるが、
+VC 2010/2012 の C++/CLI で .NET 2.0/3.0/3.5 を使う場合、
+仲介のための VC 2008 ランタイムが必要となるらしく、VS 2008 のインストールが別途必要らしい。
+また、その場合 IDE が 2012 でも VC 2008 コンパイラ（v90 プラットフォーム ツールセット）が
+使われることになるので注意。
+アプリケーションの再配布時にも .NET 以外に VC 2008 ランタイムが必要となる。
+
+なお、Visual C++ 2015 用のプロジェクトにアップグレードすると、
+自動的に "v4.5" から "v4.5.2" に変換される模様。
+
+ほかにも、VC 2012 以降では Windows XP 向けにビルドする際、プラットフォーム ツールセットを変更する必要があるが、
+Windows SDK 8.0 以降は使えず、Windows SDK 7.1 が別途必要となる。
+古いターゲットはさっさと捨てるのが吉。

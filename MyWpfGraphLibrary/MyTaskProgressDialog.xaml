@@ -1,0 +1,28 @@
+﻿<Window
+    x:Class="MyWpfGraphLibrary.MyTaskProgressDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="MyTaskProgressDialog"
+    Width="500"
+    Height="250"
+    WindowStyle="SingleBorderWindow"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterOwner"
+    >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+        <Rectangle Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="3" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+        <ProgressBar Grid.Row="0" Grid.Column="1" Height="20" IsIndeterminate="True"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="Stop" HorizontalAlignment="Center" Width="100" IsDefault="True" Name="buttonStop"/>
+    </Grid>
+</Window>
