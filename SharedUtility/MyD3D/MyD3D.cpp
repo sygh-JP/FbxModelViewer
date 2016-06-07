@@ -3898,6 +3898,7 @@ namespace MyD3D
 		this->UpdateEffectMatrices();
 
 #pragma region // シャドウマップを描画する。//
+		// HACK: ON/OFF できるようにする。
 		if (true)
 		{
 			ClearRtvSrvUavSlots(pDeviceContext);
@@ -4025,6 +4026,7 @@ namespace MyD3D
 			this->DrawPrimitive(m_effectTechs.TechRenderCoordAxisLines, 6U);
 		}
 
+		// HACK: ON/OFF できるようにする。
 		if (true)
 		{
 			// デバイスに頂点レイアウトをセット。
@@ -4037,6 +4039,7 @@ namespace MyD3D
 			this->DrawPrimitive(m_effectTechs.TechRenderLightDirLine, 1U);
 		}
 
+		if (false)
 		{
 			// デバイスに頂点レイアウトをセット。
 			pDeviceContext->IASetInputLayout(m_pInputLayoutPCNT.Get());
@@ -4535,7 +4538,8 @@ namespace MyD3D
 
 #pragma endregion
 
-#pragma region // シャドウマップのテスト描画。//
+#pragma region // シャドウマップのテスト描画。スクリーンにオーバーレイする。//
+		// HACK: ON/OFF できるようにする。
 		if (true)
 		{
 			{

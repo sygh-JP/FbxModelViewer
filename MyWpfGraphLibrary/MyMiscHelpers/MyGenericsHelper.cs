@@ -71,6 +71,28 @@ namespace MyMiscHelpers
 			return (obj != null) ? obj.ToString() : "null";
 		}
 
+		public static T AssignNewIfNull<T>(T obj)
+			where T : new()
+		{
+			if (obj == null)
+			{
+				return new T();
+			}
+			else
+			{
+				return obj;
+			}
+		}
+
+		public static void AssignNewIfNull<T>(ref T obj)
+			where T : new()
+		{
+			if (obj == null)
+			{
+				obj = new T();
+			}
+		}
+
 		public static string GetMemberName<T>(System.Linq.Expressions.Expression<Func<T>> e)
 		{
 			var memberExp = (System.Linq.Expressions.MemberExpression)e.Body;
@@ -131,6 +153,9 @@ namespace MyMiscHelpers
 		}
 	}
 
+	// Dictionary/Set は、XmlSerializer では直接 XML にシリアライズできない。
+	// DataContractSerializer を使うか、List/Array を経由する。
+
 	public class MyObjectSerializationHelper
 	{
 		/// <summary>
@@ -174,10 +199,13 @@ namespace MyMiscHelpers
 			var serializer = new DataContractSerializer(typeof(T));
 			var settings = new XmlWriterSettings();
 			settings.Encoding = new System.Text.UTF8Encoding(true);
+			settings.Indent = true;
 			using (var stream = File.Open(filename, FileMode.Create, FileAccess.Write, FileShare.Read))
 			{
-				var xw = XmlWriter.Create(stream, settings);
-				serializer.WriteObject(xw, srcObject);
+				using (var xw = XmlWriter.Create(stream, settings))
+				{
+					serializer.WriteObject(xw, srcObject);
+				}
 			}
 		}
 
@@ -186,8 +214,10 @@ namespace MyMiscHelpers
 			var serializer = new DataContractSerializer(typeof(T));
 			using (var stream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
-				var xr = XmlReader.Create(stream);
-				return (T)serializer.ReadObject(xr);
+				using (var xr = XmlReader.Create(stream))
+				{
+					return (T)serializer.ReadObject(xr);
+				}
 			}
 		}
 
