@@ -2573,6 +2573,7 @@ namespace MyD3D
 		// Direct3D 11 デバイスの初期化。
 		// BGRA サポートのチェックは Direct3D リソースとの相互運用を Direct2D で実現するために必要。
 		// Direct2D がサポートする DXGI フォーマット自体は BGRA 以外に RGBA もある。
+		// Windows 10 で D3D11_CREATE_DEVICE_DEBUG を使うには、グラフィックス ツールのインストール（有効化）が必要になるので注意。
 #ifdef _DEBUG
 		const UINT devCreationFlag = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #else

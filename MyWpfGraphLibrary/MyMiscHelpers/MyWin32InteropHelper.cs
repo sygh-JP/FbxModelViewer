@@ -88,8 +88,8 @@ namespace MyMiscHelpers
 		/// <summary>
 		/// 指定した Visual 要素を、ビットマップにレンダリングして返す。
 		/// </summary>
-		/// <param name="outputImageWidth">出力画像の幅 [pixel]。ゼロ以下を指定すると、Visual 要素の ActualWidth から自動取得する。</param>
-		/// <param name="outputImageHeight">出力画像の高さ [pixel]。ゼロ以下を指定すると、Visual 要素の ActualHeight から自動取得する。</param>
+		/// <param name="outputImageWidth">出力画像の幅 [pixels]。ゼロ以下を指定すると、Visual 要素の ActualWidth から自動取得する。</param>
+		/// <param name="outputImageHeight">出力画像の高さ [pixels]。ゼロ以下を指定すると、Visual 要素の ActualHeight から自動取得する。</param>
 		/// <param name="dpiX">水平方向の解像度 DPI。ゼロ以下を指定すると、ディスプレイ設定から自動取得する。</param>
 		/// <param name="dpiY">垂直方向の解像度 DPI。ゼロ以下を指定すると、ディスプレイ設定から自動取得する。</param>
 		/// <param name="visualToRender"></param>
@@ -653,6 +653,11 @@ namespace MyMiscHelpers
 			return User32DllMethodsInvoker.GetDesktopWindow();
 		}
 
+		static System.Windows.Int32Rect ToInt32Rect(this Win32Commons.RECT rect)
+		{
+			return new System.Windows.Int32Rect(rect.left, rect.top, rect.Width, rect.Height);
+		}
+
 		public static System.Windows.Int32Rect GetWindowRect(IntPtr hwnd)
 		{
 			var tempRect = new Win32Commons.RECT();
@@ -928,6 +933,8 @@ namespace MyMiscHelpers
 	{
 		public event Action PreMinimized;
 		//public event Action PreMaximized;
+
+		// HACK: 物理ピクセルではなく論理ピクセルを指定できるようにする。
 
 		public int MinWindowWidth { get; set; }
 		public int MinWindowHeight { get; set; }

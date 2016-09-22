@@ -31,18 +31,21 @@
 // SDK バージョン 2014 の頃までは、Kaydara 由来のシンボル名の廃止・変更や大幅な API 仕様変更が頻繁に行なわれていた。
 
 
-// DirectX Graphics, Direct3D 11
+// DirectX Graphics
 //#include <dxgi.h>
 //#include <dxgi1_2.h> // DXGI 1.2: Windows 8, Windows 7 Platform Update
 #include <dxgi1_3.h> // DXGI 1.3: Windows 8.1
+//#include <dxgi1_4.h> // DXGI 1.4: Windows 10
+
+// Direct3D 11
 //#include <d3d11.h>
 //#include <d3d11_1.h> // Direct3D 11.1: Windows 8, Windows 7 Platform Update
 #include <d3d11_2.h> // Direct3D 11.2: Windows 8.1
 // --> Windows 8.1 では D3D 11.2 が使えるようになる。ただし無印の Windows 8 にはバックポートされない。Windows 7 でも使えない。
+//#include <d3d11_3.h> // Direct3D 11.3: Windows 10
+
 //#include <d3dx11.h>
-// D3DX11 のすべてが必要なわけではないが、
 // 個別に <d3dx11async.h> や <d3dx11tex.h> をインクルードしても、結局 <d3dx11.h> をインクルードすることになる模様。
-// D3DX11SaveTextureToFile() を DirectXTex で置き換えれば、D3DX は不要になる。
 #include <d3dx11effect.h> // DX SDK June 2010, C++ Samples の Effects11 を改変したもの。
 
 // Direct2D

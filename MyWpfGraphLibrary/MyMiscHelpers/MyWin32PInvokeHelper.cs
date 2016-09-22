@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Threading;
+//using System.Windows.Threading;
 
-// unsafe キーワードを使ってポインタ経由でメモリを直接操作するメソッドを定義する場合、アプリケーション アセンブリとは切り離す。
+// もし unsafe キーワードを使ってポインタ経由でメモリを直接操作するメソッドを定義する場合、アプリケーション アセンブリとは切り離す。
 
 // フラグ系 enum の内部型は uint などの符号なし型を指定するのがセオリー。
 
 // P/Invoke はヘルパーアセンブリ内のみで使用し、より高レベルなラッパーのみ外部公開するようにするため、すべて internal にしようと思ったが、
 // やはり直接呼び出せるようにしたほうがよい場面もあるので public にしている。
 
+// WinRT にも流用できるようにするため、このソースファイルでは WPF や WinForms 固有の機能には依存しないようにする。
+// とはいえ、WinRT では GDI は一切使えないが……
 
 namespace MyMiscHelpers
 {
@@ -26,13 +28,15 @@ namespace MyMiscHelpers
 			public Int32 right;
 			public Int32 bottom;
 
+			/// <summary>
+			/// MFC の CRect::Width() 同様、負になりうる。
+			/// </summary>
 			public int Width { get { return this.right - this.left; } }
-			public int Height { get { return this.bottom - this.top; } }
 
-			public System.Windows.Int32Rect ToInt32Rect()
-			{
-				return new System.Windows.Int32Rect(this.left, this.top, this.Width, this.Height);
-			}
+			/// <summary>
+			/// MFC の CRect::Height() 同様、負になりうる。
+			/// </summary>
+			public int Height { get { return this.bottom - this.top; } }
 
 			/// <summary>
 			/// MFC の CRect::NormalizeRect() 同様。
@@ -345,6 +349,18 @@ namespace MyMiscHelpers
 			GW_ENABLEDPOPUP = 6,
 		}
 
+		public enum WinMsgSizingOption : int
+		{
+			WMSZ_LEFT = 1,
+			WMSZ_RIGHT = 2,
+			WMSZ_TOP = 3,
+			WMSZ_TOPLEFT = 4,
+			WMSZ_TOPRIGHT = 5,
+			WMSZ_BOTTOM = 6,
+			WMSZ_BOTTOMLEFT = 7,
+			WMSZ_BOTTOMRIGHT = 8,
+		}
+
 		public enum MonitorFlagType : uint
 		{
 			MONITOR_DEFAULTTONULL = 0,
@@ -504,7 +520,7 @@ namespace MyMiscHelpers
 		// Win32 ではマクロ実装で GetWindowLong() / SetWindowLong() に置き換わるだけなのでエントリーポイントを取得できないことに注意。
 		// P/Invoke は基本的に遅延バインディングなので、extern 対象の DLL に関数エントリーポイントが存在していなくても実際に呼び出さなければ問題ない。
 		// ただし内部的には GetProcAddress() を使ってエントリーポイントを検索する処理が毎回走っている可能性があるので、
-		// C/C++ で直接呼び出す場合と比べてオーバーヘッドがあるものと思われる。
+		// C/C++ でコンパイル時にアーリーバインドして直接呼び出す場合と比べてオーバーヘッドがあるものと思われる。
 		// なお、ウィンドウ スタイル系フラグは 32bit 範囲分しか使われていないので、Win32/Win64 で呼び出しを切り替える必要はない。
 		// 64bit 版で Ptr 系を使う状況というのは、ポインタ値をウィンドウにバインドする必要があるときのみ。
 
@@ -693,11 +709,13 @@ namespace MyMiscHelpers
 	public static class Kernel32DllMethodsInvoker
 	{
 		// NOTE: GetLastError() に関しては、System.Runtime.InteropServices.Marshal.GetLastWin32Error() が用意されている。
+		// System.ComponentModel.Win32Exception と組み合わせると便利。
 
 		[System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true)]
 		public static extern bool CloseHandle(IntPtr hObject);
 
-		// System.Runtime.InteropServices.Marshal.Copy() ではサポートされない。
+		// System.Runtime.InteropServices.Marshal.Copy() では、IntPtr 同士を経由したブロックコピーはサポートされない。
+		// プリミティブ型配列同士のバイト単位コピーであれば、System.Buffer.BlockCopy() を使うという方法もある。
 
 		[System.Runtime.InteropServices.DllImport("kernel32.dll")]
 		public static extern void CopyMemory(IntPtr dst, IntPtr src, IntPtr size);
@@ -705,6 +723,7 @@ namespace MyMiscHelpers
 		[System.Runtime.InteropServices.DllImport("Kernel32.dll", EntryPoint = "RtlZeroMemory")]
 		public static extern void ZeroMemory(IntPtr dest, IntPtr size);
 
+		// Vista 以降。
 		[System.Runtime.InteropServices.DllImport("kernel32.dll")]
 		public static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, [System.Runtime.InteropServices.Out] StringBuilder lpExeName, ref int lpdwSize);
 	}

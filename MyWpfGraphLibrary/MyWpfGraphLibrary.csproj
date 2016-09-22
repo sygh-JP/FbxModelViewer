@@ -95,6 +95,7 @@
       <DependentUpon>MyGradientStopPin.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MyMiscHelpers\MyBindingHelper.cs" />
     <Compile Include="MyMiscHelpers\MyGenericsHelper.cs" />
     <Page Include="MyTaskProgressDialog.xaml">
       <SubType>Designer</SubType>
@@ -104,7 +105,6 @@
   <ItemGroup>
     <Compile Include="MyMiscHelpers\MyWin32InteropHelper.cs" />
     <Compile Include="MyMiscHelpers\MyWin32PInvokeHelper.cs" />
-    <Compile Include="MyMiscHelpers\MyWpfBindingHelper.cs" />
     <Compile Include="MyTaskProgressDialog.xaml.cs">
       <DependentUpon>MyTaskProgressDialog.xaml</DependentUpon>
     </Compile>
