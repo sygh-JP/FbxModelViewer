@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Threading;
+//using System.Windows;
+//using System.Windows.Threading;
 
 // System.Windows 配下のクラスはすべて WPF 関連のものであることに注意。WinForms や WinRT とは別物で、類似性はあるが互換性はない。
 // System.Windows.Threading 名前空間は WindowsBase アセンブリに属する。
@@ -57,10 +57,10 @@ namespace MyMiscHelpers
 		/// </summary>
 		public static void DoEvents()
 		{
-			var frame = new DispatcherFrame();
-			var callback = new DispatcherOperationCallback(obj => { ((DispatcherFrame)obj).Continue = false; return null; });
-			Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, callback, frame);
-			Dispatcher.PushFrame(frame);
+			var frame = new System.Windows.Threading.DispatcherFrame();
+			var callback = new System.Windows.Threading.DispatcherOperationCallback(obj => { ((System.Windows.Threading.DispatcherFrame)obj).Continue = false; return null; });
+			System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, callback, frame);
+			System.Windows.Threading.Dispatcher.PushFrame(frame);
 		}
 
 		private static Action EmptyMethod = () => { };
@@ -71,7 +71,16 @@ namespace MyMiscHelpers
 		/// <param name="uiElement"></param>
 		public static void Refresh(System.Windows.UIElement uiElement)
 		{
-			uiElement.Dispatcher.Invoke(DispatcherPriority.Render, EmptyMethod);
+			uiElement.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Render, EmptyMethod);
+		}
+
+		public static void InvokeShutdownCurrentThreadDispatcher()
+		{
+			var dsp = System.Windows.Threading.Dispatcher.FromThread(System.Threading.Thread.CurrentThread);
+			if (dsp != null)
+			{
+				dsp.InvokeShutdown();
+			}
 		}
 	}
 
