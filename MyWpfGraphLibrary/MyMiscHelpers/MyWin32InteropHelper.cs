@@ -41,13 +41,82 @@ namespace MyMiscHelpers
 		}
 	}
 
-	// intsafe.h もしくは minwindef.h から移植。
+#if false
+	[Obsolete]
 	public static class MyBitHelper
 	{
 		public static uint LoWord(IntPtr ptr) { return ((uint)ptr) & 0xffff; }
 		public static uint HiWord(IntPtr ptr) { return (((uint)ptr) >> 16) & 0xffff; }
 		public static uint LoWord(UIntPtr ptr) { return ((uint)ptr) & 0xffff; }
 		public static uint HiWord(UIntPtr ptr) { return (((uint)ptr) >> 16) & 0xffff; }
+	}
+#endif
+
+	public static class MyBitOpHelper
+	{
+		#region // intsafe.h もしくは minwindef.h から移植。オリジナルは C/C++ マクロ。
+		// C# デフォルトでは HiWord(), HiByte() の計算にマスク演算は不要で、キャストだけでも十分だが、
+		// オーバーフローをチェックする設定の場合でも無視できるようにする。
+
+		public static ushort LoWord(int val) { return LoWord((uint)val); }
+		public static ushort HiWord(int val) { return HiWord((uint)val); }
+		public static ushort LoWord(uint val) { return (ushort)(val & 0xffff); }
+		public static ushort HiWord(uint val) { return (ushort)((val >> 16) & 0xffff); }
+
+		public static ushort LoWord(IntPtr ptr) { return LoWord((uint)ptr); }
+		public static ushort HiWord(IntPtr ptr) { return HiWord((uint)ptr); }
+		public static ushort LoWord(UIntPtr ptr) { return LoWord((uint)ptr); }
+		public static ushort HiWord(UIntPtr ptr) { return HiWord((uint)ptr); }
+
+		public static byte LoByte(short val) { return LoByte((ushort)val); }
+		public static byte HiByte(short val) { return HiByte((ushort)val); }
+		public static byte LoByte(ushort val) { return (byte)(val & 0xff); }
+		public static byte HiByte(ushort val) { return (byte)((val >> 8) & 0xff); }
+		#endregion
+
+		#region // 2進数かつ先頭ゼロ埋めで文字列化。
+		// ulong, uint, ushort, sbyte は基数を受け取るオーバーロードがない。
+
+		public static string ConvertToBinaryDigitsString(byte val, int totalWidth)
+		{
+			return Convert.ToString(val, 2).PadLeft(totalWidth, '0');
+		}
+
+		public static string ConvertToBinaryDigitsString(short val, int totalWidth)
+		{
+			return Convert.ToString(val, 2).PadLeft(totalWidth, '0');
+		}
+
+		public static string ConvertToBinaryDigitsString(int val, int totalWidth)
+		{
+			return Convert.ToString(val, 2).PadLeft(totalWidth, '0');
+		}
+
+		public static string ConvertToBinaryDigitsString(long val, int totalWidth)
+		{
+			return Convert.ToString(val, 2).PadLeft(totalWidth, '0');
+		}
+
+		public static string ConvertToBinaryDigitsString(sbyte val, int totalWidth)
+		{
+			return ConvertToBinaryDigitsString((byte)val, totalWidth);
+		}
+
+		public static string ConvertToBinaryDigitsString(ushort val, int totalWidth)
+		{
+			return ConvertToBinaryDigitsString((short)val, totalWidth);
+		}
+
+		public static string ConvertToBinaryDigitsString(uint val, int totalWidth)
+		{
+			return ConvertToBinaryDigitsString((int)val, totalWidth);
+		}
+
+		public static string ConvertToBinaryDigitsString(ulong val, int totalWidth)
+		{
+			return ConvertToBinaryDigitsString((long)val, totalWidth);
+		}
+		#endregion
 	}
 
 	public static class MyThreadHelper
@@ -74,6 +143,20 @@ namespace MyMiscHelpers
 			uiElement.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Render, EmptyMethod);
 		}
 
+		// 明示的に作成した System.Threading.Thread すなわち
+		// サブスレッドで DispatcherObject を生成するとメモリ リークする、とのことだが、
+		// UIElement などだけでなく、WriteableBitmap を作成して Freeze() するだけの場合でも同様らしい。
+		// （WriteableBitmap も DispatcherObject 派生）
+		// http://grabacr.net/archives/1851
+		// ただし、BackgroundWorker や、async/await によるスレッドプールを利用すれば、少なくともメモリ リークは発生しない模様。
+		// BitmapDecoder.Create() をサブスレッドで呼び出すとリークする、という現象も同様の原理。
+		// （BitmapDecoder も DispatcherObject 派生）
+		// http://sssoftware.main.jp/csharp/tips/bitmap_decoder_resource_leak.html
+		// VC++ で CRT ライブラリを利用する場合に Win32 API の CreateThread() 関数の使用が推奨されないのと似たようなもの？
+		// RegisterClassEx() の挙動が気になるので、
+		// BackgroundWorker や async/await を使う場合でも、念のため Dispatcher は明示的にシャットダウンしたほうがよさげではある。
+		// http://b.starwing.net/?p=142
+
 		public static void InvokeShutdownCurrentThreadDispatcher()
 		{
 			var dsp = System.Windows.Threading.Dispatcher.FromThread(System.Threading.Thread.CurrentThread);
@@ -81,6 +164,12 @@ namespace MyMiscHelpers
 			{
 				dsp.InvokeShutdown();
 			}
+		}
+
+		public static void ShutdownCurrentDispatcher()
+		{
+			System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvokeShutdown(System.Windows.Threading.DispatcherPriority.SystemIdle);
+			System.Windows.Threading.Dispatcher.Run();
 		}
 	}
 

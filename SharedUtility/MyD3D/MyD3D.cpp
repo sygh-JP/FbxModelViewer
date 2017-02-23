@@ -2573,7 +2573,11 @@ namespace MyD3D
 		// Direct3D 11 デバイスの初期化。
 		// BGRA サポートのチェックは Direct3D リソースとの相互運用を Direct2D で実現するために必要。
 		// Direct2D がサポートする DXGI フォーマット自体は BGRA 以外に RGBA もある。
-		// Windows 10 で D3D11_CREATE_DEVICE_DEBUG を使うには、グラフィックス ツールのインストール（有効化）が必要になるので注意。
+		// Windows 10 で D3D11_CREATE_DEVICE_DEBUG を使うには、グラフィックス ツール (Graphics Tools) のインストール（有効化）が必要になるので注意。
+		// 同ツールをインストールしていないと、デバイス作成時に 0x887a002d すなわち DXGI_ERROR_SDK_COMPONENT_MISSING が返却される。
+		// また、バージョン 1511 → 1607 にアップデートすると、同ツールが勝手にアンインストール（無効化）された状態になる模様。
+		// アップデート後は再度インストールする必要がある。
+
 #ifdef _DEBUG
 		const UINT devCreationFlag = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #else
@@ -2632,16 +2636,16 @@ namespace MyD3D
 			&featureLevel,
 			m_pD3DImmediateContext.ReleaseAndGetAddressOf());
 #endif
+		if (FAILED(hr))
+		{
+			DXTRACE_ERR(_T("Failed to create D3D device!!"), hr);
+			return false;
+		}
+
 		ATLTRACE(__FILE__"(%d): Max Feature Level = 0x%08x\n", __LINE__, featureLevel);
 		if (featureLevel < D3D_FEATURE_LEVEL_11_0)
 		{
 			DXTRACE_ERR(_T("H/W does not support Direct3D 11.0!!"), hr);
-			return false;
-		}
-
-		if (FAILED(hr))
-		{
-			DXTRACE_ERR(_T("Failed to create D3D device!!"), hr);
 			return false;
 		}
 

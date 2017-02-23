@@ -112,7 +112,7 @@ namespace Misc
 			const LPCWSTR PostfixStrChs = L"CHS";
 			const LPCWSTR PostfixStrCht = L"CHT";
 
-			//! @brief  NxLanguageResType に対応した言語 DLL ポストフィックス文字列のテーブル。<br>
+			//! @brief  LanguageResType に対応した言語 DLL ポストフィックス文字列のテーブル。<br>
 			const LPCWSTR PostfixStringsTable[LanguageResType_All] =
 			{
 				PostfixStrNeutral,
@@ -158,7 +158,7 @@ namespace Misc
 
 			const LPCWSTR CultureNameStrNeutral = CultureNameStr_en_US;
 
-			//! @brief  NxLanguageResType に対応したカルチャー名文字列のテーブル。<br>
+			//! @brief  LanguageResType に対応したカルチャー名文字列のテーブル。<br>
 			const LPCWSTR CultureNameStringsTable[LanguageResType_All] =
 			{
 				CultureNameStrNeutral,
@@ -293,7 +293,7 @@ namespace Misc
 			//! @brief  存在するすべての言語リソース DLL をロードする。<br>
 			void LoadAllLanguageResDlls(LPCTSTR pBaseAppName)
 			{
-				//ATLASSERT(!m_hResInstances[NxLanguageResType_Jpn]);
+				//ATLASSERT(!m_hResInstances[LanguageResType_Jpn]);
 
 				// EXE と同じ階層に言語リソース {AppName}???.dll を配置しておくと、MFC のサテライト DLL 機構によって
 				// 自動的に OS 言語環境に応じた DLL がロードされるようになるが、
@@ -302,7 +302,7 @@ namespace Misc
 				// AfxLoadLibrary() + AfxSetResourceHandle() を使用する。
 				CString strDllPathName;
 				// サブ ディレクトリ名は .NET のカルチャ名に準じる。
-				for (int i = LanguageResType_Jpn; i < LanguageResType_All; ++i)
+				for (int i = LanguageResType_Neutral + 1; i < LanguageResType_All; ++i)
 				{
 					//if (!m_hResInstances[i])
 					{
