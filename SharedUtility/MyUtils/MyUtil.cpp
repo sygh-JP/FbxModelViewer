@@ -13,16 +13,19 @@ namespace MyUtil
 		// 念のためクリアしておく。
 		buffer.clear();
 
-		// ARM64 はとりあえず対象外。
-//#ifdef WIN64
-#ifdef _M_X64
+		// _stat64i32, _wstat64i32 は (2GB-1B) までのファイルしか正常に扱えない。2GB 以上のファイルに対しては _stat64, _wstat64 を使う。
+		// 64bit ビルドの判定は _WIN64 でもよさそう。
+		// https://msdn.microsoft.com/en-us/library/b0084kay.aspx
+		// ちなみに x86 や ARM では _WIN64 は定義されないが、x64 と ARM64 では _WIN64 と _WIN32 の両方が定義されるので注意。
+#if defined(_M_X64) || defined(_M_ARM64)
 		struct _stat64 fileStats = {};
 		const auto getFileStatFunc = _wstat64;
-#else
+#elif defined(_M_IX86) || defined(_M_ARM)
 		struct _stat64i32 fileStats = {};
 		const auto getFileStatFunc = _wstat64i32;
+#else
+#error Not supported platform!!
 #endif
-		// _stat64i32 は (2GB-1B) までのファイルしか正常に扱えない。2GB 以上のファイルに対しては _stat64 を使う。
 
 		// ファイル サイズが取得できない、もしくはサイズが負だった場合は false を返す。
 		if (getFileStatFunc(pFileName, &fileStats) != 0 || fileStats.st_size < 0)

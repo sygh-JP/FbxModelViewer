@@ -132,6 +132,23 @@ namespace MyMiscHelpers
 		{
 			return srcData.ToDictionary(item => item.Key, item => item.Value.ToList());
 		}
+
+		public static TEnum GetUnionOfAllKnownFlagsInEnum<TEnum>()
+			where TEnum : struct
+		{
+			// C# では型制約に enum が使えない。[Flags] つまり FlagsAttribute が指定されているかどうかも制約できない。
+			// 少々邪道だが、dynamic を使って回避。ただし実行時に動的に解決することになるので、パフォーマンスに劣る。
+			// 起動時に1回だけ実行する、などの運用に限定すること。
+			// F# だと静的に書けそう。
+			dynamic outVal = default(TEnum);
+			// TEnum が enum でない場合は Enum.GetValues() で例外がスローされる。
+			foreach (TEnum x in Enum.GetValues(typeof(TEnum)))
+			{
+				// FlagsAttribute が指定されていることが前提。
+				outVal |= x;
+			}
+			return outVal;
+		}
 	}
 
 

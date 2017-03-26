@@ -82,7 +82,7 @@
 #include <SimpleMath.h>
 
 // 以前のバージョンの DirectXTex は、Windows Vista/7 で利用する場合には CreateFile2() API まわりの関係で
-// _WIN32_WINNT=0x0600/_WIN32_WINNT=0x0601 を明示的に定義する必要があったらしいが、現在（2013/08/13 版）はデフォルトで定義されている。
+// _WIN32_WINNT=0x0600/_WIN32_WINNT=0x0601 を明示的に定義する必要があったらしいが、現在（2013-08-13 版）はデフォルトで定義されている。
 // ただし DirectXTex スタティック ライブラリのビルドに含まれない DDSTextureLoader などの補助クラスをコンパイルするときは注意が必要。
 #include <DirectXTex.h>
 
