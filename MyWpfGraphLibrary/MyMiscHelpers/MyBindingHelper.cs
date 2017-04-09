@@ -88,7 +88,7 @@ namespace MyBindingHelpers
 	// System.Windows.Input.ICommand は WPF だけでなく、WinRT や Silverlight でも使える模様。
 	// https://msdn.microsoft.com/ja-jp/library/hh563947(v=vs.110).aspx
 
-	public class DelegateCommand : System.Windows.Input.ICommand
+	public class MyDelegateCommand : System.Windows.Input.ICommand
 	{
 		public event Action<object> ExecuteHandler;
 		public event Func<object, bool> CanExecuteHandler;
@@ -101,7 +101,7 @@ namespace MyBindingHelpers
 		/// <param name="parameter"></param>
 		public void Execute(object parameter)
 		{
-			var handler = ExecuteHandler;
+			var handler = this.ExecuteHandler;
 			if (handler != null)
 			{
 				handler(parameter);
@@ -115,13 +115,14 @@ namespace MyBindingHelpers
 		/// <returns></returns>
 		public bool CanExecute(object parameter)
 		{
-			var handler = CanExecuteHandler;
+			var handler = this.CanExecuteHandler;
 			if (handler != null)
 			{
 				return handler(parameter);
 			}
 			else
 			{
+				// デリゲートがひとつも割り当てられていない場合は、既定で有効とする。
 				return true;
 			}
 		}
@@ -131,7 +132,7 @@ namespace MyBindingHelpers
 		/// </summary>
 		public void RaiseCanExecuteChanged()
 		{
-			CanExecuteChanged(this, null);
+			this.CanExecuteChanged(this, null);
 		}
 	}
 
