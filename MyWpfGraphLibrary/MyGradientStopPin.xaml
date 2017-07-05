@@ -6,9 +6,33 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     mc:Ignorable="d" 
     >
+    <UserControl.Style>
+        <Style TargetType="UserControl">
+            <Style.Setters>
+                <Setter Property="Opacity" Value="1.0"/>
+            </Style.Setters>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=PreDeletion}" Value="True">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
     <Canvas UseLayoutRounding="True" SnapsToDevicePixels="True">
         <!-- 接続部の形状を変える場合、StrokeLineJoin を指定する。 -->
-        <Polygon Name="tipTriangle" Canvas.Left="-6" Fill="White" Stroke="Black" StrokeThickness="1" StrokeLineJoin="Bevel">
+        <Polygon Name="tipTriangle" Canvas.Left="-6" Stroke="Black" StrokeThickness="1" StrokeLineJoin="Bevel">
+            <Polygon.Style>
+                <Style TargetType="Polygon">
+                    <Style.Setters>
+                        <Setter Property="Fill" Value="White"/>
+                    </Style.Setters>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=IsSelected}" Value="True">
+                            <Setter Property="Fill" Value="Black"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Polygon.Style>
             <Polygon.Points>
                 <Point X="6" Y="0"></Point>
                 <Point X="12" Y="8"></Point>
@@ -23,7 +47,10 @@
                 <Point X="0" Y="12"></Point>
             </Polygon.Points>
         </Polygon>
-        <Polygon Name="surfaceRect" Canvas.Left="-6" Canvas.Top="8" Fill="RoyalBlue" Stroke="LightGray" StrokeThickness="1">
+        <Polygon Name="surfaceRect" Canvas.Left="-6" Canvas.Top="8" Stroke="LightGray" StrokeThickness="1">
+            <Polygon.Fill>
+                <SolidColorBrush Color="{Binding Path=Color}"/>
+            </Polygon.Fill>
             <Polygon.Points>
                 <Point X="1" Y="1"></Point>
                 <Point X="11" Y="1"></Point>

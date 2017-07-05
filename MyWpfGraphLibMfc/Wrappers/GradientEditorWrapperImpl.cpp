@@ -236,26 +236,26 @@ namespace
 			System::Diagnostics::Debug::Assert(m_isWpfCtrlInitialized);
 			//System::Diagnostics::Debug::Assert(false, L"Not Implemented!!");
 			const int size = int(inArray.size());
-			auto pinArray = gcnew array<MyWpfGraphLibrary::MyGradientStopPin^>(size);
+			auto vmArray = gcnew array<MyWpfGraphLibrary::ViewModels::MyGradientStopViewModel^>(size);
 			for (int i = 0; i < size; ++i)
 			{
-				pinArray[i] = gcnew MyWpfGraphLibrary::MyGradientStopPin();
+				auto vm = gcnew MyWpfGraphLibrary::ViewModels::MyGradientStopViewModel();
 				COLORREF color = inArray[i].Color;
-				pinArray[i]->SetSurfaceColorAndGradientOffset(
-					System::Windows::Media::Color::FromRgb(
+				vm->Color = System::Windows::Media::Color::FromRgb(
 					GetRValue(color),
 					GetGValue(color),
-					GetBValue(color)),
-					inArray[i].Offset);
+					GetBValue(color));
+				vm->Offset = inArray[i].Offset;
+				vmArray[i] = vm;
 			}
-			m_gchWpfUserCtrl->SetGradientColorStopPinsArray(pinArray);
+			m_gchWpfUserCtrl->SetGradientColorStopPinsArray(vmArray);
 		}
 
 		virtual void GetGradientColorStops(TGradientColorParamsArray& outArray) const override
 		{
 			System::Diagnostics::Debug::Assert(m_isWpfCtrlInitialized);
 			outArray.clear();
-			auto pinArray = m_gchWpfUserCtrl->GetGradientColorStopPinsArray();
+			auto vmArray = m_gchWpfUserCtrl->GetGradientColorStopPinsArray();
 
 			//for (auto pin : pinArray) {}
 			// --> C++11 の range-based for loop だが、C++/CLI のマネージ型には使えない。
@@ -280,12 +280,12 @@ namespace
 			// http://d.hatena.ne.jp/faith_and_brave/20080514/1210755507
 			// http://connect.microsoft.com/VisualStudio/feedback/details/375614/native-c-for-each-unable-to-enumerate-a-map-with-another-stl-container-as-its-value-type
 
-			for each (auto pin in pinArray)
+			for each (auto vm in vmArray)
 			{
-				System::Diagnostics::Debug::Assert(pin != nullptr);
-				auto color = pin->AssociatedGradientStop->Color;
+				System::Diagnostics::Debug::Assert(vm != nullptr);
+				auto color = vm->Color;
 				outArray.push_back(GradientColorParams(
-					pin->AssociatedGradientStop->Offset,
+					vm->Offset,
 					RGB(color.R, color.G, color.B)
 					));
 			}

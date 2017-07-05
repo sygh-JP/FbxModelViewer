@@ -8,6 +8,21 @@
     mc:Ignorable="d" 
     Background="White"
     >
+    <UserControl.Resources>
+        <local:MultiplyDouble2Converter x:Key="MultiplyDouble2Converter"/>
+        <DataTemplate x:Key="GradientStopDataTemplateKey">
+            <Canvas Width="{Binding ElementName=colorStopArea, Path=Width}">
+                <local:MyGradientStopPin MouseLeftButtonDown="MyGradientStopPin_MouseLeftButtonDown" MouseLeftButtonUp="MyGradientStopPin_MouseLeftButtonUp" MouseDoubleClick="MyGradientStopPin_MouseDoubleClick">
+                    <Canvas.Left>
+                        <MultiBinding Converter="{StaticResource MultiplyDouble2Converter}">
+                            <Binding ElementName="colorStopArea" Path="Width"/>
+                            <Binding Path="Offset"/>
+                        </MultiBinding>
+                    </Canvas.Left>
+                </local:MyGradientStopPin>
+            </Canvas>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,11 +31,10 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Canvas Grid.Row="1" Name="opacityStopArea"
-                Width="{Binding ElementName=borderGradient, Path=Width}" Height="30" Background="Transparent"/>
+        <Canvas Grid.Row="1" Name="opacityStopArea" Width="{Binding ElementName=borderGradient, Path=Width}" Height="30" Background="Transparent"/>
         <Border Grid.Row="2" Name="borderGradient" Width="400" Height="40" BorderBrush="Black" BorderThickness="1" UseLayoutRounding="True" SnapsToDevicePixels="True">
             <Border.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                <LinearGradientBrush x:Name="gradientBrush" StartPoint="0,0" EndPoint="1,0">
                     <!-- GradientStops コレクション内の順序は問わず、Offset の昇順にグラデーションが自動作成されるらしい。 -->
                     <GradientStop Color="Red" Offset="0.0"/>
                     <GradientStop Color="Yellow" Offset="0.25"/>
@@ -30,19 +44,15 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-        <!-- Background の既定値は Transparent ではなく null（{x:Null}）なので、マウスやタッチのイベントを拾えない。 -->
-        <Canvas Grid.Row="3" Name="colorStopArea"
-                Width="{Binding ElementName=borderGradient, Path=Width}"
-                Height="30"
-                Background="Transparent"
-                MouseLeftButtonDown="colorStopArea_MouseLeftButtonDown"
-                MouseLeftButtonUp="colorStopArea_MouseLeftButtonUp"
-                MouseMove="colorStopArea_MouseMove"
-                MouseLeave="colorStopArea_MouseLeave">
-            <local:MyGradientStopPin
-                Canvas.Left="100"
-                />
-        </Canvas>
+        <!-- Background の既定値は Transparent ではなく {x:Null} すなわち null なので、マウスやタッチのイベントを拾えない。 -->
+        <!-- ItemsControl は IsSynchronizedWithCurrentItem を持たない。System.Windows.Controls.Primitives.Selector のプロパティ。ListBox は Selector 派生。ListView は ListBox 派生。 -->
+        <ItemsControl Grid.Row="3" Width="{Binding ElementName=borderGradient, Path=Width}" Height="30" Background="Transparent" ItemTemplate="{StaticResource GradientStopDataTemplateKey}" x:Name="colorStopArea" ItemsSource="{Binding}" MouseLeftButtonDown="colorStopArea_MouseLeftButtonDown" MouseLeftButtonUp="colorStopArea_MouseLeftButtonUp" MouseMove="colorStopArea_MouseMove" MouseLeave="colorStopArea_MouseLeave">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
         <GroupBox Grid.Row="4" Header="Stops">
             <Grid>
                 <Grid.RowDefinitions>
@@ -62,24 +72,22 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Row="0" Grid.Column="0" Content="Opacity:" HorizontalAlignment="Left"/>
-                <Label Grid.Row="0" Grid.Column="3" Content="Location:" HorizontalAlignment="Left"/>
-                <TextBox Grid.Row="0" Grid.Column="4" Name="textboxCurrentOpacityLocation"
-                         InputMethod.IsInputMethodSuspended="True"
-                         HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Text="50"/>
+                <Label Grid.Row="0" Grid.Column="3" Content="Offset:" HorizontalAlignment="Left"/>
+                <TextBox Grid.Row="0" Grid.Column="4" Name="textboxCurrentOpacityOffsetPercent" InputMethod.IsInputMethodSuspended="True" TextAlignment="Right" VerticalContentAlignment="Center" Text="50" IsEnabled="False"/>
                 <Label Grid.Row="0" Grid.Column="5" Content="%"/>
-                <Button Grid.Row="0" Grid.Column="8" Content="Delete opacity" Padding="10,0"/>
+                <Button Grid.Row="0" Grid.Column="8" Content="Delete Opacity" Padding="10,0" Name="buttonDeleteOpacityStop" IsEnabled="False"/>
                 <Label Grid.Row="2" Grid.Column="0" Content="Color:" HorizontalAlignment="Left"/>
-                <Border Grid.Row="2" Grid.Column="1" Name="borderColorPalette" BorderBrush="Black" BorderThickness="1" Background="White"
-                        MouseLeftButtonDown="borderColorPalette_MouseLeftButtonDown"/>
-                <Label Grid.Row="2" Grid.Column="3" Content="Location:" HorizontalAlignment="Left"/>
-                <TextBox Grid.Row="2" Grid.Column="4" Name="textboxCurrentColorLocation"
-                         InputMethod.IsInputMethodSuspended="True"
-                         HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
-                         Text="{Binding Path=CurrentColorLocation, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=0.0}"/>
+                <Border Grid.Row="2" Grid.Column="1" Name="borderColorPalette" BorderBrush="Black" BorderThickness="1" MouseLeftButtonDown="borderColorPalette_MouseLeftButtonDown">
+                    <Border.Background>
+                        <SolidColorBrush Color="{Binding Path=CurrentGradientStop.Color}"/>
+                    </Border.Background>
+                </Border>
+                <Label Grid.Row="2" Grid.Column="3" Content="Offset:" HorizontalAlignment="Left"/>
+                <!-- TODO: TextBox 内 Enter キー押下で確定するためのビヘイビアを指定する。 -->
+                <TextBox Grid.Row="2" Grid.Column="4" Name="textboxCurrentColorOffsetPercent" InputMethod.IsInputMethodSuspended="True" TextAlignment="Right" VerticalContentAlignment="Center" Text="{Binding Path=CurrentColorOffsetPercent, Mode=TwoWay, StringFormat=0.0}"/>
                 <Label Grid.Row="2" Grid.Column="5" Content="%"/>
-                <Label Grid.Row="2" Grid.Column="6" Name="labelColorStopCount" HorizontalAlignment="Right" Foreground="Red"
-                       Content="{Binding ElementName=colorStopArea, Path=Children.Count}"/>
-                <Button Grid.Row="2" Grid.Column="8" Content="Delete color" Padding="10,0"/>
+                <Label Grid.Row="2" Grid.Column="6" HorizontalAlignment="Right" Foreground="Red" Content="{Binding ElementName=colorStopArea, Path=Items.Count}"/>
+                <Button Grid.Row="2" Grid.Column="8" Content="Delete Color" Padding="10,0" Name="buttonDeleteColorStop"/>
                 <!-- HorizontalAlignment や VerticalAlignment を指定しないと、Fill モードになる。Grid 内の要素の幅を、Auto を使ってそろえるときに使える。 -->
             </Grid>
         </GroupBox>

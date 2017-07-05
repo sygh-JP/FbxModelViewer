@@ -30,7 +30,8 @@
         </Grid.ColumnDefinitions>
         <Rectangle Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="6" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
         <local:MyGradientEditor Grid.ColumnSpan="6" x:Name="gradientEditor"/>
-        <Button Grid.Row="2" Grid.Column="2" Content="OK" IsDefault="True" Name="buttonOK" Click="buttonOK_Click"/>
+        <!-- Enter キーは Offset の確定に使いたいので、Button に IsDefault は指定しない。 -->
+        <Button Grid.Row="2" Grid.Column="2" Content="OK" Name="buttonOK" Click="buttonOK_Click"/>
         <Button Grid.Row="2" Grid.Column="4" Content="Cancel" IsCancel="True"/>
     </Grid>
 </Window>

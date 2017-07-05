@@ -28,80 +28,50 @@ namespace MyWpfGraphLibrary
 		{
 			InitializeComponent();
 		}
+	}
 
-		private bool f_isActivePin = false;
-
-		//private GradientStop f_associatedGradientStop;
-
-		public GradientStop AssociatedGradientStop { get; protected set; }
-
-		SolidColorBrush TipTriangleFillBrush
+	namespace ViewModels
+	{
+		public class MyGradientStopViewModel : MyBindingHelpers.MyNotifyPropertyChangedBase
 		{
-			get
-			{
-				return this.tipTriangle.Fill as SolidColorBrush;
-			}
-			set
-			{
-				this.tipTriangle.Fill = value;
-			}
-		}
+			bool _isSelected = false;
+			bool _preDeletion = false;
+			Color _color = Colors.White;
+			double _offset = 0;
 
-		public SolidColorBrush SurfaceRectFillBrush
-		{
-			get
-			{
-				return this.surfaceRect.Fill as SolidColorBrush;
-			}
-			protected set
-			{
-				this.surfaceRect.Fill = value;
-			}
-		}
+			// HACK: Opacity 専用のプロパティを用意する？　Color に含める？
 
-		public Color SurfaceRectFillBrushColor
-		{
-			get
+			public bool IsSelected
 			{
-				return this.SurfaceRectFillBrush.Color;
+				get { return this._isSelected; }
+				set { base.SetSingleProperty(ref this._isSelected, value); }
 			}
-		}
 
-		public bool IsActivePin
-		{
-			get
+			public bool PreDeletion
 			{
-				return f_isActivePin;
+				get { return this._preDeletion; }
+				set { base.SetSingleProperty(ref this._preDeletion, value); }
 			}
-			set
+
+			public Color Color
 			{
-				f_isActivePin = value;
-				this.TipTriangleFillBrush = value ? Brushes.Black : Brushes.White;
+				get { return this._color; }
+				set { base.SetSingleProperty(ref this._color, value); }
 			}
-		}
 
-		public void SetSurfaceColor(Color color)
-		{
-			this.SurfaceRectFillBrush = new SolidColorBrush(color);
-			// 読み取り専用（定義済み）の Brushes メンバーなどが割り当てられている場合、
-			// SolidColorBrush.Color プロパティを直接変更できない。
-			// 同値を持つ SolidColorBrush オブジェクトの再割り当てが必要。
-			Debug.Assert(this.AssociatedGradientStop != null);
-			this.AssociatedGradientStop.Color = color;
-		}
+			public double Offset
+			{
+				get { return this._offset; }
+				set { base.SetSingleProperty(ref this._offset, value); }
+			}
 
-		public void SetGradientOffset(double offsetVal)
-		{
-			// Color プロパティは R/W だが、Offset プロパティは読み取り専用なので、再割り当てが必要。
-			Debug.Assert(this.AssociatedGradientStop != null);
-			this.AssociatedGradientStop = new GradientStop(this.AssociatedGradientStop.Color, offsetVal);
-		}
-
-		public void SetSurfaceColorAndGradientOffset(Color color, double offsetVal)
-		{
-			this.SurfaceRectFillBrush = new SolidColorBrush(color);
-			// Color プロパティは R/W だが、Offset プロパティは読み取り専用なので、再割り当てが必要。
-			this.AssociatedGradientStop = new GradientStop(color, offsetVal);
+			public object Tag { get; set; }
 		}
 	}
+
+#if false
+	public class MySelector : System.Windows.Controls.Primitives.Selector
+	{
+	}
+#endif
 }

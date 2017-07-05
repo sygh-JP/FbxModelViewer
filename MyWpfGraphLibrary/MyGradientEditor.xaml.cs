@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
+//using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,16 +25,22 @@ using System.Windows.Shapes;
 // ただしこのブラシ エディタ コントロールは SharpDevelop のコンポーネントらしく、LGPL ライセンスらしい。
 // WPF Property Grid 自体は Ms-PL ライセンスらしい。
 // http://wpg.codeplex.com/
-
-// グラデーション オフセットの UI 設定値は 0[%]～100[%] だが、内部では 0.0～1.0 の正規化された値で管理する。
-
+// 
+// グラデーション オフセットの UI 設定値は 0[%]~100[%] だが、内部では 0.0～1.0 の正規化された値で管理する。
+// 
+// GradientBrush.GradientStops に ObservableCollection をバインディングする方法もあるが、複雑。
+// https://stackoverflow.com/questions/41758309/wpf-bind-gradientstopcollection
+// 
+// SolidColorBrush オブジェクトに読み取り専用（定義済み）の Brushes メンバーなどが割り当てられている場合、
+// SolidColorBrush.Color プロパティを直接変更できない。
+// 同値を持つ SolidColorBrush オブジェクトの明示的作成が必要。
 
 namespace MyWpfGraphLibrary
 {
 	/// <summary>
 	/// MyGradientEditor.xaml の相互作用ロジック
 	/// </summary>
-	public partial class MyGradientEditor : UserControl, INotifyPropertyChanged
+	public partial class MyGradientEditor : UserControl
 	{
 		public interface IManagedEventListener
 		{
@@ -43,108 +50,54 @@ namespace MyWpfGraphLibrary
 
 		#region Properties
 
-		public MyGradientEditor.IManagedEventListener EventListener { set; get; }
+		public IManagedEventListener EventListener { set; get; }
 		public bool CanNotifyListener { get { return this.EventListener != null; } }
-
-		public double CurrentColorLocation
-		{
-			get
-			{
-				if (f_currentColorStopPin != null)
-				{
-					return f_currentColorStopPin.AssociatedGradientStop.Offset * 100;
-				}
-				else
-				{
-					return 0;
-				}
-			}
-			protected set
-			{
-				if (f_currentColorStopPin != null)
-				{
-					double normalizedOffset = MyMiscHelpers.MyGenericsHelper.Clamp(value * 0.01, 0.0, 1.0);
-					Canvas.SetLeft(f_currentColorStopPin, normalizedOffset * this.colorStopArea.Width);
-					// GradientStop を入れ替える。
-					f_gradientBrush.GradientStops.Remove(f_currentColorStopPin.AssociatedGradientStop);
-					f_currentColorStopPin.SetGradientOffset(normalizedOffset);
-					f_gradientBrush.GradientStops.Add(f_currentColorStopPin.AssociatedGradientStop);
-					// 普通はプロパティ名の文字列リテラルを直接記述すればよいが、あえてメンテナンス性を考慮して式木からプロパティ名を取得する。
-					this.NotifyPropertyChanged(MyMiscHelpers.MyGenericsHelper.GetMemberName(() => this.CurrentColorLocation));
-				}
-			}
-		}
-
-		public SolidColorBrush ColorPaletteBrush
-		{
-			get
-			{
-				return this.borderColorPalette.Background as SolidColorBrush;
-			}
-			protected set
-			{
-				this.borderColorPalette.Background = value;
-			}
-		}
-
-		public Color ColorPaletteBrushColor
-		{
-			get
-			{
-				return this.ColorPaletteBrush.Color;
-			}
-			protected set
-			{
-				this.ColorPaletteBrush = new SolidColorBrush(value);
-				// 読み取り専用（定義済み）の Brushes メンバーなどが割り当てられている場合、
-				// SolidColorBrush.Color プロパティを直接変更できない。
-				// 同値を持つ SolidColorBrush オブジェクトの明示的作成が必要。
-			}
-		}
-
-		public MyGradientStopPin[] GetGradientColorStopPinsArray()
-		{
-			// グラデーション Offset の昇順に並べ替えて配列化したものを返す。
-			var query = from pin in this.colorStopArea.Children.OfType<MyGradientStopPin>()
-						orderby pin.AssociatedGradientStop.Offset ascending
-						select pin;
-
-			return query.ToArray();
-		}
-
-		public void SetGradientColorStopPinsArray(MyGradientStopPin[] stopPins)
-		{
-			// スワップの実装は VisualParent の関係からちょっと大変。全削除して全追加の手順をとる。
-			this.colorStopArea.Children.Clear();
-			f_gradientBrush.GradientStops.Clear();
-			f_currentColorStopPin = null;
-			f_isHoldingPin = false;
-			f_isDraggingPin = false;
-			foreach (var newStop in stopPins)
-			{
-				// ソートする必要はない。
-				double normalizedOffset = MyMiscHelpers.MyGenericsHelper.Clamp(newStop.AssociatedGradientStop.Offset, 0.0, 1.0);
-				Canvas.SetLeft(newStop, normalizedOffset * this.colorStopArea.Width);
-				newStop.MouseLeftButtonDown += MyGradientStopPin_MouseLeftButtonDown;
-				newStop.MouseLeftButtonUp += MyGradientStopPin_MouseLeftButtonUp;
-				newStop.MouseDoubleClick += MyGradientStopPin_MouseDoubleClick;
-				this.colorStopArea.Children.Add(newStop);
-				f_gradientBrush.GradientStops.Add(newStop.AssociatedGradientStop);
-				this.UpdateColorStopCountLabel();
-			}
-		}
 
 		#endregion
 
+		static GradientStop CreateGradientStopFromVM(ViewModels.MyGradientStopViewModel src)
+		{
+			// Color プロパティは R/W だが、Offset プロパティは読み取り専用なので、既存オブジェクトの動的変更はできず、再割り当てが必要。
+			return new GradientStop(src.Color, src.Offset);
+		}
+
+		static double NormalClamp(double val)
+		{
+			return MyMiscHelpers.MyGenericsHelper.Clamp(val, 0.0, 1.0);
+		}
+
+		public IEnumerable<ViewModels.MyGradientStopViewModel> GetGradientStops()
+		{
+			// グラデーション Offset の昇順に並べ替えたものを返す。
+			return from elem in this._viewModel.GradientStops orderby elem.Offset ascending select elem;
+		}
+
+		public void SetGradientStops(IEnumerable<ViewModels.MyGradientStopViewModel> stops)
+		{
+			// スワップの実装は VisualParent の関係からちょっと大変。全削除して全追加の手順をとる。
+			this._viewModel.GradientStops.Clear();
+			this.gradientBrush.GradientStops.Clear();
+			this._viewModel.CurrentGradientStop = new ViewModels.MyGradientStopViewModel();
+			this._isHoldingPin = false;
+			this._isDraggingPin = false;
+			foreach (var elem in stops)
+			{
+				// ソートする必要はない。
+				double normalizedOffset = NormalClamp(elem.Offset);
+				var stop = CreateGradientStopFromVM(elem);
+				elem.Tag = stop;
+				this._viewModel.GradientStops.Add(elem);
+				this.gradientBrush.GradientStops.Add(stop);
+			}
+		}
+
 		#region Fields
 
-		bool f_isHoldingPin = false;
-		bool f_isDraggingPin = false;
-		double f_dragStartPosX = 0;
-		MyGradientStopPin f_currentColorStopPin;
-		LinearGradientBrush f_gradientBrush;
+		bool _isHoldingPin = false;
+		bool _isDraggingPin = false;
+		double _dragStartPosX = 0;
 
-		public event PropertyChangedEventHandler PropertyChanged;
+		ViewModels.MyGradientEditorViewModel _viewModel = new ViewModels.MyGradientEditorViewModel();
 
 		#endregion
 
@@ -156,168 +109,187 @@ namespace MyWpfGraphLibrary
 		{
 			InitializeComponent();
 
-			f_gradientBrush = this.borderGradient.Background as LinearGradientBrush;
-			f_gradientBrush.GradientStops.Clear();
+			this._viewModel.PropertyChanged += (s, e) =>
+			{
+				if (e.PropertyName == nameof(ViewModels.MyGradientEditorViewModel.CurrentColorOffsetPercent))
+				{
+					this.UpdateVisualGradientStops();
+				}
+			};
 
-			this.colorStopArea.Children.Clear(); // ダミーデータの削除。
-			this.UpdateColorStopCountLabel();
+			this.buttonDeleteColorStop.Click += (s, e) =>
+			{
+				this.DeleteCurrentGradientStop();
+			};
 
-			// HACK: MVVM 的には邪道。View と ViewModel をきちんと分離する。
-			this.DataContext = this;
+			// ダミーデータの削除。
+			this.gradientBrush.GradientStops.Clear();
+
+			// WPF の GradientBrush.GradientStops の仕様は、Photoshop のグラデーションと近い仕様。
+			// 端の色は先頭・末尾の GradientStop でクランプされる。
+
+			//this.DataContext = this._viewModel;
+			this.borderColorPalette.DataContext = this._viewModel;
+			this.textboxCurrentColorOffsetPercent.DataContext = this._viewModel;
+			this.colorStopArea.DataContext = this._viewModel.GradientStops;
 
 			// デフォルトの NaN で Grid の Auto を使ってサイズを決めると、実際のサイズは ActualWidth, ActualHeight で知るほかないが、
-			// コンストラクト直後、レンダリングされていない状態では Actual～ も NaN になってしまう。
+			// コンストラクト直後、レンダリングされていない状態では Actual も NaN になってしまう。
 			// Width, Height の値は実際の描画サイズではなく論理値だが、
 			// グラデーション データの設定や UI 操作ロジックにも関わりがあるので、NaN ではまずい。
-			Debug.Assert(!Double.IsNaN(this.colorStopArea.Width) && this.colorStopArea.Width > 0);
-			Debug.Assert(!Double.IsNaN(this.colorStopArea.Height) && this.colorStopArea.Height > 0);
+			System.Diagnostics.Debug.Assert(!Double.IsNaN(this.colorStopArea.Width) && this.colorStopArea.Width > 0);
+			System.Diagnostics.Debug.Assert(!Double.IsNaN(this.colorStopArea.Height) && this.colorStopArea.Height > 0);
 		}
 
-		void NotifyPropertyChanged(string propName)
+		void SetActiveGradientStop(ViewModels.MyGradientStopViewModel target)
 		{
-			if (this.PropertyChanged != null)
+			foreach (var stop in this._viewModel.GradientStops)
 			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+				System.Diagnostics.Debug.Assert(stop != null);
+				stop.IsSelected = (stop == target);
 			}
+			this._viewModel.CurrentGradientStop = target;
 		}
 
-		void UpdateColorStopCountLabel()
+		void UpdateVisualGradientStops()
 		{
-			//this.labelColorStopCount.Content = this.colorStopArea.Children.Count;
-			var be = this.labelColorStopCount.GetBindingExpression(Label.ContentProperty);
-			be.UpdateTarget();
+			// 自作の VM は直接プロパティを書き換えても OK だが、
+			// GradientBrush.GradientStops は GradientStop を入れ替える必要がある。
+			if (this.gradientBrush.GradientStops.Remove(this._viewModel.CurrentGradientStop.Tag as GradientStop))
+			{
+				var stop = CreateGradientStopFromVM(this._viewModel.CurrentGradientStop);
+				this._viewModel.CurrentGradientStop.Tag = stop;
+				this.gradientBrush.GradientStops.Add(stop);
+			}
 		}
 
 		void UpdateCurrentColorLocationText()
 		{
-			var be = this.textboxCurrentColorLocation.GetBindingExpression(TextBox.TextProperty);
+			var be = this.textboxCurrentColorOffsetPercent.GetBindingExpression(TextBox.TextProperty);
 			be.UpdateTarget();
 		}
 
-		void SetActiveGradientStop(MyGradientStopPin target)
+		void DeleteCurrentGradientStop()
 		{
-			foreach (var child in this.colorStopArea.Children)
+			if (this._viewModel.CurrentGradientStop != null)
 			{
-				var stop = child as MyGradientStopPin;
-				Debug.Assert(stop != null);
-				stop.IsActivePin = (stop == target);
+				this._viewModel.GradientStops.Remove(this._viewModel.CurrentGradientStop);
+				this.gradientBrush.GradientStops.Remove(this._viewModel.CurrentGradientStop.Tag as GradientStop);
+				this._viewModel.CurrentGradientStop = new ViewModels.MyGradientStopViewModel();
 			}
-			this.ColorPaletteBrush = target.SurfaceRectFillBrush;
-			f_currentColorStopPin = target;
+		}
 
-			this.UpdateCurrentColorLocationText();
+		[System.Diagnostics.Conditional("DEBUG")]
+		private void DebugWriteCallerMethodName([System.Runtime.CompilerServices.CallerMemberName] string member = "")
+		{
+			System.Diagnostics.Debug.WriteLine(member);
 		}
 
 		private void colorStopArea_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
-			if (e.ClickCount == 1 && !f_isHoldingPin)
+			DebugWriteCallerMethodName();
+			//System.Diagnostics.Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+			if (e.ClickCount == 1 && !this._isHoldingPin)
 			{
-				var newStop = new MyGradientStopPin();
+				var newVM = new ViewModels.MyGradientStopViewModel();
 				double newPosX = e.GetPosition(this.colorStopArea).X;
-				Canvas.SetLeft(newStop, newPosX);
-				newStop.MouseLeftButtonDown += MyGradientStopPin_MouseLeftButtonDown;
-				newStop.MouseLeftButtonUp += MyGradientStopPin_MouseLeftButtonUp;
-				newStop.MouseDoubleClick += MyGradientStopPin_MouseDoubleClick;
-				this.colorStopArea.Children.Add(newStop);
-				this.UpdateColorStopCountLabel();
-				var normalizedOffset = MyMiscHelpers.MyGenericsHelper.Clamp(newPosX / this.colorStopArea.Width, 0.0, 1.0);
+				this._viewModel.GradientStops.Add(newVM);
+				var normalizedOffset = NormalClamp(newPosX / this.colorStopArea.Width);
 				// 追加する色は、現在選択中のパレット色となる。作成中のグラデーションから補間した色ではない。
-				var currPaletteBgBrush = this.ColorPaletteBrush as SolidColorBrush;
-				Debug.Assert(currPaletteBgBrush != null);
-				//var newColor = Colors.White;
-				var newColor = currPaletteBgBrush != null ? currPaletteBgBrush.Color : Colors.White;
-				newStop.SetSurfaceColorAndGradientOffset(newColor, normalizedOffset);
-				f_gradientBrush.GradientStops.Add(newStop.AssociatedGradientStop);
-				this.SetActiveGradientStop(newStop);
+				var newColor = this._viewModel.CurrentGradientStop != null ? this._viewModel.CurrentGradientStop.Color : Colors.White;
+				newVM.Offset = normalizedOffset;
+				newVM.Color = newColor;
+				var stop = CreateGradientStopFromVM(newVM);
+				newVM.Tag = stop;
+				this.gradientBrush.GradientStops.Add(stop);
+				this.SetActiveGradientStop(newVM);
 			}
 		}
 
 		private void colorStopArea_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
-			Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
-			if (f_currentColorStopPin != null)
+			DebugWriteCallerMethodName();
+			if (this._isHoldingPin)
 			{
 				// 終了位置の上下がはみ出している場合、グラデーション ストップを消去。
 				double endPosY = e.GetPosition(this.colorStopArea).Y;
 				if (endPosY < 0 || this.colorStopArea.Height < endPosY)
 				{
-					this.colorStopArea.Children.Remove(f_currentColorStopPin);
-					this.UpdateColorStopCountLabel();
-					f_gradientBrush.GradientStops.Remove(f_currentColorStopPin.AssociatedGradientStop);
-					f_currentColorStopPin = null;
+					this.DeleteCurrentGradientStop();
 				}
 				Mouse.Capture(null);
-				f_isHoldingPin = false;
+				this._isHoldingPin = false;
 			}
 		}
 
 		private void colorStopArea_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (!f_isHoldingPin)
+			if (!this._isHoldingPin)
 			{
 				return;
 			}
 
-			if (Math.Abs(f_dragStartPosX - e.GetPosition(this.colorStopArea).X) >= 2)
+			if (Math.Abs(this._dragStartPosX - e.GetPosition(this.colorStopArea).X) >= 2)
 			{
-				f_isDraggingPin = true;
+				this._isDraggingPin = true;
 			}
 
-			if (f_isDraggingPin)
+			if (this._isDraggingPin)
 			{
 				double newPosX = e.GetPosition(this.colorStopArea).X;
 				//Debug.WriteLine("newPosX = {0}", newPosX);
-				this.CurrentColorLocation = 100 * newPosX / this.colorStopArea.Width;
+				var normalizedOffset = NormalClamp(newPosX / this.colorStopArea.Width);
+				this._viewModel.CurrentGradientStop.Offset = normalizedOffset;
+				this.UpdateVisualGradientStops();
+				this.UpdateCurrentColorLocationText();
 				// 現在位置の上下がはみ出している場合、グラデーション ストップを消去する予告として、半透明にする。
 				double endPosY = e.GetPosition(this.colorStopArea).Y;
 				if (endPosY < 0 || this.colorStopArea.Height < endPosY)
 				{
-					f_currentColorStopPin.Opacity = 0.5;
+					this._viewModel.CurrentGradientStop.PreDeletion = true;
 				}
 				else
 				{
-					f_currentColorStopPin.Opacity = 1.0;
+					this._viewModel.CurrentGradientStop.PreDeletion = false;
 				}
 			}
 		}
 
 		private void colorStopArea_MouseLeave(object sender, MouseEventArgs e)
 		{
-			Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+			DebugWriteCallerMethodName();
 		}
 
 		private void MyGradientStopPin_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+			DebugWriteCallerMethodName();
 			if (e.ClickCount == 1)
 			{
 				// ダブルクリックすると、2回 MouseDown イベントが発生する。そのうち、2回目は MouseDoubleClick イベントの後に発生する。
 				var stopPin = sender as MyGradientStopPin;
-				this.SetActiveGradientStop(stopPin);
+				var vm = stopPin.DataContext as ViewModels.MyGradientStopViewModel;
+				System.Diagnostics.Debug.Assert(vm != null);
+				this.SetActiveGradientStop(vm);
 				Mouse.Capture(stopPin);
-				f_isHoldingPin = true;
-				f_isDraggingPin = false;
-				f_dragStartPosX = e.GetPosition(this.colorStopArea).X;
+				this._isHoldingPin = true;
+				this._isDraggingPin = false;
+				this._dragStartPosX = e.GetPosition(this.colorStopArea).X;
 			}
 		}
 
 		private void MyGradientStopPin_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
-			Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
-			Mouse.Capture(null);
-			f_isHoldingPin = false;
+			DebugWriteCallerMethodName();
+			//Mouse.Capture(null);
+			//this._isHoldingPin = false;
 		}
 
 		private void MyGradientStopPin_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+			DebugWriteCallerMethodName();
 			if (e.ChangedButton == MouseButton.Left)
 			{
-				//var stopPin = sender as MyGradientStopPin;
-				//Debug.Assert(stopPin != null);
 				ShowColorDialog();
-				//MessageBox.Show("Left Button is Double-Clicked!!");
 			}
 		}
 
@@ -328,35 +300,87 @@ namespace MyWpfGraphLibrary
 
 		private void ShowColorDialog()
 		{
-#if false
-			if (f_currentColorStopPin == null)
-			{
-				return;
-			}
-#endif
-
 			// HACK: Windows ストア アプリや Windows Phone などにも移植する場合、Windows Forms (Win32) のカラーダイアログは使えない。
 			// .NET Compact Framework でもサポートされていないらしい。
 			// ストア アプリでもカラーピッカーは用意されていないようなので、必要に応じて
 			// Photoshop ライクの RGB/HSV/HSB カラーエディタなどを改めて XAML 実装したほうがよい。
 
-			f_isHoldingPin = false;
-			var stopPin = f_currentColorStopPin;
+			this._isHoldingPin = false;
+			var vm = this._viewModel.CurrentGradientStop;
 			var colorDlg = new System.Windows.Forms.ColorDialog();
-			var brushColor = stopPin != null ? stopPin.SurfaceRectFillBrushColor : this.ColorPaletteBrushColor;
+			var brushColor = vm != null ? vm.Color : Colors.White;
 			colorDlg.Color = System.Drawing.Color.FromArgb(brushColor.R, brushColor.G, brushColor.B);
 			colorDlg.FullOpen = true;
 			if (colorDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
-				var newColor = System.Windows.Media.Color.FromRgb(colorDlg.Color.R, colorDlg.Color.G, colorDlg.Color.B);
-				if (stopPin != null)
+				var newColor = Color.FromRgb(colorDlg.Color.R, colorDlg.Color.G, colorDlg.Color.B);
+				if (vm != null)
 				{
-					stopPin.SetSurfaceColor(newColor);
-					this.SetActiveGradientStop(stopPin);
+					vm.Color = newColor;
+					this.SetActiveGradientStop(vm);
+					var stop = vm.Tag as GradientStop;
+					if (stop != null)
+					{
+						stop.Color = vm.Color;
+					}
 				}
-				else
+			}
+		}
+	}
+
+	internal sealed class MultiplyDouble2Converter : IMultiValueConverter
+	{
+		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			if (!(values[0] is double))
+			{
+				throw new ArgumentException("values[0] must be a 'double'!!");
+			}
+			if (!(values[1] is double))
+			{
+				throw new ArgumentException("values[1] must be a 'double'!!");
+			}
+			return (double)values[0] * (double)values[1];
+		}
+
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	namespace ViewModels
+	{
+		public class MyGradientEditorViewModel : MyBindingHelpers.MyNotifyPropertyChangedBase
+		{
+			public readonly ObservableCollection<MyGradientStopViewModel> GradientStops = new ObservableCollection<MyGradientStopViewModel>();
+
+			MyGradientStopViewModel _currentGradientStop = new MyGradientStopViewModel();
+
+			public MyGradientStopViewModel CurrentGradientStop
+			{
+				get { return this._currentGradientStop; }
+				set
 				{
-					this.ColorPaletteBrushColor = newColor;
+					System.Diagnostics.Debug.Assert(value != null);
+					if (base.SetSingleProperty(ref this._currentGradientStop, value))
+					{
+						this.NotifyPropertyChanged(nameof(this.CurrentColorOffsetPercent));
+					}
+				}
+			}
+
+			public double CurrentColorOffsetPercent
+			{
+				get { return this._currentGradientStop.Offset * 100; }
+				set
+				{
+					// TODO: ビューから VM を書き換えたときに、GradientBrush.GradientStops の更新が必要。
+					double temp = this._currentGradientStop.Offset;
+					if (base.SetSingleProperty(ref temp, value * 0.01))
+					{
+						this._currentGradientStop.Offset = temp;
+					}
 				}
 			}
 		}

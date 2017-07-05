@@ -11,7 +11,7 @@ namespace MyWpfGraphLibWrapper
 		class GradientColorParams final
 		{
 		public:
-			double Offset; // 0.0～1.0 の範囲。
+			double Offset; // 0.0~1.0 の範囲。
 			COLORREF Color;
 		public:
 			GradientColorParams()
@@ -27,7 +27,7 @@ namespace MyWpfGraphLibWrapper
 		class GradientOpacityParams final
 		{
 		public:
-			double Offset; // 0.0～1.0 の範囲。
+			double Offset; // 0.0~1.0 の範囲。
 			double Opacity;
 		public:
 			GradientOpacityParams()

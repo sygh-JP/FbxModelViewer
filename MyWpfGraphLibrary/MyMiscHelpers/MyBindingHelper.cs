@@ -85,15 +85,22 @@ namespace MyBindingHelpers
 	// Modern UI と従来のデスクトップ UI とで外観を変えるだけにして、内部処理や機能は共通化できるようにするため、
 	// コマンドやデータ モデルをビューと分離して、バインディングを使う。
 	// http://blog.hiros-dot.net/?p=5742
+	// http://yujiro15.net/YKSoftware/MVVM_ICommand.html
 	// System.Windows.Input.ICommand は WPF だけでなく、WinRT や Silverlight でも使える模様。
 	// https://msdn.microsoft.com/ja-jp/library/hh563947(v=vs.110).aspx
+	// 本格的に MVVM でコマンドを扱う場合、Prism や Livet を使ったほうがよい。
 
 	public class MyDelegateCommand : System.Windows.Input.ICommand
 	{
 		public event Action<object> ExecuteHandler;
 		public event Func<object, bool> CanExecuteHandler;
 
-		public event EventHandler CanExecuteChanged;
+		//public event EventHandler CanExecuteChanged;
+		public event EventHandler CanExecuteChanged
+		{
+			add { System.Windows.Input.CommandManager.RequerySuggested += value; }
+			remove { System.Windows.Input.CommandManager.RequerySuggested -= value; }
+		}
 
 		/// <summary>
 		/// コマンドの実行。
@@ -132,7 +139,8 @@ namespace MyBindingHelpers
 		/// </summary>
 		public void RaiseCanExecuteChanged()
 		{
-			this.CanExecuteChanged(this, null);
+			//this.CanExecuteChanged(this, null);
+			System.Windows.Input.CommandManager.InvalidateRequerySuggested();
 		}
 	}
 
@@ -174,7 +182,7 @@ namespace MyBindingHelpers
 #if false
 			// 式を評価して sender 用のインスタンスを得る。
 			var sender = System.Linq.Expressions.Expression.Lambda(senderExpression).Compile().DynamicInvoke();
-			// --> コレだとだいぶ遅いらしい。
+			// → コレだとだいぶ遅いらしい。
 #else
 			// 定数なので Value プロパティから sender 用のインスタンスを得る。
 			var sender = senderExpression.Value;

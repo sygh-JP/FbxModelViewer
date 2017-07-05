@@ -381,7 +381,7 @@ bool CMyGradientStopsProperty::ScanGradientString(const CStringW& strTarget)
 			break;
 		}
 	};
-	// GDI+ では WPF などと違い、グラデーションの最初と最後にストップを追加してやる必要がある。
+	// GDI+ では WPF/Photoshop と違い、グラデーションの最初と最後にストップを追加してやる必要がある。
 	// グラデーション データをテクスチャのソースとして DIB 化するときも同様の処理が要る。
 	// なお、GDI+ レンダリング時に毎回配列の先頭と末尾にストップを追加した一時データを生成することはせず、
 	// レンダリング専用データを事前作成しておく。
@@ -612,7 +612,7 @@ void CMyGradientStopsProperty::OnDrawValue(CDC* pDC, CRect rect)
 			gradBrush.SetGammaCorrection(true);
 			// GDI+ の LinearGradientBrush の InterpolationColors を使う場合、
 			// 最初と最後の Stop オフセット位置は必ずそれぞれ 0, 1 でなければならないらしい。
-			// Photoshop や WPF の場合、最初と最後の Stop オフセットはそれぞれ 0, 1 でなくても良い（左端は最初の色、右端は最後の色になる）ので、
+			// WPF/Photoshop の場合、最初と最後の Stop オフセットはそれぞれ 0, 1 でなくても良い（左端は最初の色、右端は最後の色になる）ので、
 			// GDI+ で描画する場合は注意が必要。
 #if 0
 			// テストコード。

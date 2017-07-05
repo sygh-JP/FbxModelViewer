@@ -40,13 +40,13 @@ namespace MyWpfGraphLibrary
 		/// </summary>
 		public bool CanEnforcedClose { get; set; }
 
-		public MyGradientStopPin[] GetGradientColorStopPinsArray()
+		public ViewModels.MyGradientStopViewModel[] GetGradientColorStopPinsArray()
 		{
-			return this.gradientEditor.GetGradientColorStopPinsArray();
+			return this.gradientEditor.GetGradientStops().ToArray();
 		}
-		public void SetGradientColorStopPinsArray(MyGradientStopPin[] stopPins)
+		public void SetGradientColorStopPinsArray(ViewModels.MyGradientStopViewModel[] stopPins)
 		{
-			this.gradientEditor.SetGradientColorStopPinsArray(stopPins);
+			this.gradientEditor.SetGradientStops(stopPins);
 		}
 
 		/// <summary>
