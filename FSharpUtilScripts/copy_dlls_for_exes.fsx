@@ -37,7 +37,7 @@ let copyFile fileName srcDirPath dstDirPath =
 let copyD3DCompilerDlls srcArch dstArch isDebug =
     let fileName = "d3dcompiler_47.dll"
     let configuration = (if isDebug then "Debug" else "Release")
-    let programFilesDirPath = "C:\Program Files" + (if Environment.Is64BitOperatingSystem then " (x86)" else "")
+    let programFilesDirPath = @"C:\Program Files" + (if Environment.Is64BitOperatingSystem then " (x86)" else "")
     let srcDirPath = sprintf @"%s\Windows Kits\10\bin\%s" programFilesDirPath srcArch
     let dstDirPath = sprintf @"..\%s\%s" dstArch configuration
     copyFile fileName srcDirPath dstDirPath
@@ -47,8 +47,8 @@ let copyFbxDlls srcArch dstArch isDebug =
     for ext in extensions do
         let fileName = sprintf "libfbxsdk.%s" ext
         let configuration = (if isDebug then "Debug" else "Release")
-        let programFilesDirPath = "C:\Program Files"
-        let srcDirPath = sprintf @"%s\Autodesk\FBX\FBX SDK\2017.1\lib\vs2015\%s\%s" programFilesDirPath srcArch configuration
+        let programFilesDirPath = @"C:\Program Files"
+        let srcDirPath = sprintf @"%s\Autodesk\FBX\FBX SDK\2018.1.1\lib\vs2015\%s\%s" programFilesDirPath srcArch configuration
         let dstDirPath = sprintf @"..\%s\%s" dstArch configuration
         copyFile fileName srcDirPath dstDirPath
 

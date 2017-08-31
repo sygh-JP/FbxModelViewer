@@ -59,16 +59,18 @@ namespace MyMiscHelpers
 		}
 
 		/// <summary>
-		/// Nullable もしくは参照型を明示的な文字列に変換する。
+		/// Nullable もしくは参照型に null が格納されている場合に明示的なリテラル文字列に変換する。
 		/// Nullable に null が格納されている場合、通常は ToString() によって空文字列が返却される。
 		/// 参照型に null が格納されている場合、ToString() を呼び出すと NullReferenceException になる。
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public static string ConvertNullableToExplicitString<T>(T obj)
+		public static string ConvertToLiteralNullIfNull<T>(T obj)
 		{
 			return (obj != null) ? obj.ToString() : "null";
+			// C# 6.0 以降であれば、obj?.ToString() ?? "null" と書いてもよい。ただし厳密には完全互換でない。
+			// C# 5.0 以前の古いコンパイラもサポートしたいので、あえて古い書き方にとどめる。
 		}
 
 		public static T AssignNewIfNull<T>(T obj)
@@ -107,7 +109,7 @@ namespace MyMiscHelpers
 
 		public static T GetPropertyValueFrom<T>(SerializationInfo info, System.Linq.Expressions.Expression<Func<T>> propertyNameExpression)
 		{
-			return GetValueFrom<T>(info, MyMiscHelpers.MyGenericsHelper.GetMemberName(propertyNameExpression));
+			return GetValueFrom<T>(info, GetMemberName(propertyNameExpression));
 		}
 
 		public static void AddValueTo<T>(SerializationInfo info, string name, T inValue)
@@ -117,11 +119,11 @@ namespace MyMiscHelpers
 
 		public static void AddPropertyValueTo<T>(SerializationInfo info, System.Linq.Expressions.Expression<Func<T>> propertyNameExpression, T inValue)
 		{
-			AddValueTo<T>(info, MyMiscHelpers.MyGenericsHelper.GetMemberName(propertyNameExpression), inValue);
+			AddValueTo<T>(info, GetMemberName(propertyNameExpression), inValue);
 		}
 
 		// Dictionary には IDictionary を受け取るコピーコンストラクタがあるが、テーブルの値が参照型だとシャローコピーになる。
-		// 下記は T[] や List<T> を値とするようなテーブルを、1段だけディープコピーするヘルパーメソッド。
+		// 下記は T[] や List<T> を値とするようなテーブルを、1段だけディープコピーするヘルパーメソッド。末尾までディープコピーしたければ再帰が必要。
 
 		public static Dictionary<TKey, TListValue[]> CreateDeepCopyL1<TKey, TListValue>(Dictionary<TKey, TListValue[]> srcData)
 		{
