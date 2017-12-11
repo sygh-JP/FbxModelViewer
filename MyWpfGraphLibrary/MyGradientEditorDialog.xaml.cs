@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +18,7 @@ namespace MyWpfGraphLibrary
 	/// <summary>
 	/// MyGradientEditorDialog.xaml の相互作用ロジック
 	/// </summary>
-	public partial class MyGradientEditorDialog : Window, MyMiscHelpers.IDynamicCultureChangeable
+	public partial class MyGradientEditorDialog : Window
 	{
 		#region Properties
 
@@ -72,11 +71,6 @@ namespace MyWpfGraphLibrary
 			// ちなみにタイトル バーがなくても、[Alt + Space] でシステム コマンド メニューを出現させることができる。
 
 			//this.WindowStyle = System.Windows.WindowStyle.ToolWindow;
-		}
-
-		public void ChangeCulture(CultureInfo culture)
-		{
-			// UNDONE: 未実装。
 		}
 
 		public bool ShowModalDialog()

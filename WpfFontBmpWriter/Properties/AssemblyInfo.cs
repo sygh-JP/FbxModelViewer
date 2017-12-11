@@ -7,12 +7,12 @@ using System.Windows;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("WpfFontBmpWriter")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("WPF Font Bitmap Writer")]
+[assembly: AssemblyDescription("WPF Font Bitmap Writer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("sygh")]
 [assembly: AssemblyProduct("WpfFontBmpWriter")]
-[assembly: AssemblyCopyright("Copyright © sygh 2013")]
+[assembly: AssemblyCopyright("Copyright (C) sygh 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -52,4 +52,5 @@ using System.Windows;
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+//[assembly: AssemblyFileVersion("1.0.0.0")]
+//[assembly: AssemblyInformationalVersion("1.0.0.0")]

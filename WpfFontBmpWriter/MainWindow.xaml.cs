@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,13 +52,13 @@ namespace WpfFontBmpWriter
 		{
 			try
 			{
-				SaveFileDialog ofd = new SaveFileDialog();
-				ofd.DefaultExt = "*.png";
-				ofd.Filter = "PNG(*.png)|*.png";
-				if (ofd.ShowDialog() == true)
+				var fileDlg = new SaveFileDialog();
+				fileDlg.DefaultExt = "*.png";
+				fileDlg.Filter = "PNG(*.png)|*.png";
+				if (fileDlg.ShowDialog() == true)
 				{
-					this.fontImageView1.SaveAsPngFile(ofd.FileName);
-					this.fontImageView1.SaveUVMapAsCsvFile(ofd.FileName + ".csv");
+					this.fontImageView1.SaveAsPngFile(fileDlg.FileName);
+					this.fontImageView1.SaveUVMapAsCsvFile(fileDlg.FileName + ".csv");
 				}
 			}
 			catch (Exception err)

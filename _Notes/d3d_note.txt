@@ -99,3 +99,13 @@ ID3D11Device3, ID3D11DeviceContext3, IDWriteFactory3, ID2D1Factory3, ID2D1Device
 
 新しいプラットフォームではもちろん以前のバージョンのインターフェイスも使える（ただしストア アプリで使える API には制限・制約がある）。
 しかしインターフェイス名末尾のマイナー番号は普通にインクリメントするんじゃなく API のバージョン番号に合わせて欲しかった……
+
+
+Windows 10 Version 1703 で特定の FBX ファイルを開いて描画し、カメラを動かすと、
+デバッグ レイヤーから以下のようなエラーメッセージが出てレンダリングが停止する。
+
+D3D11: Removing Device.
+D3D11 ERROR: ID3D11Device::RemoveDevice: Device removal has been triggered for the following reason (DXGI_ERROR_DEVICE_HUNG: The Device took an unreasonable amount of time to execute its commands, or the hardware crashed/hung. As a result, the TDR (Timeout Detection and Recovery) mechanism has been triggered. The current Device Context was executing commands when the hang occurred. The application may want to respawn and fallback to less aggressive use of the display hardware). [ EXECUTION ERROR #378: DEVICE_REMOVAL_PROCESS_AT_FAULT]
+
+GPU は GeForce GTX 760 4GB、ドライバー 384.94 だが、以前のバージョン (Version 1607) とドライバー 378.49 では
+同じファイルをレンダリングしても問題は出ていなかったはず。

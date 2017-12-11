@@ -90,7 +90,7 @@ namespace
 		virtual void ChangeCulture(CStringW strCultureName) override
 		{
 			System::Diagnostics::Debug::Assert(m_isWpfCtrlInitialized);
-			m_gchWpfUserCtrl->ChangeCulture(CppCliMisc::CreateCultureInfoByName(strCultureName));
+			//m_gchWpfUserCtrl->ChangeCulture(CppCliMisc::CreateCultureInfoByName(strCultureName));
 		}
 
 		virtual bool ShowModalDialog(/*HWND hWndOwner*/) override
