@@ -71,7 +71,11 @@ namespace WpfFontBmpWriter
 			Debug.Assert(f_asciiArray.Length > 0);
 			uvRectArray = new Rect[f_asciiArray.Length];
 
-			var target = new RenderTargetBitmap(bmpWidth, bmpHeight, 96, 96, PixelFormats.Pbgra32);
+			// RenderTargetBitmap へのオフスクリーン描画の際は、システム DPI ではなく、RenderTargetBitmap の DPI が使われるようになる模様。
+			// これを使えば、複数の DPI パターンのフォント画像を事前生成できる。
+			const int bmpDpi = 96;
+			//const int bmpDpi = 144;
+			var target = new RenderTargetBitmap(bmpWidth, bmpHeight, bmpDpi, bmpDpi, PixelFormats.Pbgra32);
 			var dv = new DrawingVisual();
 			// DrawingContext を使って描画。
 			using (var dc = dv.RenderOpen())
@@ -98,15 +102,18 @@ namespace WpfFontBmpWriter
 						this.FontSize, Brushes.White);
 
 					const double paddingX = 2, paddingY = 1;
-					double fontWidth = formattedText.WidthIncludingTrailingWhitespace;
+					//double fontWidth = formattedText.WidthIncludingTrailingWhitespace;
 					//double fontWidth = formattedText.Width + formattedText.WidthIncludingTrailingWhitespace;
 					//double fontWidth = (formattedText.OverhangTrailing > 0 ? formattedText.OverhangTrailing : 0) + formattedText.WidthIncludingTrailingWhitespace;
 					//double fontWidth = formattedText.MinWidth;
-					double fontHeight = formattedText.Height;
+					double fontWidth = Math.Ceiling(formattedText.WidthIncludingTrailingWhitespace);
+					double fontHeight = Math.Ceiling(formattedText.Height);
 					double feedX = fontWidth + paddingX;
 					double feedY = fontHeight + paddingY;
 					maxFontHeight = Math.Max(maxFontHeight, fontHeight);
-					if (posX + feedX > bmpWidth)
+					double devPixelsPerLogX = target.DpiX / 96;
+					double devPixelsPerLogY = target.DpiY / 96;
+					if ((posX + feedX) * devPixelsPerLogX > bmpWidth)
 					{
 						posX = initX;
 						posY += maxFontHeight + paddingY;
@@ -119,7 +126,7 @@ namespace WpfFontBmpWriter
 					// スプライト フォントの場合、立体をアプリ側で機械的に傾ける（オブリーク体）ほうが楽ではある。
 					// ただし Times New Roman のように、イタリック体では字形が変わるものもある。
 					// HACK: Times New Roman Italic のダブルクォーテーションの境界矩形が小さくなりすぎる（隣にオーバーラップする？）問題がある。
-					var uvRect = new Rect(posX, posY, fontWidth, fontHeight);
+					var uvRect = new Rect(posX * devPixelsPerLogX, posY * devPixelsPerLogY, fontWidth * devPixelsPerLogX, fontHeight * devPixelsPerLogY);
 					uvRectArray[i] = uvRect;
 
 					posX += feedX;

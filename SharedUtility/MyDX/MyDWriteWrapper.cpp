@@ -203,7 +203,13 @@ namespace
 				DXTRACE_ERR(_T("GetString()"), hr);
 				return hr;
 			}
+#if false
 			const auto fontSize = fabs(static_cast<float>(::MulDiv(logFont.lfHeight, 96, ::GetDeviceCaps(hdc, LOGPIXELSY))));
+#else
+			// IDWriteFactory::CreateTextFormat() が受け取るのは DIP 単位のフォントサイズ。
+			// LOGFONT の高さを論理ピクセルサイズとして渡すことにする。
+			const auto fontSize = static_cast<float>(abs(logFont.lfHeight));
+#endif
 			Microsoft::WRL::ComPtr<IDWriteTextFormat> pTextFormatTemp;
 			hr = m_pDWriteFactory->CreateTextFormat(&strBuffer[0], nullptr,
 				pFontTemp->GetWeight(), pFontTemp->GetStyle(), pFontTemp->GetStretch(),
@@ -305,10 +311,15 @@ namespace
 				// 三角形ラスタライズ ルールの違いが影響している？
 				const float fontWidth = std::ceil(textMetrics.widthIncludingTrailingWhitespace);
 				const float fontHeight = std::ceil(textMetrics.height);
-				maxFontHeight = max(maxFontHeight, fontHeight);
+				maxFontHeight = (std::max)(maxFontHeight, fontHeight);
 				const float feedX = fontWidth + paddingX;
 				const float feedY = maxFontHeight + paddingY;
-				if (posX + feedX > bmpWidth)
+				// DWRITE_TEXT_METRICS が扱うのは DIP なので、デバイスピクセル単位との比較には換算が必要。
+				const int logPixelsX = ::GetDeviceCaps(hdc, LOGPIXELSX);
+				const int logPixelsY = ::GetDeviceCaps(hdc, LOGPIXELSY);
+				const float devPixelsPerLogX = logPixelsX / 96.0f;
+				const float devPixelsPerLogY = logPixelsY / 96.0f;
+				if ((posX + feedX) * devPixelsPerLogX > bmpWidth)
 				{
 					posX = iniX;
 					posY += feedY;
@@ -318,7 +329,12 @@ namespace
 				hr = pTextLayoutTemp->Draw(nullptr, m_pTextRenderer.get(), posX, posY);
 				// 1文字分のフォント境界ボックス矩形の UV。
 				_ASSERTE(codeUVMap.size() > index);
-				codeUVMap[index] = MyMath::RectF(posX, posY, fontWidth, fontHeight);
+				// TODO: UV はデバイスピクセル単位を使う。
+				codeUVMap[index] = MyMath::RectF(
+					posX * devPixelsPerLogX,
+					posY * devPixelsPerLogY,
+					fontWidth * devPixelsPerLogX,
+					fontHeight * devPixelsPerLogY);
 				posX += feedX;
 				if (FAILED(hr))
 				{

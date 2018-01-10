@@ -96,16 +96,10 @@ CMainFrame::~CMainFrame()
 
 bool CMainFrame::CreateFontTextureDibs()
 {
-	m_hudFontTexData.FontHeight = 32;
-	m_hudFontTexData.UsesMonospaceFont = true;
-	m_hudFontTexData.TextureData.TextureWidth = 1024;
-	m_hudFontTexData.TextureData.TextureHeight = 1024;
-	m_hudFontTexData.TextureData.TextureColorDepthInBits = 8;
-	m_hudFontTexData.TextureData.IsForAlpha = true;
 	// HACK: GDI 相互運用をせず、最初から Direct2D & DirectWrite 向けに組むのであれば、LOGFONT を使う必要はない。
 	const LOGFONTW logFont =
 	{
-		m_hudFontTexData.FontHeight,
+		-32,
 		0,
 		0,
 		0,
@@ -178,11 +172,20 @@ bool CMainFrame::CreateFontTextureDibs()
 	dc.CreateCompatibleDC(nullptr);
 	//CFont* pOldFont = dc.SelectObject(&font);
 
+	// システム DPI に合わせてテクスチャ フォントのデバイスピクセルサイズを決定する。
+	m_hudFontTexData.FontHeight = ::MulDiv(abs(logFont.lfHeight), dc.GetDeviceCaps(LOGPIXELSY), 96);
+	m_hudFontTexData.UsesMonospaceFont = true;
+	m_hudFontTexData.TextureData.TextureWidth = 1024;
+	m_hudFontTexData.TextureData.TextureHeight = 1024;
+	m_hudFontTexData.TextureData.TextureColorDepthInBits = 8;
+	m_hudFontTexData.TextureData.IsForAlpha = true;
+
 	const bool result = MyDWriteWrapper::CreateFontAlphaTextureBufferFromDC(
 		dc.GetSafeHdc(),
 		//static_cast<HFONT>(font.GetSafeHandle()),
 		logFont,
-		logFont.lfHeight,
+		//logFont.lfHeight,
+		0,
 		m_hudFontTexData.TextureData.TextureWidth,
 		m_hudFontTexData.TextureData.TextureHeight,
 		m_hudFontTexData.TextureData.TextureDib,
@@ -355,11 +358,33 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		auto pOldRibbonFont = m_wndRibbonBar.GetFont();
 		LOGFONT oldRibbonLogFont = {};
 		pOldRibbonFont->GetLogFont(&oldRibbonLogFont);
+
+		CDC dc;
+		dc.CreateCompatibleDC(nullptr);
+		const int logPixelsX = dc.GetDeviceCaps(LOGPIXELSX);
+		const int logPixelsY = dc.GetDeviceCaps(LOGPIXELSY);
+		// MFC 14.0 において、リボン バーの既定フォントは、Windows 7/10 では日英問わず Segoe UI がデフォルトらしい。
+		// 96 DPI 環境だと height = -11。120 DPI 環境だと height = -14。
+		// CreateFont() において、引数 nHeight は論理単位 (logical units) であり、デバイス単位 (device units) に変換されると書いてある。
+		// https://msdn.microsoft.com/en-us/library/dd183499.aspx
+		// CreateFontIndirect() は LOGFONT を受け取り、また LOGFONT::lfHeight の説明には logical units と書いてある。
+		// また、LOGFONT::lfHeight は正数と負数の両方を許可するが、それぞれ意味が異なるらしい。
+		// https://msdn.microsoft.com/en-us/library/dd145037.aspx
+		// https://support.microsoft.com/en-us/help/32667/info-font-metrics-and-the-use-of-negative-lfheight
+		// しかし、システムの DPI 値によって CFont::GetLogFont() の結果が変動し、
+		// また高 DPI 環境において従来の 96 DPI を前提としたサイズを指定した場合はフォントの見た目が小さくなることから、
+		// CFont::CreateFontIndirect() において、実際には LOGFONT::lfHeight はデバイス単位として解釈されるのではないか？
+		// アプリケーションが DPI Unaware の場合、GetDeviceCaps(LOGPIXELSX), GetDeviceCaps(LOGPIXELSY) は常に 96 を返す。
+		// MFC は VC2010 以降で System DPI Aware が既定値となっている。[構成プロパティ]→[マニフェスト ツール]→[入出力]→[DPI 認識]にて変更可能。
+		// なお、CFont::CreatePointFontIndirect() を使う場合は、ポイント数の10倍の数と解釈される。
+		ATLTRACE(_T("Old font = \"%s\", height = %ld, LogPixelsX = %d, LogPixelsY = %d\n"),
+			oldRibbonLogFont.lfFaceName, oldRibbonLogFont.lfHeight, logPixelsX, logPixelsY);
+
 		_tcscpy_s(oldRibbonLogFont.lfFaceName, _T("Meiryo UI"));
 		//_tcscpy_s(oldRibbonLogFont.lfFaceName, _T("Segoe UI"));
-		// Windows 7 デフォルト（メイリオ）の場合は高さが -11 らしいが、Meiryo UI や Segoe UI では小さすぎる。
+		// Windows 7/10 デフォルト（Segoe UI + フォント リンクされたメイリオ）の場合は高さが -11 らしいが、Meiryo UI では小さすぎる。
 		// MS Paint などと同じサイズにするには、-12 を指定する。
-		oldRibbonLogFont.lfHeight = -12;
+		oldRibbonLogFont.lfHeight = -::MulDiv(12, logPixelsY, 96);
 		if (m_ribbonFont.CreateFontIndirect(&oldRibbonLogFont))
 		{
 			m_wndRibbonBar.SetFont(&m_ribbonFont);

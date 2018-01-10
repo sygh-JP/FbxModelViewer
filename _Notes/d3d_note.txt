@@ -61,7 +61,7 @@ Windows 環境では Direct2D を使えば実行時の文字列テクスチャ�
 GPU 側のメモリーに直接グリフを書き込むことができ、CPU 側のメモリー（DIB バッファ）を介さないので高速になると思われる。
 他のプラットフォームでは Direct2D 相当機能がないので、同じことをしようと思えば CPU 側で OpenGL テクスチャを書き換える必要がある。
 ゲーム HUD は画像ファイルから生成した Direct3D テクスチャもしくは Direct2D ビットマップを直接使ったほうが効率がよいが、
-より柔軟な対応が必要となる日本語の長文などは Direct2D & DirectWrite を使ったほうがよさげ。
+より柔軟な対応が必要となる日本語の長文などは Direct2D & DirectWrite を使ったほうがよさげ。高 DPI 対応も簡単。
 なお、Direct2D ビットマップは 3D ビルボードには厳しいが、完全な 2D の HUD には使える。
 また、Begin-End によるバッチ処理をサポートするので、下手に自前で組むより効率的。
 ただしメッセージの文字送りを実装するんだったら、1文字ずつ分解して描画できないとダメ。
@@ -81,12 +81,17 @@ Direct2D 1.1 には便利な各種エフェクト群も追加されている。
 COM のインターフェイス ポインタに対して暗黙のアップキャストやダウンキャストを行ないたい場合、
 ATL::CComQIPtr を使うと、オーバーロードされた代入演算子によって QueryInterface() が自動的に実行される。
 なお、Windows SDK 8.0 では、<wrl/client.h> に Microsoft::WRL::ComPtr が用意されている。
-ストア アプリでも ATL のユーティリティ ライブラリはそのまま使えるものが多いが、
-ストア アプリへの移行やコード共有を視野に入れている場合、WRL を使用しておいたほうが良いかもしれない。
-ATL は有償版 Visual Studio でないと使えないが、WRL は Express 版でも使用可能。
+ただ、WRL は C++/CLI (/clr) で使えないという致命的弱点を持っている。
+C++/CLI によるマネージ インターフェイスの実装を視野に入れている場合、WRL ではなく ATL を使用しておいたほうが良いかもしれない。
+WRL は無償の Visual Studio Express でも使用可能、ATL は有償の Pro 以上でないと使えないという違いがあったが、
+VS2013 以降で用意されている Community では ATL/MFC も普通に使える。
+ATL のユーティリティ ライブラリはストア アプリ (C++/CX) でもそのまま使えるものが多い。
+
 
 OpenGL や Direct3D 9 はバッファやテクスチャなどのリソース（のハンドル）を直接デバイスにバインドする方式なのに対して、
 Direct3D 10/11 はまずリソースに対して用途に応じたビューを作成し、それらをデバイスにバインドする方式になっている。
+Direct3D 11 の設計はウィンドウ ハンドルとの分離も進んでいるため、オフスクリーン・バックグラウンドでリソースを作成しやすくなった。
+
 
 ・Windows Vista SP2 PU, 7 では Direct3D 11, Direct3D 10.1 + DWrite 1.0 / D2D 1.0 のインターフェイスが使える。
 ID3D10Device1, IDWriteFactory, ID2D1Factory, ID2D1RenderTarget, ID2D1Bitmap など。
@@ -101,11 +106,10 @@ ID3D11Device3, ID3D11DeviceContext3, IDWriteFactory3, ID2D1Factory3, ID2D1Device
 しかしインターフェイス名末尾のマイナー番号は普通にインクリメントするんじゃなく API のバージョン番号に合わせて欲しかった……
 
 
-Windows 10 Version 1703 で特定の FBX ファイルを開いて描画し、カメラを動かすと、
-デバッグ レイヤーから以下のようなエラーメッセージが出てレンダリングが停止する。
+とある FBX ファイルを開いて、カメラを動かしながら描画すると、デバッグ レイヤーから以下のようなエラーメッセージが出てレンダリングが停止する。
 
 D3D11: Removing Device.
 D3D11 ERROR: ID3D11Device::RemoveDevice: Device removal has been triggered for the following reason (DXGI_ERROR_DEVICE_HUNG: The Device took an unreasonable amount of time to execute its commands, or the hardware crashed/hung. As a result, the TDR (Timeout Detection and Recovery) mechanism has been triggered. The current Device Context was executing commands when the hang occurred. The application may want to respawn and fallback to less aggressive use of the display hardware). [ EXECUTION ERROR #378: DEVICE_REMOVAL_PROCESS_AT_FAULT]
 
-GPU は GeForce GTX 760 4GB、ドライバー 384.94 だが、以前のバージョン (Version 1607) とドライバー 378.49 では
-同じファイルをレンダリングしても問題は出ていなかったはず。
+どうやら NVIDIA GeForce ドライバー 384.94 にバグがある模様。
+古いドライバー 378.49 では、まったく同じファイルをレンダリングしても問題は出ていなかったはず。
