@@ -10,9 +10,11 @@ using namespace MyAppCommonConsts;
 
 #include "DebugNew.h"
 
+#ifdef ENABLES_SHADER_REFLECTION
 #include <d3dcompiler.inl>
 //#include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
+#endif
 
 // TODO: Direct3D 11.0 をサポートしない場合はリソースの作成を中止し、画面の塗りつぶしだけを行なうようにする。
 
@@ -2938,6 +2940,7 @@ namespace MyD3D
 			// HLSL 側で明示的に指定するすべはない。
 			// HACK: デバッグ ビルドやツールで事前に調べておいて、本番環境では決め打ちする？
 
+#ifdef ENABLES_SHADER_REFLECTION
 			Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pShaderReflector;
 			hr = D3D11Reflect(&shaderBytecode[0], shaderBytecode.size(), pShaderReflector.ReleaseAndGetAddressOf());
 			if (FAILED(hr))
@@ -2960,6 +2963,7 @@ namespace MyD3D
 				const UINT ifSlot = pShaderVarName->GetInterfaceSlot(0);
 				ATLTRACE("I/F Slot of '%s' = %u\n", varName, ifSlot);
 			}
+#endif
 		}
 
 		pathCompiledShaderFilePath = pathMediaDir;

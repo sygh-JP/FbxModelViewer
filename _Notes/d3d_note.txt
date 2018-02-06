@@ -106,7 +106,8 @@ ID3D11Device3, ID3D11DeviceContext3, IDWriteFactory3, ID2D1Factory3, ID2D1Device
 しかしインターフェイス名末尾のマイナー番号は普通にインクリメントするんじゃなく API のバージョン番号に合わせて欲しかった……
 
 
-とある FBX ファイルを開いて、カメラを動かしながら描画すると、デバッグ レイヤーから以下のようなエラーメッセージが出てレンダリングが停止する。
+とある自作 FBX ファイルを開いて、カメラを動かしながら描画すると、レンダリングが停止する現象に遭遇。
+デバッグ レイヤーからは以下のようなエラーメッセージが出る。
 
 D3D11: Removing Device.
 D3D11 ERROR: ID3D11Device::RemoveDevice: Device removal has been triggered for the following reason (DXGI_ERROR_DEVICE_HUNG: The Device took an unreasonable amount of time to execute its commands, or the hardware crashed/hung. As a result, the TDR (Timeout Detection and Recovery) mechanism has been triggered. The current Device Context was executing commands when the hang occurred. The application may want to respawn and fallback to less aggressive use of the display hardware). [ EXECUTION ERROR #378: DEVICE_REMOVAL_PROCESS_AT_FAULT]

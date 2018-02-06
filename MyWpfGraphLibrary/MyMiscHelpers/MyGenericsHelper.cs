@@ -240,6 +240,19 @@ namespace MyMiscHelpers
 			}
 		}
 
+		public static T DeserializeFromXmlFileByDataContractIfExists<T>(string filename)
+			where T : new()
+		{
+			if (File.Exists(filename))
+			{
+				return DeserializeFromXmlFileByDataContract<T>(filename);
+			}
+			else
+			{
+				return new T();
+			}
+		}
+
 		#endregion
 
 		// IXmlSerializable にも対応できるように、ISerializable には限定しない。
@@ -261,6 +274,19 @@ namespace MyMiscHelpers
 			{
 				var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
 				return (T)formatter.Deserialize(stream);
+			}
+		}
+
+		public static T DeserializeFromBinaryFileIfExists<T>(string filename)
+			where T : new()
+		{
+			if (File.Exists(filename))
+			{
+				return DeserializeFromBinaryFile<T>(filename);
+			}
+			else
+			{
+				return new T();
 			}
 		}
 
@@ -287,6 +313,19 @@ namespace MyMiscHelpers
 					var serializer = new System.Xml.Serialization.XmlSerializer(typeof(T));
 					return (T)serializer.Deserialize(sr);
 				}
+			}
+		}
+
+		public static T DeserializeFromXmlFileIfExists<T>(string filename)
+			where T : new()
+		{
+			if (File.Exists(filename))
+			{
+				return DeserializeFromXmlFile<T>(filename);
+			}
+			else
+			{
+				return new T();
 			}
 		}
 	}
