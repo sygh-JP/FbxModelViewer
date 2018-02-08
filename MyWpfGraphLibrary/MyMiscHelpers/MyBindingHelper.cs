@@ -14,15 +14,18 @@ namespace MyBindingHelpers
 	public abstract class MyNotifyPropertyChangedBase : System.ComponentModel.INotifyPropertyChanged
 	{
 		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+		// C# では多重継承ができないので、このヘルパークラスは万能ではないことに注意。
 		// Target から Source へのバインディングだけであれば、INotifyPropertyChanged を実装する必要はない。また、自動プロパティでも OK。
 		// Source から Target へのバインディングもサポートして双方向バインディングするためには、
 		// INotifyPropertyChanged の実装が必須であり、また自動プロパティが使えないので注意。
 		// なお、OnPropertyChanged() 仮想メソッドの個別実装は骨が折れるので、System.Linq.Expressions によるバインディング ヘルパーを使う。
 		// 普通はプロパティ名の文字列リテラルを直接記述すればよいが、あえてメンテナンス性を考慮して式木からプロパティ名を取得する。
 		// System.Linq.Expressions.Expression にラムダ式を渡すことで、プロパティの文字列表現を取得できる。
-		// C# 5.0 であれば、Caller Info 属性を使うともっと簡潔かつ効率的に実装できそう。
+		// C# 5.0 であれば、Caller Info 属性を使うと簡潔かつ効率的に実装できる。
 		// Caller Info は C/C++ の __FILE__ や __LINE__ 同様コンパイル時に処理されるので、リフレクションよりも実行効率がよい。
-		// C# 6.0 で導入された nameof 演算子を使えれば一番良いのだが……
+		// ただし、別のプロパティも連動させたい場合（複数のプロパティ変更を同時に通知したい場合）には、Caller Info では対応できない場面も出てくる。
+		// C# 6.0 で導入された nameof 演算子を使う方法もある。実際のところ nameof が一番汎用的。
 
 		protected void NotifyPropertyChanged(string propertyName)
 		{
@@ -34,7 +37,7 @@ namespace MyBindingHelpers
 		}
 
 		/// <summary>
-		/// ラムダ式からプロパティの文字列表現を取り出す。C# 6.0 では不要。
+		/// ラムダ式からプロパティの文字列表現を取り出す。C# 6.0 以降では不要。代わりに string を受け取るオーバーロードと nameof を使うこと。
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="propertyNameExpression"></param>
@@ -66,6 +69,7 @@ namespace MyBindingHelpers
 			// string などの参照型が渡されたときも考慮する。
 			// Nullable はたとえ null が入っていても、Nullable 自体は値型なので Equals メソッドはいつでも呼び出せるが、参照型はそうではない。
 			// Nullable でない値型と null との比較は静的に解析できるので、最適化が行なわれるはず。
+			// HACK: 単に静的メソッド Object.Equals(Object, Object) を使えばよいだけかも？　内部では仮想メソッド Object.Equals(Object) が呼ばれる実装となっているはず。
 			if ((dst == null && src != null) || (dst != null && !dst.Equals(src)))
 			{
 				dst = src;
