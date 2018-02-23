@@ -424,6 +424,41 @@ namespace MyMiscHelpers
 			HC_SYSMODALOFF = 5,
 		}
 
+		[Flags]
+		public enum FlashWindowMode : uint
+		{
+			/// <summary>
+			/// Stop flashing. The system restores the window to its original state.
+			/// </summary>
+			FLASHW_STOP = 0,
+
+			/// <summary>
+			/// Flash the window caption.
+			/// </summary>
+			FLASHW_CAPTION = 0x00000001,
+
+			/// <summary>
+			/// Flash the taskbar button.
+			/// </summary>
+			FLASHW_TRAY = 0x00000002,
+
+			/// <summary>
+			/// Flash both the window caption and taskbar button.
+			/// This is equivalent to setting the FLASHW_CAPTION | FLASHW_TRAY flags.
+			/// </summary>
+			FLASHW_ALL = (FLASHW_CAPTION | FLASHW_TRAY),
+
+			/// <summary>
+			/// Flash continuously, until the FLASHW_STOP flag is set.
+			/// </summary>
+			FLASHW_TIMER = 0x00000004,
+
+			/// <summary>
+			/// Flash continuously until the window comes to the foreground.
+			/// </summary>
+			FLASHW_TIMERNOFG = 0x0000000C,
+		}
+
 		[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
 		public struct MONITORINFO
 		{
@@ -487,6 +522,10 @@ namespace MyMiscHelpers
 		}
 
 		// CharSet の指定なしだと Ansi 扱いになってしまう模様。メソッドのほうも同様。
+		// なお、CLR の既定値は Auto だが、言語ごとにオーバーライドされるらしい。C# の既定値は Ansi らしい。はた迷惑な仕様。
+		// 通例、文字列型をインターフェイスに含む構造体およびメソッドを P/Invoke で利用する場合、明示的に CharSet を指定するべき。
+		// Auto は Win9x で Ansi となり、WinNT で Unicode となる。
+
 		[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
 		public struct MENUITEMINFO
 		{
@@ -499,9 +538,19 @@ namespace MyMiscHelpers
 			public IntPtr hbmpChecked;
 			public IntPtr hbmpUnchecked;
 			public UIntPtr dwItemData;
-			public string dwTypeData;
+			public string dwTypeData; // Original type: LPTSTR.
 			public UInt32 cch;
 			public IntPtr hbmpItem;
+		}
+
+		[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+		public struct FLASHWINFO
+		{
+			public UInt32 cbSize;
+			public IntPtr hwnd;
+			public FlashWindowMode dwFlags;
+			public UInt32 uCount;
+			public UInt32 dwTimeout;
 		}
 
 		[System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -704,6 +753,9 @@ namespace MyMiscHelpers
 
 		[System.Runtime.InteropServices.DllImport("user32.dll")]
 		public static extern bool EnableMenuItem(IntPtr hMenu, UInt32 uIDEnableItem, MenuFlags uEnable);
+
+		[System.Runtime.InteropServices.DllImport("user32.dll")]
+		public static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
 	}
 
 	public static class Kernel32DllMethodsInvoker

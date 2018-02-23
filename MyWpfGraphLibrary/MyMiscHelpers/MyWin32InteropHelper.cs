@@ -275,6 +275,7 @@ namespace MyMiscHelpers
 		}
 	}
 
+#if false
 	public interface IWin32ModalDialogImpl
 	{
 		/// <summary>
@@ -284,7 +285,9 @@ namespace MyMiscHelpers
 		/// <returns> Window.ShowDialog() の戻り値。</returns>
 		bool? ShowModalDialog(IntPtr ownerHwnd);
 	}
+#endif
 
+#if false
 	/// <summary>
 	/// 動的なカルチャ変更を実装するオブジェクトを表すインターフェイス。
 	/// </summary>
@@ -296,7 +299,7 @@ namespace MyMiscHelpers
 		/// <param name="newCulture">新しいカルチャ。</param>
 		void ChangeCulture(System.Globalization.CultureInfo newCulture);
 	}
-
+#endif
 
 	/// <summary>
 	/// Win32 との相互運用を提供する静的ヘルパークラス。
@@ -774,6 +777,14 @@ namespace MyMiscHelpers
 			return User32DllMethodsInvoker.GetDesktopWindow();
 		}
 
+		public static bool FlashWindowEx(IntPtr hwnd, User32DllMethodsInvoker.FlashWindowMode mode, uint count, uint timeoutMilliseconds = 0)
+		{
+			var fwi = new User32DllMethodsInvoker.FLASHWINFO() { dwFlags = mode, uCount = count, dwTimeout = timeoutMilliseconds };
+			fwi.cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(fwi);
+			fwi.hwnd = hwnd;
+			return User32DllMethodsInvoker.FlashWindowEx(ref fwi);
+		}
+
 		static System.Windows.Int32Rect ToInt32Rect(this Win32Commons.RECT rect)
 		{
 			return new System.Windows.Int32Rect(rect.left, rect.top, rect.Width, rect.Height);
@@ -876,13 +887,18 @@ namespace MyMiscHelpers
 			return winHandleList;
 		}
 
-		// ツールヒント（ツールチップ）が表示されると、Process.MainWindowHandle が切り替わってしまう模様。ツールヒントも一種のウィンドウ。
+		// System.Diagnostics.Process.MainWindowHandle は状況によって動的に切り替わってしまう。
 		// したがってこのプロパティでプロセスのメインウィンドウ（WPF の System.Windows.Application.MainWindow など）を安定して取得することはできない。
-		// CommCtrl.h で定義されている TOOLTIPS_CLASS すなわち "tooltips_class32" とウィンドウクラス名を比較して、ツールヒントか否かを判定する？
-		// プロセスに属するトップレベルの可視ウィンドウをすべて列挙してからチェックをかける？
 		// Windows Forms の場合、MainWindowHandle に影響するのはメニュー、コンテキストメニュー、ツールヒント、そしてウィンドウのシステムメニュー。他にもあるかもしれない。
+		// ツールヒント（ツールチップ）も一種のウィンドウ。
+		// CommCtrl.h で定義されている TOOLTIPS_CLASS すなわち "tooltips_class32" とウィンドウクラス名を比較して、ツールヒントか否かを判定する？
 		// WPF の Menu/ContextMenu/ToolTip は MainWindowHandle に影響しないようだが、ウィンドウのシステムメニューは影響する。
 
+		/// <summary>
+		/// プロセスに属するトップレベルの（オーナーを持たない）可視ウィンドウをすべて列挙する。
+		/// </summary>
+		/// <param name="ownerProcessId"></param>
+		/// <returns></returns>
 		public static List<IntPtr> EnumProcessRootVisibleWindows(uint ownerProcessId)
 		{
 			var winHandleList = new List<IntPtr>();
@@ -920,7 +936,7 @@ namespace MyMiscHelpers
 		/// 特定のウィンドウを強制的に最前面に表示する。
 		/// </summary>
 		/// <param name="hwnd">
-		/// 通常は Process.MainWindowHandle を渡せばよいが、タスク バーに表示されてないウィンドウのハンドルは取得できないので注意。
+		/// 通常は Process.MainWindowHandle を渡せばよいが、タスク バーに表示されていないウィンドウのハンドルは取得できないので注意。
 		/// タスクバーに表示されていないトップレベルのウィンドウも取得したい場合、Win32 EnumWindows() API などを使うしかないらしい。
 		/// </param>
 		public static void WakeupWindow(IntPtr hwnd)
