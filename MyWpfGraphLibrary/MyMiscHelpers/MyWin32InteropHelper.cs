@@ -1054,9 +1054,13 @@ namespace MyMiscHelpers
 		public void DetachCustomWndProc()
 		{
 			//System.Diagnostics.Debug.Assert(this.source != null && this.hook != null);
-			if (this._source != null && this._hook != null)
+			if (this._source != null)
 			{
-				this._source.RemoveHook(this._hook);
+				if (this._hook != null)
+				{
+					this._source.RemoveHook(this._hook);
+				}
+				this._source.Dispose();
 			}
 			this._source = null;
 			this._hook = null;
