@@ -30,9 +30,13 @@ namespace MyUtil
 
 
 	// char の符号は処理系依存なため、オーバーロードを作成できることに注意。
+	// ただのバイナリファイルやバイトコードだけでなく、SPIR-V や Raw 点群データなどにも対応できるよう、基本的なオーバーロードを用意しておく。
 	extern bool LoadBinaryFromFile(LPCWSTR pFileName, std::vector<char>& buffer);
 	extern bool LoadBinaryFromFile(LPCWSTR pFileName, std::vector<int8_t>& buffer);
 	extern bool LoadBinaryFromFile(LPCWSTR pFileName, std::vector<uint8_t>& buffer);
+	extern bool LoadBinaryFromFile(LPCWSTR pFileName, std::vector<int32_t>& buffer);
+	extern bool LoadBinaryFromFile(LPCWSTR pFileName, std::vector<uint32_t>& buffer);
+	extern bool LoadBinaryFromFile(LPCWSTR pFileName, std::vector<float>& buffer);
 
 	// Windows API の TCHAR 用に MyUtil::tstring, tformat を定義。
 	// std 名前空間を汚染しないように、std::tstring とはしない。

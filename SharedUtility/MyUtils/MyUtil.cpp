@@ -6,82 +6,125 @@
 
 namespace MyUtil
 {
-	template<typename T> bool LoadBinaryFromFileImpl(LPCWSTR pFileName, std::vector<T>& buffer)
+	template<typename T> void LoadBinaryFromFileImpl(LPCWSTR pFileName, std::vector<T>& buffer)
 	{
-		static_assert((sizeof(T) == 1), "Unsupported size!!");
+		//static_assert((sizeof(T) == 1), "Unsupported size!!");
 
-		// 念のためクリアしておく。
+		// あらかじめクリアしておく。
 		buffer.clear();
 
-		// _stat64i32, _wstat64i32 は (2GB-1B) までのファイルしか正常に扱えない。2GB 以上のファイルに対しては _stat64, _wstat64 を使う。
+		// _stat32(), _wstat32(), _stat32i64(), _wstat32i64() はタイムスタンプが 2038-01-18 23:59:59 までしか扱えないので論外。
+		// _stat64i32(), _wstat64i32() は 0x7FFFFFFF [bytes] (2GB - 1B) までのファイルしか正常に扱えない。
+		// 2GB 以上のファイルも正常に扱えるようにするには _stat64(), _wstat64() を使う必要がある。
+
+#if defined(_M_X64) || defined(_M_ARM64)
 		// 64bit ビルドの判定は _WIN64 でもよさそう。
 		// https://msdn.microsoft.com/en-us/library/b0084kay.aspx
 		// ちなみに x86 や ARM では _WIN64 は定義されないが、x64 と ARM64 では _WIN64 と _WIN32 の両方が定義されるので注意。
-#if defined(_M_X64) || defined(_M_ARM64)
-		struct _stat64 fileStats = {};
-		const auto getFileStatFunc = _wstat64;
 #elif defined(_M_IX86) || defined(_M_ARM)
-		struct _stat64i32 fileStats = {};
-		const auto getFileStatFunc = _wstat64i32;
 #else
 #error Not supported platform!!
 #endif
+		// 構造体と同名の関数が存在するので、C++ でも struct で修飾する必要がある。
+		struct _stat64 fileStats = {};
+		const auto getFileStatFunc = _wstat64;
 
 		// ファイル サイズが取得できない、もしくはサイズが負だった場合は false を返す。
 		if (getFileStatFunc(pFileName, &fileStats) != 0 || fileStats.st_size < 0)
 		{
-			ATLTRACE(L"Cannot get the file stats for the file!! <%s>\n", pFileName);
-			return false;
+			throw std::exception("Cannot get the file stats for the file!!");
 		}
 
-		buffer.resize(fileStats.st_size);
+		if (fileStats.st_size % sizeof(T) != 0)
+		{
+			throw std::exception("The file size is not a multiple of the expected size of element!!");
+		}
+
+		const auto fileSizeInBytes = static_cast<uint64_t>(fileStats.st_size);
+
+		if (sizeof(size_t) < 8 && (std::numeric_limits<size_t>::max)() < fileSizeInBytes)
+		{
+			throw std::exception("The file size is over the capacity on this platform!!");
+		}
 
 		if (fileStats.st_size == 0)
 		{
-			return true;
+			return;
 		}
 
+		const auto numElementsInFile = static_cast<size_t>(fileStats.st_size) / sizeof(T);
+
+		buffer.resize(numElementsInFile);
+
 #if 0
-		// std::fstream の場合、32bit 版では 2GB までのファイルしか扱えないので注意。
-		// デバッグ ビルドでは、数 MB のファイルを読み込むときに20秒以上の時間がかかる。
+		// std::fstream の場合、32bit 版では 0xFFFFFFFF [bytes] (4GB - 1B) までのファイルしか正常に扱えないので注意。
+		// 4GB 以上のファイルを読み込もうとするとどうなる？　少なくともサイズ判定は正しくできない。
+		// また、MSVC のデバッグ ビルドでは、数 MB のファイルを読み込むときに20秒以上の時間がかかる。
+		// 従来の CRT ファイル入出力関数には、デバッグ ビルドであってもそこまでの致命的なオーバーヘッドはない。
 		std::basic_ifstream<T> ifs(pFileName, std::ios::in | std::ios::binary);
 
 		if (ifs.fail())
 		{
-			ATLTRACE(L"Cannot open the file!! <%s>\n", pFileName);
-			return false;
+			throw std::exception("Cannot open the file!!");
 		}
 
-		ifs.read(&buffer[0], fileStats.st_size);
+		ifs.read(&buffer[0], numElementsInFile);
 #else
 		FILE* pFile = nullptr;
 		const auto retCode = _wfopen_s(&pFile, pFileName, L"rb");
 		if (retCode != 0 || pFile == nullptr)
 		{
-			ATLTRACE(L"Cannot open the file!! <%s>\n", pFileName);
-			return false;
+			throw std::exception("Cannot open the file!!");
 		}
-		fread_s(&buffer[0], buffer.size(), 1, fileStats.st_size, pFile);
+		fread_s(&buffer[0], buffer.size(), sizeof(T), numElementsInFile, pFile);
 		fclose(pFile);
 		pFile = nullptr;
 #endif
+	}
 
-		return true;
+	template<typename T> bool LoadBinaryFromFileImpl2(LPCWSTR pFileName, std::vector<T>& buffer)
+	{
+		try
+		{
+			LoadBinaryFromFileImpl(pFileName, buffer);
+			return true;
+		}
+		catch (const std::exception& ex)
+		{
+			const CStringW strMsg(ex.what());
+			ATLTRACE(L"%s <%s>\n", strMsg.GetString(), pFileName);
+			return false;
+		}
 	}
 
 	bool LoadBinaryFromFile(LPCWSTR pFileName, std::vector<char>& buffer)
 	{
-		return LoadBinaryFromFileImpl(pFileName, buffer);
+		return LoadBinaryFromFileImpl2(pFileName, buffer);
 	}
 
 	bool LoadBinaryFromFile(LPCWSTR pFileName, std::vector<int8_t>& buffer)
 	{
-		return LoadBinaryFromFileImpl(pFileName, buffer);
+		return LoadBinaryFromFileImpl2(pFileName, buffer);
 	}
 
 	bool LoadBinaryFromFile(LPCWSTR pFileName, std::vector<uint8_t>& buffer)
 	{
-		return LoadBinaryFromFileImpl(pFileName, buffer);
+		return LoadBinaryFromFileImpl2(pFileName, buffer);
+	}
+
+	bool LoadBinaryFromFile(LPCWSTR pFileName, std::vector<int32_t>& buffer)
+	{
+		return LoadBinaryFromFileImpl2(pFileName, buffer);
+	}
+
+	bool LoadBinaryFromFile(LPCWSTR pFileName, std::vector<uint32_t>& buffer)
+	{
+		return LoadBinaryFromFileImpl2(pFileName, buffer);
+	}
+
+	bool LoadBinaryFromFile(LPCWSTR pFileName, std::vector<float>& buffer)
+	{
+		return LoadBinaryFromFileImpl2(pFileName, buffer);
 	}
 
 	// コピーコンストラクタよりも C++11 ムーブ コンストラクタが優先されることを考慮し、あえて引数ではなく戻り値で返す。
