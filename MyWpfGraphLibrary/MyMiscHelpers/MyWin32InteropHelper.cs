@@ -15,6 +15,7 @@ namespace MyMiscHelpers
 
 	internal class MyDeviceHelper
 	{
+#if false
 		/// <summary>
 		/// System.Windows.Controls.Orientation と同じ。
 		/// </summary>
@@ -23,6 +24,7 @@ namespace MyMiscHelpers
 			Horizontal,
 			Vertical,
 		}
+#endif
 
 		/// <summary>
 		/// Windows OS の標準 DPI は 96。旧 Mac だと 72 になる。Retina ディスプレイは世代や製品によって複数ある。
@@ -190,7 +192,7 @@ namespace MyMiscHelpers
 		}
 	}
 
-	public static class MyVisualUtility
+	public static class MyVisualHelper
 	{
 		/// <summary>
 		/// 指定した Visual 要素を、ビットマップにレンダリングして返す。
@@ -469,6 +471,7 @@ namespace MyMiscHelpers
 					var removeFlags = User32DllMethodsInvoker.MenuFlags.MF_BYPOSITION | User32DllMethodsInvoker.MenuFlags.MF_REMOVE;
 					User32DllMethodsInvoker.RemoveMenu(hMenu, (uint)(num - 1), removeFlags); // Remove 'Close'
 					User32DllMethodsInvoker.RemoveMenu(hMenu, (uint)(num - 2), removeFlags); // Remove a separator
+
 					//User32DllMethodsInvoker.DrawMenuBar(hwnd);
 				}
 			}
