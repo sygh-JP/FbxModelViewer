@@ -22,6 +22,9 @@
 #pragma region // [B]
 #ifndef _MFC_VER
 
+// VC2015 Update3 では、<vcruntime_new_debug.h> にて、デバッグ情報を受け取る
+// operator new のオーバーロードが定義されている。
+// MFC では、<afx.h> にて DEBUG_NEW が定義されている。
 // 非 MFC の場合、DEBUG_NEW を自前で定義する。
 #ifdef _DEBUG
 #define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
@@ -29,19 +32,23 @@
 
 #endif
 
+// MSVC の CRT では、_CRTDBG_MAP_ALLOC を定義して <crtdbg.h> をインクルードすると、
+// malloc, free などをマクロ定義のデバッグ レイヤーに置き換えるようになる。
+// 自前で定義する必要はない。
+
 #ifdef _DEBUG
-#define DEBUG_MALLOC(size) _malloc_dbg(size, _NORMAL_BLOCK, __FILE__, __LINE__)
-#define DEBUG_CALLOC(count, size) _calloc_dbg(count, size, _NORMAL_BLOCK, __FILE__, __LINE__)
-#define DEBUG_REALLOC(memory, newSize) _realloc_dbg(memory, newSize, _NORMAL_BLOCK, __FILE__, __LINE__)
+//#define DEBUG_MALLOC(size) _malloc_dbg(size, _NORMAL_BLOCK, __FILE__, __LINE__)
+//#define DEBUG_CALLOC(count, size) _calloc_dbg(count, size, _NORMAL_BLOCK, __FILE__, __LINE__)
+//#define DEBUG_REALLOC(memory, newSize) _realloc_dbg(memory, newSize, _NORMAL_BLOCK, __FILE__, __LINE__)
 
 #define NEW DEBUG_NEW
-#define MALLOC DEBUG_MALLOC
-#define CALLOC DEBUG_CALLOC
-#define REALLOC DEBUG_REALLOC
+//#define MALLOC DEBUG_MALLOC
+//#define CALLOC DEBUG_CALLOC
+//#define REALLOC DEBUG_REALLOC
 #else
 #define NEW new
-#define MALLOC malloc
-#define CALLOC calloc
-#define REALLOC realloc
+//#define MALLOC malloc
+//#define CALLOC calloc
+//#define REALLOC realloc
 #endif
 #pragma endregion

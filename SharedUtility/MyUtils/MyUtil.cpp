@@ -62,18 +62,25 @@ namespace MyUtil
 		outBuffer.resize(numElementsInFile);
 
 #if 0
-		// std::fstream の場合、32bit 版では 0xFFFFFFFF [bytes] (4GB - 1B) までのファイルしか正常に扱えないので注意。
-		// 4GB 以上のファイルを読み込もうとするとどうなる？　少なくともサイズ判定は正しくできない。
-		// また、MSVC のデバッグ ビルドでは、数 MB のファイルを読み込むときに20秒以上の時間がかかる。
+		// std::fstream の場合、MSVC のデバッグ ビルドでは、数 MB のファイルを読み込むときに20秒以上の時間がかかる。
 		// 従来の CRT ファイル入出力関数には、デバッグ ビルドであってもそこまでの致命的なオーバーヘッドはない。
-		std::basic_ifstream<T> ifs(pFileName, std::ios::in | std::ios::binary);
+		std::basic_ifstream<T> ifs(pFilePath, std::ios::in | std::ios::binary);
 
 		if (ifs.fail())
 		{
 			throw std::exception("Cannot open the file!!");
 		}
 
-		ifs.read(&buffer[0], numElementsInFile);
+		ifs.seekg(0, std::fstream::end);
+		const auto endPos = ifs.tellg();
+		ifs.clear();
+		ifs.seekg(0, std::fstream::beg);
+		const auto begPos = ifs.tellg();
+		const auto fileSize = endPos - begPos;
+		static_assert(sizeof(fileSize) >= 8, "Size of pos_type must be greater than or equal to 8 bytes!!");
+		static_assert(sizeof(fpos_t) >= 8, "Size of fpos_t must be greater than or equal to 8 bytes!!");
+
+		ifs.read(&outBuffer[0], numElementsInFile);
 #else
 		FILE* pFile = nullptr;
 		const auto retCode = _wfopen_s(&pFile, pFilePath, L"rb");
