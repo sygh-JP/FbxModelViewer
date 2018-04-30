@@ -46,6 +46,11 @@ namespace MyUtil
 
 		const auto fileSizeInBytes = static_cast<uint64_t>(fileStats.st_size);
 
+		// MFC や GDI+ を使う場合は NOMINMAX を定義できず、邪魔というか邪悪な min/max マクロを無効化できない。
+		// Windows SDK の <intsafe.h> で定義されている SIZE_T_MAX などを代替として使う方法もあるが、
+		// コードレベルでの移植性を高めるために、小技を使ってマクロ展開を回避する。
+		// http://d.hatena.ne.jp/yohhoy/20120115/p1
+
 		// size_t で表現できない場合はエラー。
 		if (sizeof(size_t) < 8 && (std::numeric_limits<size_t>::max)() < fileSizeInBytes)
 		{
@@ -76,7 +81,7 @@ namespace MyUtil
 		ifs.clear();
 		ifs.seekg(0, std::fstream::beg);
 		const auto begPos = ifs.tellg();
-		const auto fileSize = endPos - begPos;
+		const auto fileSize = endPos - begPos; // std::streamoff 型。VC2012 では 32bit 版でも long long になるらしい。
 		static_assert(sizeof(fileSize) >= 8, "Size of pos_type must be greater than or equal to 8 bytes!!");
 		static_assert(sizeof(fpos_t) >= 8, "Size of fpos_t must be greater than or equal to 8 bytes!!");
 
