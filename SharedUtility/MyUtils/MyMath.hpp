@@ -81,18 +81,18 @@ namespace MyMath
 	inline DWORD ConvertColor3FToRGBX(const Vector3F& colorVal)
 	{
 		return
-			(uint32_t(MyUtil::Clamp(colorVal.x * 255.0f, 0.0f, 255.0f))) |
-			(uint32_t(MyUtil::Clamp(colorVal.y * 255.0f, 0.0f, 255.0f)) << 8) |
-			(uint32_t(MyUtil::Clamp(colorVal.z * 255.0f, 0.0f, 255.0f)) << 16);
+			(uint32_t(MyUtils::Clamp(colorVal.x * 255.0f, 0.0f, 255.0f))) |
+			(uint32_t(MyUtils::Clamp(colorVal.y * 255.0f, 0.0f, 255.0f)) << 8) |
+			(uint32_t(MyUtils::Clamp(colorVal.z * 255.0f, 0.0f, 255.0f)) << 16);
 	}
 
 	// リトルエンディアン表記が基準なので注意。COLORREF への変換に使える。
 	inline DWORD ConvertColor4FToRGBX(const Vector4F& colorVal)
 	{
 		return
-			(uint32_t(MyUtil::Clamp(colorVal.x * 255.0f, 0.0f, 255.0f))) |
-			(uint32_t(MyUtil::Clamp(colorVal.y * 255.0f, 0.0f, 255.0f)) << 8) |
-			(uint32_t(MyUtil::Clamp(colorVal.z * 255.0f, 0.0f, 255.0f)) << 16);
+			(uint32_t(MyUtils::Clamp(colorVal.x * 255.0f, 0.0f, 255.0f))) |
+			(uint32_t(MyUtils::Clamp(colorVal.y * 255.0f, 0.0f, 255.0f)) << 8) |
+			(uint32_t(MyUtils::Clamp(colorVal.z * 255.0f, 0.0f, 255.0f)) << 16);
 	}
 
 
@@ -103,7 +103,7 @@ namespace MyMath
 			0.298912 * r +
 			0.586611 * g +
 			0.114478 * b;
-		//return static_cast<uint8_t>(MyUtil::Clamp<double>(graylevel, 0, 255));
+		//return static_cast<uint8_t>(MyUtils::Clamp<double>(graylevel, 0, 255));
 		// uint8_t が入力であれば、単純な切り捨て演算で OK。
 		return static_cast<uint8_t>(graylevel);
 	}
@@ -811,7 +811,7 @@ namespace MyMath
 		}
 
 		//! @brief  ボーン名を設定する。<br>
-		void SetBoneName(const char* pName) { m_strBoneName = pName ? MyUtil::ConvertUtf8toUtf16(pName) : L""; }
+		void SetBoneName(const char* pName) { m_strBoneName = pName ? MyUtils::ConvertUtf8toUtf16(pName) : L""; }
 		void SetBoneName(const wchar_t* pName) { m_strBoneName = pName ? pName : L""; }
 
 		const std::wstring& GetBoneNameW() const { return m_strBoneName; }
@@ -910,12 +910,12 @@ namespace MyMath
 
 #if 0
 		//! @brief  ボーン名を設定する。<br>
-		void SetBoneName(const char* pName) { m_strBoneName = pName ? MyUtil::ConvertUtf8toUtf16(pName) : L""; }
+		void SetBoneName(const char* pName) { m_strBoneName = pName ? MyUtils::ConvertUtf8toUtf16(pName) : L""; }
 		void SetBoneName(const wchar_t* pName) { m_strBoneName = pName ? pName : L""; }
 
 		const std::wstring& GetBoneNameW() const { return m_strBoneName; }
 
-		void SetAnimTrackName(const char* pName) { m_strAnimTrackName = pName ? MyUtil::ConvertUtf8toUtf16(pName) : L""; }
+		void SetAnimTrackName(const char* pName) { m_strAnimTrackName = pName ? MyUtils::ConvertUtf8toUtf16(pName) : L""; }
 		void SetAnimTrackName(const wchar_t* pName) { m_strAnimTrackName = pName ? pName : L""; }
 
 		const std::wstring& GetAnimTrackNameW() const { return m_strAnimTrackName; }
@@ -1186,7 +1186,7 @@ namespace MyMath
 
 		float GetSpecularPower() const { return m_specularPower; }
 		// ゼロは無効（HLSL の pow() 計算結果が不正になる）なので、クランプ。
-		void SetSpecularPower(float val) { m_specularPower = MyUtil::Clamp(val, MinSpecularPowerValue, MaxSpecularPowerValue); }
+		void SetSpecularPower(float val) { m_specularPower = MyUtils::Clamp(val, MinSpecularPowerValue, MaxSpecularPowerValue); }
 
 		float GetRoughness() const { return m_roughness; }
 		void SetRoughness(float val) { m_roughness = val; }

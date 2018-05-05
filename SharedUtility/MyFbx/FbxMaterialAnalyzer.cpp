@@ -22,7 +22,7 @@ namespace
 				//const KFbxTexture* texture = KFbxCast<KFbxTexture>(prop.GetSrcObject(KFbxTexture::ClassId, i));
 				const auto* texture = prop.GetSrcObject<const FbxTexture>(i);
 				//outTexName = texture->GetFileName(); // 昔の FBX SDK ではこの GetFileName() メソッドでファイル名を取得できていた？
-				outTexName = MyUtil::ConvertUtf8toUtf16(texture->GetName());
+				outTexName = MyUtils::ConvertUtf8toUtf16(texture->GetName());
 				// GetName() で抽出するのは名前（FBX オブジェクト名）であってファイル名ではない。
 				// Metasequoia 用の FBX Exporter プラグインを使って出力したとき、"マテリアル名" + "_tex" という名前になっていた。
 				// http://horsetail.sakura.ne.jp/mqplugin/mqfbxe.html
@@ -36,8 +36,8 @@ namespace
 			for (int i = 0; i < generalFileTextureCount; ++i)
 			{
 				const auto* fileTexture = prop.GetSrcObject<const FbxFileTexture>(i);
-				outTexFileName = MyUtil::ConvertUtf8toUtf16(fileTexture->GetFileName());
-				outTexRelativeFileName = MyUtil::ConvertUtf8toUtf16(fileTexture->GetRelativeFileName());
+				outTexFileName = MyUtils::ConvertUtf8toUtf16(fileTexture->GetFileName());
+				outTexRelativeFileName = MyUtils::ConvertUtf8toUtf16(fileTexture->GetRelativeFileName());
 				// FBX の RelativeFileName は、FBX ファイルからテクスチャ画像ファイルへの相対パスでなく、
 				// FBX ファイルからその FBX を作成したプロセス（EXE）への相対ディレクトリ パス＋ファイル名が記録されることがあるなど、
 				// 挙動不審というか可搬性が全くない。
@@ -298,7 +298,7 @@ namespace MyFbx
 		case PropertyType_Reflection:
 			return m_texNameReflection;
 		default:
-			return MyUtil::EmptyStdStringW;
+			return MyUtils::EmptyStdStringW;
 		}
 	}
 
@@ -325,7 +325,7 @@ namespace MyFbx
 		case PropertyType_Reflection:
 			return m_texFileNameReflection;
 		default:
-			return MyUtil::EmptyStdStringW;
+			return MyUtils::EmptyStdStringW;
 		}
 	}
 
@@ -352,7 +352,7 @@ namespace MyFbx
 		case PropertyType_Reflection:
 			return m_texRelativeFileNameReflection;
 		default:
-			return MyUtil::EmptyStdStringW;
+			return MyUtils::EmptyStdStringW;
 		}
 	}
 }

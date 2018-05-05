@@ -1675,7 +1675,7 @@ namespace MyOGL
 			return false;
 		}
 
-		MyUtil::HRStopwatch stopwatch;
+		MyUtils::HRStopwatch stopwatch;
 		stopwatch.Start();
 
 		_ASSERTE(m_hDC != nullptr);
@@ -1693,7 +1693,7 @@ namespace MyOGL
 #else
 			// OpenGL コンピュート シェーダーのローカル グループ サイズは、
 			// DirectX 11 / HLSL のように GLSL シェーダー側でハード コーディングする方法のほか、
-			// ホスト プログラム側でも指定することができるようになっている。
+			// ホスト プログラム側でも指定することができる拡張 GL_ARB_compute_variable_group_size が用意されている。
 			// ただしホスト側で指定する場合、シェーダーコンパイル時には layout に local_size_variable の指定が必要な模様。
 			glDispatchComputeGroupSizeARB(ComputeDispatchCountX, 1, 1,
 				ComputingThreadLocalGroupSizeX, ComputingThreadLocalGroupSizeY, 1);

@@ -60,7 +60,7 @@ namespace MyFbx
 		// リリース ビルドではそれなりに高速。できれば FBX ファイルを出力する際に、3D ツール（モデラー）側で三角形化しておいたほうがいい。
 		FbxGeometryConverter geoConv(pMesh->GetFbxManager());
 
-		MyUtil::HRStopwatch stopwatch;
+		MyUtils::HRStopwatch stopwatch;
 		stopwatch.Start();
 
 		// Web で見かける古いコードで使われている TriangulateMesh() は deprecated らしい。

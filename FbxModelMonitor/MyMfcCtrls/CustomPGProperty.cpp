@@ -128,7 +128,7 @@ BOOL CMyIntSpinPGProperty::OnUpdateValue()
 	const BOOL ret = __super::OnUpdateValue();
 	if (ret)
 	{
-		m_varValue = _variant_t(MyUtil::Clamp(this->GetCurrentValue(), this->GetMinValue(), this->GetMaxValue()));
+		m_varValue = _variant_t(MyUtils::Clamp(this->GetCurrentValue(), this->GetMinValue(), this->GetMaxValue()));
 	}
 
 	return ret;
@@ -241,7 +241,7 @@ BOOL CMyDoubleSpinPGProperty::OnUpdateValue()
 	const BOOL ret = __super::OnUpdateValue();
 	if (ret)
 	{
-		m_varValue = _variant_t(MyUtil::Clamp(this->GetCurrentValue(), this->GetMinValue(), this->GetMaxValue()));
+		m_varValue = _variant_t(MyUtils::Clamp(this->GetCurrentValue(), this->GetMinValue(), this->GetMaxValue()));
 	}
 
 	return ret;
@@ -319,13 +319,13 @@ void CMyDoubleSpinPGProperty::SetCurrentValue(double val, bool notifiesPropertyC
 
 void CMyDoubleSpinPGProperty::IncreaseValue(bool notifiesPropertyChanged)
 {
-	const double newVal = MyUtil::Clamp(this->GetCurrentValue() + this->GetDelta(), this->GetMinValue(), this->GetMaxValue());
+	const double newVal = MyUtils::Clamp(this->GetCurrentValue() + this->GetDelta(), this->GetMinValue(), this->GetMaxValue());
 	this->SetCurrentValue(newVal, notifiesPropertyChanged);
 }
 
 void CMyDoubleSpinPGProperty::DecreaseValue(bool notifiesPropertyChanged)
 {
-	const double newVal = MyUtil::Clamp(this->GetCurrentValue() - this->GetDelta(), this->GetMinValue(), this->GetMaxValue());
+	const double newVal = MyUtils::Clamp(this->GetCurrentValue() - this->GetDelta(), this->GetMinValue(), this->GetMaxValue());
 	this->SetCurrentValue(newVal, notifiesPropertyChanged);
 }
 
@@ -345,9 +345,9 @@ namespace
 
 	inline Gdiplus::Color ToGdipColorRgb(int r, int g, int b)
 	{
-		const byte cR = byte(MyUtil::Clamp<int>(r, 0, 0xFF));
-		const byte cG = byte(MyUtil::Clamp<int>(g, 0, 0xFF));
-		const byte cB = byte(MyUtil::Clamp<int>(b, 0, 0xFF));
+		const byte cR = byte(MyUtils::Clamp<int>(r, 0, 0xFF));
+		const byte cG = byte(MyUtils::Clamp<int>(g, 0, 0xFF));
+		const byte cB = byte(MyUtils::Clamp<int>(b, 0, 0xFF));
 		return Gdiplus::Color(cR, cG, cB);
 	}
 }
@@ -372,7 +372,7 @@ bool CMyGradientStopsProperty::ScanGradientString(const CStringW& strTarget)
 		{
 			return false;
 		}
-		gradStopOffsets.push_back(MyUtil::Clamp<float>(offset * 0.01f, 0.0f, 1.0f));
+		gradStopOffsets.push_back(MyUtils::Clamp<float>(offset * 0.01f, 0.0f, 1.0f));
 		gradStopColors.push_back(ToGdipColorRgb(r, g, b));
 
 		strRes = strTarget.Tokenize(sepChars, tokenStart);

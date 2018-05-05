@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace MyUtil
+namespace MyUtils
 {
 	typedef std::vector<int32_t> TIntArray;
 	typedef std::vector<uint32_t> TUIntArray;
@@ -16,9 +16,9 @@ namespace MyUtil
 } // end of namespace
 
 
-using MyUtil::TIntArray;
-using MyUtil::TUIntArray;
-using MyUtil::TStrArray;
-//using MyUtil::TIntIntPair;
-using MyUtil::TIntToIntMap;
-using MyUtil::TStrToIntMap;
+using MyUtils::TIntArray;
+using MyUtils::TUIntArray;
+using MyUtils::TStrArray;
+//using MyUtils::TIntIntPair;
+using MyUtils::TIntToIntMap;
+using MyUtils::TStrToIntMap;

@@ -168,8 +168,8 @@ private:
 		// 要するにハードウェア依存。MSAA レベルに関しても、Direct3D 10.1 以降のような明確な下限はないらしい。
 		// http://wlog.flatlib.jp/item/1634
 		return CSize(
-			MyUtil::Clamp<int>(clrect.Width(), 1, 4096),
-			MyUtil::Clamp<int>(clrect.Height(), 1, 4096));
+			MyUtils::Clamp<int>(clrect.Width(), 1, 4096),
+			MyUtils::Clamp<int>(clrect.Height(), 1, 4096));
 	}
 	CSize GetSafeDirect3DHostWndClientRectSize() const
 	{

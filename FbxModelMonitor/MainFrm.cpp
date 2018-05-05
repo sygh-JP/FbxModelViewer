@@ -210,7 +210,7 @@ void CMainFrame::CreateToonShadingDiffuseCoefRefTextureDibs(const std::vector<My
 
 	// デフォルトで白色。
 	m_toonShadingDiffuseCoefRefTexData.TextureDib.resize(texW * texH * 4, 0xFF);
-	MyMath::ColorRgba* textureBuf = MyUtil::StaticPointerCast<MyMath::ColorRgba>(&m_toonShadingDiffuseCoefRefTexData.TextureDib[0]);
+	MyMath::ColorRgba* textureBuf = MyUtils::StaticPointerCast<MyMath::ColorRgba>(&m_toonShadingDiffuseCoefRefTexData.TextureDib[0]);
 
 	// HACK: UI でマテリアルの種類ごとに動的に制御・設定できるようにする。
 	// マテリアルの種類の上限は高さピクセル数に左右される。256 あれば十分か？
@@ -1250,9 +1250,9 @@ void CMainFrame::OnDestroy()
 		m_resizeCheckTimerID = 0;
 	}
 
-	MyUtil::SafeDelete(m_pD3DManager);
+	MyUtils::SafeDelete(m_pD3DManager);
 #ifdef MY_FBX_ENABLES_OPENGL_SUPPORT
-	MyUtil::SafeDelete(m_pOGLManager);
+	MyUtils::SafeDelete(m_pOGLManager);
 #endif
 
 	__super::OnDestroy();
@@ -1271,7 +1271,7 @@ void CMainFrame::OnClose()
 
 MyFbx::MyFbxNodeAnalyzerBase::TSharedPtr CMainFrame::LoadFbxFile(CStringW strFilePath)
 {
-	MyUtil::HRStopwatch stopwatch;
+	MyUtils::HRStopwatch stopwatch;
 	stopwatch.Start();
 
 	// NOTE: ATL::CComPtr は内包するポインタ型への暗黙のキャストがオーバーロードされているが、std::shared_ptr はそうでないことに注意。
@@ -1333,7 +1333,7 @@ bool CMainFrame::CreateDeviceMeshFromFbx(CStringW strFilePath, const MyFbx::MyFb
 	texDirPath.RemoveFileSpec(); // FBX ファイルと同階層にすべての相対テクスチャ ファイルがあるものとする。
 
 	// ポリゴン数、マテリアルやテクスチャが多い場合はデバイス メッシュの構築にも時間がかかる。
-	MyUtil::HRStopwatch stopwatch;
+	MyUtils::HRStopwatch stopwatch;
 	stopwatch.Start();
 
 	MyMath::TMyNameToMaterialTable nameToMaterialTable;

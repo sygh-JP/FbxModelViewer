@@ -66,7 +66,7 @@ namespace MyFbx
 		TFbxSdkImporterPtr pImporter(FbxImporter::Create(pSdkManager, ""), MyFbx::Deleter<FbxImporter>());
 
 		std::string fullPath;
-		MyUtil::GetUtf8FullPath(pFilePath, fullPath);
+		MyUtils::GetUtf8FullPath(pFilePath, fullPath);
 		int fileFormat = -1;
 #if 0
 		// FBX SDK 2010.2 以前

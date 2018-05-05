@@ -510,7 +510,7 @@ namespace MyDWriteWrapper
 							/ (GgoGrayLevel_8 - 1);
 						const size_t pos = texWidth * y + x;
 						_ASSERTE(pos < textureBuf.size());
-						textureBuf[pos] = MyUtil::Clamp(alpha, 0, 255);
+						textureBuf[pos] = MyUtils::Clamp(alpha, 0, 255);
 					}
 				}
 				offsetX += feedAmt;

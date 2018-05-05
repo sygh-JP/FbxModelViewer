@@ -21,7 +21,7 @@ namespace MyFbx
 		const auto type = skeleton->GetSkeletonType();
 
 		_ASSERTE(node != nullptr);
-		const auto nodeName = MyUtil::ConvertUtf8toUtf16(node->GetName());
+		const auto nodeName = MyUtils::ConvertUtf8toUtf16(node->GetName());
 
 		// もしノードだったら接続をチェックする
 		if (type == FbxSkeleton::eLimbNode)
@@ -32,7 +32,7 @@ namespace MyFbx
 			// 親ノード検索。
 			const auto* parentNode = node->GetParent();
 			_ASSERTE(parentNode != nullptr);
-			const auto parentName = MyUtil::ConvertUtf8toUtf16(parentNode->GetName());
+			const auto parentName = MyUtils::ConvertUtf8toUtf16(parentNode->GetName());
 			auto parentSkeleton = this->FindSkeleton(parentName);
 			if (parentSkeleton == nullptr)
 			{
@@ -65,7 +65,7 @@ namespace MyFbx
 			// 親ノード検索。
 			const auto* parentNode = node->GetParent();
 			_ASSERTE(parentNode != nullptr);
-			const auto parentName = MyUtil::ConvertUtf8toUtf16(parentNode->GetName());
+			const auto parentName = MyUtils::ConvertUtf8toUtf16(parentNode->GetName());
 			auto parentSkeleton = this->FindSkeleton(parentName);
 			if (parentSkeleton == nullptr)
 			{

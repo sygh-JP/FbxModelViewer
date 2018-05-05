@@ -27,7 +27,7 @@ namespace MyFbx
 		{
 			const auto* pAnimStack = scene->GetSrcObject<const FbxAnimStack>(a);
 			const char* pAnimStackName = pAnimStack->GetName();
-			const auto strAnimTrackName = MyUtil::SafeConvertUtf8toUtf16(pAnimStackName);
+			const auto strAnimTrackName = MyUtils::SafeConvertUtf8toUtf16(pAnimStackName);
 			ATLTRACE(L"AnimTrackName[%d] = \"%s\"\n", a, strAnimTrackName.c_str());
 			const auto localTimeStart = pAnimStack->GetLocalTimeSpan().GetStart();
 			const auto localTimeStop = pAnimStack->GetLocalTimeSpan().GetStop();

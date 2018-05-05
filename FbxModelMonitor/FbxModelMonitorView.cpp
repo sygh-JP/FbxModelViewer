@@ -215,7 +215,7 @@ void CFbxModelMonitorView::OnMouseMove(UINT nFlags, CPoint point)
 		vRotation.x = fmod(vRotation.x, 2 * MyMath::F_PI);
 		vRotation.y = fmod(vRotation.y, 2 * MyMath::F_PI);
 		// -PI/2 < Pitch < +PI/2 に制限する。
-		vRotation.x = MyUtil::Clamp(vRotation.x, -MyMath::F_PI * 0.5f + ThresholdVal, +MyMath::F_PI * 0.5f - ThresholdVal);
+		vRotation.x = MyUtils::Clamp(vRotation.x, -MyMath::F_PI * 0.5f + ThresholdVal, +MyMath::F_PI * 0.5f - ThresholdVal);
 		// ちなみに Metasequoia の場合、右ドラッグ中にマウスを上下に移動させると、画面に平行な軸まわりに回転する。X 軸まわりというわけではない。
 		// また、中ドラッグ中は画面座標での移動量に応じてカメラがパンするようになっている。
 		// 他の 3DCG ソフトと比べても非常に操作性がよいが、パース表示で拡大縮小を繰り返していると、やがて表示が崩れていく現象が発生する。
@@ -239,7 +239,7 @@ void CFbxModelMonitorView::OnMouseMove(UINT nFlags, CPoint point)
 		vRotation.z = 0.0f;
 		vRotation.x = fmod(vRotation.x, 2 * MyMath::F_PI);
 		vRotation.y = fmod(vRotation.y, 2 * MyMath::F_PI);
-		vRotation.x = MyUtil::Clamp(vRotation.x, -MyMath::F_PI * 0.5f + ThresholdVal, +MyMath::F_PI * 0.5f - ThresholdVal);
+		vRotation.x = MyUtils::Clamp(vRotation.x, -MyMath::F_PI * 0.5f + ThresholdVal, +MyMath::F_PI * 0.5f - ThresholdVal);
 		pMainFrame->SetMainLightRotationAmount(&vRotation);
 
 		m_mousePointOld = point;

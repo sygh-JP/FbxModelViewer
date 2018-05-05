@@ -11,7 +11,7 @@
 // 同 API は HPET (High Precision Event Timer) で実時間取得するようになっているらしく、
 // 特に大きな問題にはならないらしい。
 
-namespace MyUtil
+namespace MyUtils
 {
 	//! @brief  Wrapper for high-performance counter.<br>
 	//! 

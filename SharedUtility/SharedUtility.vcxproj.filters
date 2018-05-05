@@ -213,6 +213,9 @@
     <ClInclude Include="MyMisc\GdiPlusUtility.h">
       <Filter>MyMisc</Filter>
     </ClInclude>
+    <ClInclude Include="MyUtils\MyProcessHelpers.hpp">
+      <Filter>MyUtils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -310,6 +313,9 @@
     </ClCompile>
     <ClCompile Include="MyMisc\MyXmlProc.cpp">
       <Filter>MyMisc</Filter>
+    </ClCompile>
+    <ClCompile Include="MyUtils\MyProcessHelpers.cpp">
+      <Filter>MyUtils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

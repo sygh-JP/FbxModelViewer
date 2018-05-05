@@ -168,8 +168,8 @@ namespace MyFbx
 				ATLTRACE(MY_LOC_FOR_WARNING_TO_STRINGA "Clustrer link node [%d] is not a skeleton.\n", i);
 			}
 
-			const auto strBoneName = MyUtil::SafeConvertUtf8toUtf16(pClusterLinkNode->GetName());
-			const auto strParentName = MyUtil::SafeConvertUtf8toUtf16(pClusterLinkParentNode->GetName());
+			const auto strBoneName = MyUtils::SafeConvertUtf8toUtf16(pClusterLinkNode->GetName());
+			const auto strParentName = MyUtils::SafeConvertUtf8toUtf16(pClusterLinkParentNode->GetName());
 			ATLTRACE(L"BoneName[%d] = \"%s\"\n", i, strBoneName.c_str());
 			ATLTRACE(L"ParentName[%d] = \"%s\"\n", i, strParentName.c_str());
 			auto boneSkeletonInfo = std::make_shared<MyMath::BoneSkeletonInfo>();

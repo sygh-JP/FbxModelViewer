@@ -173,7 +173,7 @@ CFbxModelMonitorApp::CFbxModelMonitorApp()
 	// TODO: この位置に構築用コードを追加してください。
 	// ここに InitInstance 中の重要な初期化処理をすべて記述してください。
 
-	MyUtil::HRStopwatch::Initialize();
+	MyUtils::HRStopwatch::Initialize();
 }
 
 // 唯一の CFbxModelMonitorApp オブジェクトです。

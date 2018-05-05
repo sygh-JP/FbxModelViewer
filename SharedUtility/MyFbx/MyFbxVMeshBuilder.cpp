@@ -655,7 +655,7 @@ namespace MyFbxViewer
 		TVertexPosProvider vposProvider)
 	{
 		ATLTRACE(__FUNCTIONW__ L"(): Now creating adjacency info...\n");
-		MyUtil::HRStopwatch stopwatch;
+		MyUtils::HRStopwatch stopwatch;
 		stopwatch.Start();
 
 		// http://prideout.net/blog/?p=54

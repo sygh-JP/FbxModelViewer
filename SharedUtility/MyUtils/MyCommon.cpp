@@ -340,7 +340,7 @@ namespace MyCommon
 				//_ASSERTE(pBoneAnimInfoArray.get() != nullptr);
 				_ASSERTE(pBoneAnimInfoArray->size() == m_boneSkeletonInfoArray.size());
 				_ASSERTE(m_boneInitialPoseInfoArray.size() == m_boneSkeletonInfoArray.size());
-				size_t activeElemCount = MyUtil::MinVal(m_boneSkeletonInfoArray.size(), outArraySize);
+				size_t activeElemCount = MyUtils::MinVal(m_boneSkeletonInfoArray.size(), outArraySize);
 				// 0番がルート ボーンであることが前提のコードは NG。
 				// FBX Converter 付属の LocalMotionBlend.fbx などは該当しない。
 				// HACK: ルートが複数存在する場合は考慮しなくてよい？　そもそもそれはルートと呼ばない？
@@ -373,7 +373,7 @@ namespace MyCommon
 				//_ASSERTE(pBoneAnimInfoArray.get() != nullptr);
 				_ASSERTE(pBoneAnimInfoArray->size() == m_boneSkeletonInfoArray.size());
 				_ASSERTE(m_boneInitialPoseInfoArray.size() == m_boneSkeletonInfoArray.size());
-				size_t activeElemCount = MyUtil::MinVal(m_boneSkeletonInfoArray.size(), outArraySize);
+				size_t activeElemCount = MyUtils::MinVal(m_boneSkeletonInfoArray.size(), outArraySize);
 				for (size_t i = 0; i < activeElemCount; ++i)
 				{
 					pOutArray[i] = (pBoneAnimInfoArray->at(i)->GetGlobalFrameAttitudeMatrices().size() > frameIndex)
@@ -402,7 +402,7 @@ namespace MyCommon
 				//_ASSERTE(pBoneAnimInfoArray.get() != nullptr);
 				_ASSERTE(pBoneAnimInfoArray->size() == m_boneSkeletonInfoArray.size());
 				_ASSERTE(m_boneInitialPoseInfoArray.size() == m_boneSkeletonInfoArray.size());
-				size_t activeElemCount = MyUtil::MinVal(m_boneSkeletonInfoArray.size(), outArraySize);
+				size_t activeElemCount = MyUtils::MinVal(m_boneSkeletonInfoArray.size(), outArraySize);
 				const int rootBoneIndex = m_rootBoneIndex;
 				const auto& rootLocalFrameAttitudes = pBoneAnimInfoArray->at(rootBoneIndex)->GetLocalFrameAttitudeQuats();
 				const auto& rootLocalInitAttitude = m_boneInitialPoseInfoArray[rootBoneIndex].GetLocalInitAttitudeQuat();
@@ -429,7 +429,7 @@ namespace MyCommon
 				//_ASSERTE(pBoneAnimInfoArray.get() != nullptr);
 				_ASSERTE(pBoneAnimInfoArray->size() == m_boneSkeletonInfoArray.size());
 				_ASSERTE(m_boneInitialPoseInfoArray.size() == m_boneSkeletonInfoArray.size());
-				size_t activeElemCount = MyUtil::MinVal(m_boneSkeletonInfoArray.size(), outArraySize);
+				size_t activeElemCount = MyUtils::MinVal(m_boneSkeletonInfoArray.size(), outArraySize);
 				for (size_t i = 0; i < activeElemCount; ++i)
 				{
 					pOutArray[i] = (pBoneAnimInfoArray->at(i)->GetGlobalFrameAttitudeQuats().size() > frameIndex)

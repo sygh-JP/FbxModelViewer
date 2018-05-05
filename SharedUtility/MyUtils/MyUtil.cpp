@@ -4,7 +4,7 @@
 #include "DebugNew.h"
 
 
-namespace MyUtil
+namespace MyUtils
 {
 	template<typename T> void LoadBinaryFromFileImpl(LPCWSTR pFilePath, std::vector<T>& outBuffer)
 	{
@@ -159,7 +159,7 @@ namespace MyUtil
 			std::vector<char> buff(reqSize + 1); // 最後の + 1 は必須らしい。終端 null を含まないサイズが返るらしい。
 			//std::vector<char> buff(reqSize);
 			::WideCharToMultiByte(CP_UTF8, 0, srcText, textLen, &buff[0], reqSize, nullptr, nullptr);
-			return std::string(&buff[0]);
+			return std::move(std::string(&buff[0]));
 		}
 		else
 		{
@@ -182,7 +182,7 @@ namespace MyUtil
 			std::vector<wchar_t> buff(reqSize + 1); // 最後の + 1 は必須らしい。終端 null を含まないサイズが返るらしい。
 			//std::vector<wchar_t> buff(reqSize);
 			::MultiByteToWideChar(CP_UTF8, 0, srcText, textLen, &buff[0], reqSize);
-			return std::wstring(&buff[0]);
+			return std::move(std::wstring(&buff[0]));
 		}
 		else
 		{

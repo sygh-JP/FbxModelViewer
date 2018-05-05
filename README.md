@@ -10,8 +10,8 @@ Also it supports some types of shader effects such as shadow mapping, environmen
 またシャドウマッピング、環境マッピング、トゥーンレンダリング、ブルームのような数種類のシェーダー効果もサポートします。
 
 ## Development Environment (開発環境)
-* Microsoft Visual Studio 2015 Community Update 3
-* MFC 14.0
+* Microsoft Visual Studio 2015 Update 3
+* ATL/MFC 14.0
 * .NET Framework 4.5.2 (WPF)
 * DirectX 11.1 (Direct3D 11.1, Direct2D 1.1)
 * Autodesk FBX SDK 2018.1.1
@@ -21,7 +21,7 @@ Also it supports some types of shader effects such as shadow mapping, environmen
 
 ## Target Environment (ターゲット環境)
 * Windows 7 SP1 Platform Update/Windows 8.1/Windows 10 (Desktop)
-* Graphics hardware compatible with Direct3D 11.0 (Shader Model 5.0, Feature Level 11_0) or higher
+* Graphics device compatible with Direct3D 11.0 (Shader Model 5.0, Feature Level 11_0) or higher
 * Graphics driver compatible with Direct3D 11.1 or higher
 
 ## How to Build (ビルド方法)
@@ -34,4 +34,4 @@ Also it supports some types of shader effects such as shadow mapping, environmen
 1. Build "FbxModelViewer.sln"
 1. Execute the F# script "FSharpUtilScripts/copy_dlls_for_exes.fsx"
 
-2017-09-01, sygh.
+2018-05-06, sygh.

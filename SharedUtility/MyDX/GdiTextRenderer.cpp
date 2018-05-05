@@ -63,8 +63,8 @@ GdiTextRenderer::~GdiTextRenderer()
 {
 	//SafeRelease(&pRenderTarget_);
 	//SafeRelease(&pRenderingParams_);
-	MyUtil::SafeRelease(pRenderTarget_);
-	MyUtil::SafeRelease(pRenderingParams_);
+	MyUtils::SafeRelease(pRenderTarget_);
+	MyUtils::SafeRelease(pRenderingParams_);
 }
 
 

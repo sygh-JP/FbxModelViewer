@@ -13,7 +13,7 @@
 #include "MyUtilTypes.hpp"
 
 
-namespace MyUtil
+namespace MyUtils
 {
 	struct StdFileDeleter
 	{
@@ -39,7 +39,7 @@ namespace MyUtil
 	extern bool LoadBinaryFromFile(LPCWSTR pFilePath, std::vector<uint32_t>& outBuffer);
 	extern bool LoadBinaryFromFile(LPCWSTR pFilePath, std::vector<float>& outBuffer);
 
-	// Windows API の TCHAR 用に MyUtil::tstring, tformat を定義。
+	// Windows API の TCHAR 用に tstring, tformat を定義。
 	// std 名前空間を汚染しないように、std::tstring とはしない。
 	typedef std::basic_string<TCHAR> tstring;
 	typedef boost::basic_format<TCHAR> tformat;
@@ -92,8 +92,11 @@ namespace MyUtil
 // ただし、MSVC 拡張である %S 書式による ANSI - Unicode 相互変換は使えないので注意。
 #define STRINGA_FORMAT(asf, pr)  boost::io::str(boost::format(asf) pr)
 #define STRINGW_FORMAT(wsf, pr)  boost::io::str(boost::wformat(wsf) pr)
-#define STRINGT_FORMAT(tsf, pr)  boost::io::str(MyUtil::tformat(tsf) pr)
-
+#if defined UNICODE || defined _UNICODE
+#define STRINGT_FORMAT STRINGW_FORMAT
+#else
+#define STRINGT_FORMAT STRINGA_FORMAT
+#endif
 
 // シンボルの文字列リテラル化。
 #ifndef SYMBOL2STRING
@@ -225,7 +228,7 @@ namespace std
 } // end of namespace
 #endif
 
-namespace MyUtil
+namespace MyUtils
 {
 	// メソッドの戻り値で文字列クラスへの const 参照（const ポインタではない）を返したりする必要があるとき、
 	// null 値の代替として空文字列の定数オブジェクトを用意しておく。
@@ -244,10 +247,10 @@ namespace MyUtil
 	extern std::wstring ConvertUtf8toUtf16(const char* srcText);
 
 	inline std::string SafeConvertUtf16toUtf8(const wchar_t* srcText)
-	{ return srcText ? MyUtil::ConvertUtf16toUtf8(srcText) : ""; }
+	{ return srcText ? ConvertUtf16toUtf8(srcText) : ""; }
 
 	inline std::wstring SafeConvertUtf8toUtf16(const char* srcText)
-	{ return srcText ? MyUtil::ConvertUtf8toUtf16(srcText) : L""; }
+	{ return srcText ? ConvertUtf8toUtf16(srcText) : L""; }
 
 
 	//! @brief  Windows Unicode (UTF-16) のパスに対応する UTF-8 エンコード MBCS の絶対ファイルパスを取得する。<br>
@@ -275,6 +278,7 @@ namespace MyUtil
 		b = c;
 	}
 
+	// マクロ展開を回避するテクニックがあるので、std::min() および std::max() の代替は定義しない。
 #if 0
 	//! @brief  GDI+ や MFC アプリとコードを共有する場合の、std::min() の代替。NaN 非対応。<br>
 	template<typename T> inline const T& MinVal(const T& a, const T& b)

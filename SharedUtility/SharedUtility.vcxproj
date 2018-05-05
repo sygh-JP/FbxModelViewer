@@ -201,6 +201,7 @@
     <ClInclude Include="MyUtils\MyMath.hpp" />
     <ClInclude Include="MyUtils\MyMathConsts.hpp" />
     <ClInclude Include="MyUtils\MyMathTypes.hpp" />
+    <ClInclude Include="MyUtils\MyProcessHelpers.hpp" />
     <ClInclude Include="MyUtils\MyStopwatch.hpp" />
     <ClInclude Include="MyUtils\MyTextureHelper.hpp" />
     <ClInclude Include="MyUtils\MyTrackball.h" />
@@ -292,6 +293,7 @@
     <ClCompile Include="MyUtils\MyCascadedShadowHelpers.cpp" />
     <ClCompile Include="MyUtils\MyCommon.cpp" />
     <ClCompile Include="MyUtils\MyMath.cpp" />
+    <ClCompile Include="MyUtils\MyProcessHelpers.cpp" />
     <ClCompile Include="MyUtils\MyTrackball.cpp" />
     <ClCompile Include="MyUtils\MyUIAnimCenter.cpp" />
     <ClCompile Include="MyUtils\MyUIProjectileAnim.cpp" />

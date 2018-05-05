@@ -3,7 +3,7 @@
 #include "MyTrackball.h"
 
 
-namespace MyUtil
+namespace MyUtils
 {
 	MyTrackball::MyTrackball()
 		: m_isDragging()

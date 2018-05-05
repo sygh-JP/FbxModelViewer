@@ -11,7 +11,7 @@ namespace
 {
 	inline std::wstring GetConnectedNamesString(const FbxNode* node, LPCWSTR label)
 	{
-		return STRINGW_FORMAT(L"%s : \"%s\"", % label % MyUtil::ConvertUtf8toUtf16(node->GetName()).c_str());
+		return STRINGW_FORMAT(L"%s : \"%s\"", % label % MyUtils::ConvertUtf8toUtf16(node->GetName()).c_str());
 	}
 
 	// マテリアル属性出力
@@ -24,12 +24,12 @@ namespace
 
 		if (colorExists)
 		{
-			const MyUtil::tstring label = STRINGT_FORMAT(_T("Color : R=%f, G=%f, B=%f"), % color.x % color.y % color.z);
+			const auto label = STRINGT_FORMAT(_T("Color : R=%f, G=%f, B=%f"), % color.x % color.y % color.z);
 			pTree->InsertItem(label.c_str(), propLabel);
 		}
 		if (factorExists)
 		{
-			const MyUtil::tstring label = STRINGT_FORMAT(_T("Factor = %f"), % factor);
+			const auto label = STRINGT_FORMAT(_T("Factor = %f"), % factor);
 			pTree->InsertItem(label.c_str(), propLabel);
 		}
 		const CString texName = CString(_T("TextureName : ")) + inTexName.c_str();
@@ -592,19 +592,19 @@ namespace MyMfcFbx
 				const char* bumpTexName = material->GetTextureName(MyFbx::MyFbxMaterialAnalyzer::PropertyType_Bump);
 
 				temp.Format(_T("TexName = \"%s\", RGB=(%s)"),
-					CString(MyUtil::ConvertUtf8toUtf16(ambientTexName).c_str()).GetString(), ConvertVector3ToString(ambient).GetString());
+					CString(MyUtils::ConvertUtf8toUtf16(ambientTexName).c_str()).GetString(), ConvertVector3ToString(ambient).GetString());
 				this->AddStringLineToEditCtrlAndScrollToLastLine(temp);
 				temp.Format(_T("TexName = \"%s\", RGB=(%s)"),
-					CString(MyUtil::ConvertUtf8toUtf16(diffuseTexName).c_str()).GetString(), ConvertVector3ToString(diffuse).GetString());
+					CString(MyUtils::ConvertUtf8toUtf16(diffuseTexName).c_str()).GetString(), ConvertVector3ToString(diffuse).GetString());
 				this->AddStringLineToEditCtrlAndScrollToLastLine(temp);
 				temp.Format(_T("TexName = \"%s\", RGB=(%s)"),
-					CString(MyUtil::ConvertUtf8toUtf16(specularTexName).c_str()).GetString(), ConvertVector3ToString(specular).GetString());
+					CString(MyUtils::ConvertUtf8toUtf16(specularTexName).c_str()).GetString(), ConvertVector3ToString(specular).GetString());
 				this->AddStringLineToEditCtrlAndScrollToLastLine(temp);
 				temp.Format(_T("TexName = \"%s\", RGB=(%s)"),
-					CString(MyUtil::ConvertUtf8toUtf16(emissiveTexName).c_str()).GetString(), ConvertVector3ToString(emissive).GetString());
+					CString(MyUtils::ConvertUtf8toUtf16(emissiveTexName).c_str()).GetString(), ConvertVector3ToString(emissive).GetString());
 				this->AddStringLineToEditCtrlAndScrollToLastLine(temp);
 				temp.Format(_T("TexName = \"%s\", RGB=(%s)"),
-					CString(MyUtil::ConvertUtf8toUtf16(bumpTexName).c_str()).GetString(), ConvertVector3ToString(bump).GetString());
+					CString(MyUtils::ConvertUtf8toUtf16(bumpTexName).c_str()).GetString(), ConvertVector3ToString(bump).GetString());
 				this->AddStringLineToEditCtrlAndScrollToLastLine(temp);
 
 				temp.Format(_T("Reflectivity = %f"), reflectivity);

@@ -14,6 +14,7 @@
 #include "FileView.h"
 #include "Resource.h"
 #include "FbxModelMonitor.h"
+#include "MyProcessHelpers.hpp"
 
 #include "DebugNew.h"
 
@@ -183,8 +184,30 @@ void CFileView::AdjustLayout()
 
 void CFileView::OnProperties()
 {
-	AfxMessageBox(_T("プロパティ..."));
+	//AfxMessageBox(_T("プロパティ..."));
+	//MyUtils::OpenIncludeDirByWindowsExplorer(_T(R"(C:\Program Files\Microsoft DNX)"));
 
+	// https://msdn.microsoft.com/en-us/library/bs315d2c(v=vs.100).aspx
+
+	auto pActiveDocument = CMainFrame::GetTheMainFrame()->GetActiveDocument();
+	if (pActiveDocument)
+	{
+		// SDI でドキュメントが開かれていない場合、CDocument::GetPathName() は空文字列を返す。
+		const CString strFilePath = pActiveDocument->GetPathName();
+		if (strFilePath.IsEmpty())
+		{
+			AfxMessageBox(_T("No document is open!!"));
+		}
+		else
+		{
+			MyUtils::OpenIncludeDirByWindowsExplorer(strFilePath);
+		}
+	}
+	else
+	{
+		// SDI の場合はありえないはず。
+		AfxMessageBox(_T("No active document!!"));
+	}
 }
 
 void CFileView::OnFileOpen()

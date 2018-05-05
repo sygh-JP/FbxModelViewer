@@ -14,7 +14,7 @@ namespace
 	//bool LoadShaderSourceFile(LPCWSTR pFileName, _Out_ std::vector<char>& outStrBuffer, _Out_ int& outStrLength)
 	{
 		std::vector<char> buf;
-		if (!MyUtil::LoadBinaryFromFile(pFileName, buf))
+		if (!MyUtils::LoadBinaryFromFile(pFileName, buf))
 		{
 			return false;
 		}

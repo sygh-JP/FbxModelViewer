@@ -3,7 +3,7 @@
 #include "MyMathTypes.hpp"
 
 
-namespace MyUtil
+namespace MyUtils
 {
 	//! @brief  簡易トラックボール処理クラス。<br>
 	//! 

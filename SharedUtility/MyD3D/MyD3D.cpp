@@ -894,12 +894,12 @@ namespace MyD3D
 
 		std::vector<uint8_t> tempMaskBuf(strideInBytes * description.Height);
 		const double activeRadius = 120;
-		const double activeRadiusSq = MyUtil::SquareVal(activeRadius);
+		const double activeRadiusSq = MyUtils::SquareVal(activeRadius);
 		for (uint32_t y = 0; y < description.Height; ++y)
 		{
 			for (uint32_t x = 0; x < description.Width; ++x)
 			{
-				const double radiusSq = MyUtil::SquareVal(x - 0.5 * description.Width) + MyUtil::SquareVal(y - 0.5 * description.Height);
+				const double radiusSq = MyUtils::SquareVal(x - 0.5 * description.Width) + MyUtils::SquareVal(y - 0.5 * description.Height);
 				if (radiusSq <= activeRadiusSq)
 				{
 					tempMaskBuf[y * strideInBytes + x] = 0xFF;
@@ -2898,7 +2898,7 @@ namespace MyD3D
 		// エフェクトの読込。
 		pathCompiledShaderFilePath = pathMediaDir;
 		pathCompiledShaderFilePath += L"MyShaders.fxbin";
-		if (!MyUtil::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
+		if (!MyUtils::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
 			!this->CreateEffect(&shaderBytecode[0], shaderBytecode.size(), m_pMainEffect))
 		{
 			return false;
@@ -2929,7 +2929,7 @@ namespace MyD3D
 
 			pathCompiledShaderFilePath = pathMediaDir;
 			pathCompiledShaderFilePath += L"psMainLighting.cso";
-			if (!MyUtil::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
+			if (!MyUtils::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
 				FAILED(m_pD3DDevice->CreatePixelShader(&shaderBytecode[0], shaderBytecode.size(),
 				m_pClassLinkagePSMainLighting.Get(),
 				m_pPSMainLighting.ReleaseAndGetAddressOf())))
@@ -2968,7 +2968,7 @@ namespace MyD3D
 
 		pathCompiledShaderFilePath = pathMediaDir;
 		pathCompiledShaderFilePath += L"MyComputeShaders.fxbin";
-		if (!MyUtil::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
+		if (!MyUtils::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
 			!this->CreateEffect(&shaderBytecode[0], shaderBytecode.size(), m_pComputeEffect))
 		{
 			return false;
@@ -2976,7 +2976,7 @@ namespace MyD3D
 
 		pathCompiledShaderFilePath = pathMediaDir;
 		pathCompiledShaderFilePath += L"MyScreenShaders.fxbin";
-		if (!MyUtil::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
+		if (!MyUtils::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
 			!this->CreateEffect(&shaderBytecode[0], shaderBytecode.size(), m_pScreenEffect))
 		{
 			return false;
@@ -2984,7 +2984,7 @@ namespace MyD3D
 
 		pathCompiledShaderFilePath = pathMediaDir;
 		pathCompiledShaderFilePath += L"MyShadowRender.fxbin";
-		if (!MyUtil::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
+		if (!MyUtils::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
 			!this->CreateEffect(&shaderBytecode[0], shaderBytecode.size(), m_pShadowEffect))
 		{
 			return false;
@@ -2996,7 +2996,7 @@ namespace MyD3D
 
 		pathCompiledShaderFilePath = pathMediaDir;
 		pathCompiledShaderFilePath += L"MyVertexT.vsbin";
-		if (!MyUtil::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
+		if (!MyUtils::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
 			!this->CreateInputVertexLayout(
 			VertexInputLayoutElemDescArrayT, ARRAYSIZE(VertexInputLayoutElemDescArrayT),
 			&shaderBytecode[0], shaderBytecode.size(), m_pInputLayoutT))
@@ -3006,7 +3006,7 @@ namespace MyD3D
 
 		pathCompiledShaderFilePath = pathMediaDir;
 		pathCompiledShaderFilePath += L"MyVertexP.vsbin";
-		if (!MyUtil::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
+		if (!MyUtils::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
 			!this->CreateInputVertexLayout(
 			VertexInputLayoutElemDescArrayP, ARRAYSIZE(VertexInputLayoutElemDescArrayP),
 			&shaderBytecode[0], shaderBytecode.size(), m_pInputLayoutP))
@@ -3016,7 +3016,7 @@ namespace MyD3D
 
 		pathCompiledShaderFilePath = pathMediaDir;
 		pathCompiledShaderFilePath += L"MyVertexPC.vsbin";
-		if (!MyUtil::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
+		if (!MyUtils::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
 			!this->CreateInputVertexLayout(
 			VertexInputLayoutElemDescArrayPC, ARRAYSIZE(VertexInputLayoutElemDescArrayPC),
 			&shaderBytecode[0], shaderBytecode.size(), m_pInputLayoutPC))
@@ -3026,7 +3026,7 @@ namespace MyD3D
 
 		pathCompiledShaderFilePath = pathMediaDir;
 		pathCompiledShaderFilePath += L"MyVertexPCT.vsbin";
-		if (!MyUtil::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
+		if (!MyUtils::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
 			!this->CreateInputVertexLayout(
 			VertexInputLayoutElemDescArrayPCT, ARRAYSIZE(VertexInputLayoutElemDescArrayPCT),
 			&shaderBytecode[0], shaderBytecode.size(), m_pInputLayoutPCT))
@@ -3036,7 +3036,7 @@ namespace MyD3D
 
 		pathCompiledShaderFilePath = pathMediaDir;
 		pathCompiledShaderFilePath += L"MyVertexPCNT.vsbin";
-		if (!MyUtil::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
+		if (!MyUtils::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
 			!this->CreateInputVertexLayout(
 			VertexInputLayoutElemDescArrayPCNT, ARRAYSIZE(VertexInputLayoutElemDescArrayPCNT),
 			&shaderBytecode[0], shaderBytecode.size(), m_pInputLayoutPCNT))
@@ -3046,7 +3046,7 @@ namespace MyD3D
 
 		pathCompiledShaderFilePath = pathMediaDir;
 		pathCompiledShaderFilePath += L"MyVertexPNTIW.vsbin";
-		if (!MyUtil::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
+		if (!MyUtils::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
 			!this->CreateInputVertexLayout(
 			VertexInputLayoutElemDescArrayPNTIW, ARRAYSIZE(VertexInputLayoutElemDescArrayPNTIW),
 			&shaderBytecode[0], shaderBytecode.size(), m_pInputLayoutPNTIW))
@@ -3057,7 +3057,7 @@ namespace MyD3D
 #if 0
 		pathCompiledShaderFilePath = pathMediaDir;
 		pathCompiledShaderFilePath += L"MyVertexFlake.vsbin";
-		if (!MyUtil::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
+		if (!MyUtils::LoadBinaryFromFile(pathCompiledShaderFilePath, shaderBytecode) ||
 			!this->CreateInputVertexLayout(
 			VertexInputLayoutElemDescArrayFlake, ARRAYSIZE(VertexInputLayoutElemDescArrayFlake),
 			&shaderBytecode[0], shaderBytecode.size(), m_pInputLayoutFlake))
@@ -3753,7 +3753,7 @@ namespace MyD3D
 
 		_ASSERTE(pDeviceContext);
 
-		MyUtil::HRStopwatch stopwatch;
+		MyUtils::HRStopwatch stopwatch;
 		stopwatch.Start();
 
 		if (renders3d)
