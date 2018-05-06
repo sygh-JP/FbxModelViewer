@@ -343,7 +343,7 @@ namespace MyCommon
 		void SetMaterialIndicesArrayForAttribTable(const TIntArray& indices) { m_materialIndicesForAttribTable = indices; }
 		const TIntArray& GetMaterialIndicesArrayForAttribTable() const { return m_materialIndicesForAttribTable; }
 
-		void SetMeshName(const char* pName) { m_strMeshName = pName ? MyUtils::ConvertUtf8toUtf16(pName) : L""; }
+		void SetMeshName(const char* pName) { m_strMeshName = MyUtils::SafeConvertUtf8toUtf16(pName); }
 		void SetMeshName(const wchar_t* pName) { m_strMeshName = pName ? pName : L""; }
 		const std::wstring& GetMeshNameW() const { return m_strMeshName; }
 

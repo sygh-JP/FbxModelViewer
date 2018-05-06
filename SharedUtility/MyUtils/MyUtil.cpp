@@ -145,13 +145,15 @@ namespace MyUtils
 	}
 
 	// コピーコンストラクタよりも C++11 ムーブ コンストラクタが優先されることを考慮し、あえて引数ではなく戻り値で返す。
-	std::string ConvertUtf16toUtf8(const wchar_t* srcText)
+	// std::move() は書かないでよい。むしろ書くと RVO (Return Value Optimization) が阻害されることがあるらしい？
+	// HACK: std::vector だとポインタは移動しないが、std::string だとポインタが移動してしまう？（再割り当てが発生してしまう？）
+	std::vector<char> ConvertUtf16toUtf8(const wchar_t* srcText)
 	{
 		_ASSERTE(srcText != nullptr);
 		const int textLen = static_cast<int>(wcslen(srcText));
 		if (textLen <= 0)
 		{
-			return std::string();
+			return{ 0 };
 		}
 		const int reqSize = ::WideCharToMultiByte(CP_UTF8, 0, srcText, textLen, nullptr, 0, nullptr, nullptr);
 		if (reqSize > 0)
@@ -159,22 +161,23 @@ namespace MyUtils
 			std::vector<char> buff(reqSize + 1); // 最後の + 1 は必須らしい。終端 null を含まないサイズが返るらしい。
 			//std::vector<char> buff(reqSize);
 			::WideCharToMultiByte(CP_UTF8, 0, srcText, textLen, &buff[0], reqSize, nullptr, nullptr);
-			return std::move(std::string(&buff[0]));
+			return buff;
 		}
 		else
 		{
 			// 完全にエラーなので本来は例外を投げるべき？
-			return std::string();
+			//return std::vector<char>();
+			return{ 0 };
 		}
 	}
 
-	std::wstring ConvertUtf8toUtf16(const char* srcText)
+	std::vector<wchar_t> ConvertUtf8toUtf16(const char* srcText)
 	{
 		_ASSERTE(srcText != nullptr);
 		const int textLen = static_cast<int>(strlen(srcText));
 		if (textLen <= 0)
 		{
-			return std::wstring();
+			return{ 0 };
 		}
 		const int reqSize = ::MultiByteToWideChar(CP_UTF8, 0, srcText, textLen, nullptr, 0);
 		if (reqSize > 0)
@@ -182,12 +185,13 @@ namespace MyUtils
 			std::vector<wchar_t> buff(reqSize + 1); // 最後の + 1 は必須らしい。終端 null を含まないサイズが返るらしい。
 			//std::vector<wchar_t> buff(reqSize);
 			::MultiByteToWideChar(CP_UTF8, 0, srcText, textLen, &buff[0], reqSize);
-			return std::move(std::wstring(&buff[0]));
+			return buff;
 		}
 		else
 		{
 			// 完全にエラーなので本来は例外を投げるべき？
-			return std::wstring();
+			//return std::vector<wchar_t>();
+			return{ 0 };
 		}
 	}
 

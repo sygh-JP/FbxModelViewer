@@ -37,7 +37,7 @@ namespace MyFbx
 		bool GetIsRoot() const { return m_parent == nullptr; }
 		bool GetIsLeaf() const { return m_children.empty(); }
 
-		void SetSkeletonName(const char* pName) { m_name = pName ? MyUtils::ConvertUtf8toUtf16(pName) : L""; }
+		void SetSkeletonName(const char* pName) { m_name = MyUtils::SafeConvertUtf8toUtf16(pName); }
 		void SetSkeletonName(const wchar_t* pName) { m_name = pName ? pName : L""; }
 
 		const std::wstring& GetSkeletonNameW() const { return m_name; }

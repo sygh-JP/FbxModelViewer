@@ -40,7 +40,7 @@ namespace MyFbx
 		// 解析エントリ
 		void Analyze(FbxNode* node, const FbxMesh* mesh, const MyFbxAnimTimeInfo& animTimeInfo);
 
-		void SetMeshName(const char* pName) { m_meshName = pName ? MyUtils::ConvertUtf8toUtf16(pName) : L""; }
+		void SetMeshName(const char* pName) { m_meshName = MyUtils::SafeConvertUtf8toUtf16(pName); }
 		void SetMeshName(const wchar_t* pName) { m_meshName = pName ? pName : L""; }
 
 		//! @brief  メッシュ名を取得する。<br>

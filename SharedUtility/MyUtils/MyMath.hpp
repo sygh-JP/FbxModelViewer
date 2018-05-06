@@ -811,7 +811,7 @@ namespace MyMath
 		}
 
 		//! @brief  ボーン名を設定する。<br>
-		void SetBoneName(const char* pName) { m_strBoneName = pName ? MyUtils::ConvertUtf8toUtf16(pName) : L""; }
+		void SetBoneName(const char* pName) { m_strBoneName = MyUtils::SafeConvertUtf8toUtf16(pName); }
 		void SetBoneName(const wchar_t* pName) { m_strBoneName = pName ? pName : L""; }
 
 		const std::wstring& GetBoneNameW() const { return m_strBoneName; }
@@ -910,12 +910,12 @@ namespace MyMath
 
 #if 0
 		//! @brief  ボーン名を設定する。<br>
-		void SetBoneName(const char* pName) { m_strBoneName = pName ? MyUtils::ConvertUtf8toUtf16(pName) : L""; }
+		void SetBoneName(const char* pName) { m_strBoneName = MyUtils::SafeConvertUtf8toUtf16(pName); }
 		void SetBoneName(const wchar_t* pName) { m_strBoneName = pName ? pName : L""; }
 
 		const std::wstring& GetBoneNameW() const { return m_strBoneName; }
 
-		void SetAnimTrackName(const char* pName) { m_strAnimTrackName = pName ? MyUtils::ConvertUtf8toUtf16(pName) : L""; }
+		void SetAnimTrackName(const char* pName) { m_strAnimTrackName = MyUtils::SafeConvertUtf8toUtf16(pName); }
 		void SetAnimTrackName(const wchar_t* pName) { m_strAnimTrackName = pName ? pName : L""; }
 
 		const std::wstring& GetAnimTrackNameW() const { return m_strAnimTrackName; }

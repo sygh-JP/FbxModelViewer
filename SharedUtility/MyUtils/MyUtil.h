@@ -243,14 +243,14 @@ namespace MyUtils
 	const std::wstring EmptyStdStringW;
 
 
-	extern std::string ConvertUtf16toUtf8(const wchar_t* srcText);
-	extern std::wstring ConvertUtf8toUtf16(const char* srcText);
+	extern std::vector<char> ConvertUtf16toUtf8(const wchar_t* srcText);
+	extern std::vector<wchar_t> ConvertUtf8toUtf16(const char* srcText);
 
 	inline std::string SafeConvertUtf16toUtf8(const wchar_t* srcText)
-	{ return srcText ? ConvertUtf16toUtf8(srcText) : ""; }
+	{ return srcText ? ConvertUtf16toUtf8(srcText).data() : ""; }
 
 	inline std::wstring SafeConvertUtf8toUtf16(const char* srcText)
-	{ return srcText ? ConvertUtf8toUtf16(srcText) : L""; }
+	{ return srcText ? ConvertUtf8toUtf16(srcText).data() : L""; }
 
 
 	//! @brief  Windows Unicode (UTF-16) のパスに対応する UTF-8 エンコード MBCS の絶対ファイルパスを取得する。<br>

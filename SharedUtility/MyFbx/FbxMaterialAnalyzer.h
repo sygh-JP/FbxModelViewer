@@ -75,7 +75,7 @@ namespace MyFbx
 		//! @brief  テクスチャの相対ファイル名を取得する。<br>
 		const std::wstring& GetTextureRelativeFileName(PropertyType propertyType) const;
 
-		void SetMaterialName(const char* pName) { m_strMaterialName = pName ? MyUtils::ConvertUtf8toUtf16(pName) : L""; }
+		void SetMaterialName(const char* pName) { m_strMaterialName = MyUtils::SafeConvertUtf8toUtf16(pName); }
 		void SetMaterialName(const wchar_t* pName) { m_strMaterialName = pName ? pName : L""; }
 
 		const std::wstring& GetMaterialNameW() const { return m_strMaterialName; }

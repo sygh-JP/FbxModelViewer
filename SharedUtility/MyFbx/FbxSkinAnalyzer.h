@@ -129,7 +129,7 @@ namespace MyFbx
 		const MyMath::TBoneInitialPoseInfoArray& GetBoneInitialPoseInfoArray() const { return m_boneInitialPoseInfoArray; }
 		const MyMath::TBoneAnimInfoPtrsArrayPtrsArray& GetBoneAnimInfoArrayArray() const { return m_boneAnimInfoArrayArray; }
 
-		void SetSkinName(const char* pName) { m_strSkinName = pName ? MyUtils::ConvertUtf8toUtf16(pName) : L""; }
+		void SetSkinName(const char* pName) { m_strSkinName = MyUtils::SafeConvertUtf8toUtf16(pName); }
 		void SetSkinName(const wchar_t* pName) { m_strSkinName = pName ? pName : L""; }
 
 		const std::wstring& GetSkinNameW() const { return m_strSkinName; }
