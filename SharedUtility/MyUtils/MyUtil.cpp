@@ -144,9 +144,16 @@ namespace MyUtils
 		return LoadBinaryFromFileImpl2(pFilePath, outBuffer);
 	}
 
+	// 空の vector に対する vector.data() は nullptr を返すことに注意。
 	// コピーコンストラクタよりも C++11 ムーブ コンストラクタが優先されることを考慮し、あえて引数ではなく戻り値で返す。
 	// std::move() は書かないでよい。むしろ書くと RVO (Return Value Optimization) が阻害されることがあるらしい？
-	// HACK: std::vector だとポインタは移動しないが、std::string だとポインタが移動してしまう？（再割り当てが発生してしまう？）
+	// std::vector のムーブだとポインタのすげ替えが実行されるので、結果的にムーブ元とムーブ先とでポインタの値は変わらない。
+	// しかし、std::string だと必ずしもポインタのすげ替えにはならない模様。
+	// ムーブを実行した際、ムーブ先の文字列バッファ容量が十分な場合は、memmove() によるメモリブロックのコピーとなる模様。
+	// ムーブ先の文字列バッファ容量が不十分な場合は、ポインタのすげ替えになる模様。
+	// VC2015 Update3 でも、gcc 6.3 でも同様の実装になっているらしい。
+	// いずれにせよ、ヒープの再割り当ては発生しない模様。
+	// なお、C++11 で追加された codecvt は、C++17 で非推奨となってしまった。
 	std::vector<char> ConvertUtf16toUtf8(const wchar_t* srcText)
 	{
 		_ASSERTE(srcText != nullptr);
