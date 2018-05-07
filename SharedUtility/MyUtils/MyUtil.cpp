@@ -144,7 +144,7 @@ namespace MyUtils
 		return LoadBinaryFromFileImpl2(pFilePath, outBuffer);
 	}
 
-	// 空の vector に対する vector.data() は nullptr を返すことに注意。
+	// 空の std::vector に対する std::vector.data() は nullptr を返すことに注意。std::string に変換する際、nullptr は渡せない。
 	// コピーコンストラクタよりも C++11 ムーブ コンストラクタが優先されることを考慮し、あえて引数ではなく戻り値で返す。
 	// std::move() は書かないでよい。むしろ書くと RVO (Return Value Optimization) が阻害されることがあるらしい？
 	// std::vector のムーブだとポインタのすげ替えが実行されるので、結果的にムーブ元とムーブ先とでポインタの値は変わらない。
@@ -154,6 +154,9 @@ namespace MyUtils
 	// VC2015 Update3 でも、gcc 6.3 でも同様の実装になっているらしい。
 	// いずれにせよ、ヒープの再割り当ては発生しない模様。
 	// なお、C++11 で追加された codecvt は、C++17 で非推奨となってしまった。
+	// C 関数としては mbstowcs(), wcstombs() などが標準化されているが、
+	// これらで UTF-8/UTF-16 間の変換をするにはコードページの明示的な事前設定が必要だったりと、使い勝手が悪い。
+	// そもそも C/C++ においてワイド文字が UTF-16 であるとは限らない（規格で規定されていない）という根本的な問題もある。
 	std::vector<char> ConvertUtf16toUtf8(const wchar_t* srcText)
 	{
 		_ASSERTE(srcText != nullptr);

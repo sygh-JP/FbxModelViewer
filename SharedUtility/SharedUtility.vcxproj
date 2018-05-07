@@ -189,7 +189,12 @@
     <ClInclude Include="MyFbx\MyFbxVMeshBuilder.hpp" />
     <ClInclude Include="MyFbx\VertexSeparator.h" />
     <ClInclude Include="MyMisc\GdiPlusUtility.h" />
-    <ClInclude Include="MyMisc\MyXmlProc.hpp" />
+    <ClInclude Include="MyMisc\MyXmlProc.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="MyUtils\CustomTrace.hpp" />
     <ClInclude Include="MyUtils\MyBasicVertexTypes.hpp" />
     <ClInclude Include="MyUtils\MyBoneMatrixPalettePack.h" />
@@ -211,7 +216,12 @@
     <ClInclude Include="MyUtils\MyUtilTypes.hpp" />
     <ClInclude Include="PublicInclude\DebugNew.h" />
     <ClInclude Include="PublicInclude\ForPCHeader.hpp" />
-    <ClInclude Include="PublicInclude\ImportMsXml.hpp" />
+    <ClInclude Include="PublicInclude\ImportMsXml.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="PublicInclude\MeshIF.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

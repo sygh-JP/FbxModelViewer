@@ -205,7 +205,9 @@ void CFileView::OnProperties()
 	}
 	else
 	{
-		// SDI の場合はありえないはず。
+		// SDI の場合は基本的に Active な Document が常に1つだけ存在するが、
+		// 例え SDI であっても、起動直後や、「Document に関連付けられていない View on Pane」などが存在する場合、
+		// ウィンドウのアクティブ状態によっては Active な Document へのポインタが NULL となることがあるので注意。
 		AfxMessageBox(_T("No active document!!"));
 	}
 }
