@@ -1,4 +1,4 @@
-﻿//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
 // File: DXErr.h
 //
 // DirectX Error Library
@@ -13,8 +13,10 @@
 
 // This version only supports UNICODE.
 
-#ifdef _MSC_VER
 #pragma once
+
+#if !defined(NOMINMAX)
+#define NOMINMAX
 #endif
 
 #include <windows.h>
@@ -64,13 +66,13 @@ HRESULT WINAPI DXTraceW( _In_z_ const WCHAR* strFile, _In_ DWORD dwLine, _In_ HR
 //
 //--------------------------------------------------------------------------------------
 #if defined(DEBUG) || defined(_DEBUG)
-#define DXTRACE_MSG(wstr)              DXTrace( __FILEW__, (DWORD)__LINE__, 0, wstr, false )
-#define DXTRACE_ERR(wstr,hr)           DXTrace( __FILEW__, (DWORD)__LINE__, hr, wstr, false )
-#define DXTRACE_ERR_MSGBOX(wstr,hr)    DXTrace( __FILEW__, (DWORD)__LINE__, hr, wstr, true )
+#define DXTRACE_MSG(str)              DXTrace( __FILEW__, (DWORD)__LINE__, 0, str, false )
+#define DXTRACE_ERR(str,hr)           DXTrace( __FILEW__, (DWORD)__LINE__, hr, str, false )
+#define DXTRACE_ERR_MSGBOX(str,hr)    DXTrace( __FILEW__, (DWORD)__LINE__, hr, str, true )
 #else
-#define DXTRACE_MSG(wstr)              (0L)
-#define DXTRACE_ERR(wstr,hr)           (hr)
-#define DXTRACE_ERR_MSGBOX(wstr,hr)    (hr)
+#define DXTRACE_MSG(str)              (0L)
+#define DXTRACE_ERR(str,hr)           (hr)
+#define DXTRACE_ERR_MSGBOX(str,hr)    (hr)
 #endif
 
 #ifdef __cplusplus

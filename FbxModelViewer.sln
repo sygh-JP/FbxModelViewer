@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FbxModelMonitor", "FbxModelMonitor\FbxModelMonitor.vcxproj", "{39E2A1B8-21D3-40AE-B40E-EF42E72DACE1}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Notes", "_Notes", "{F1FB36
 		_Notes\boot_error_by_missing_d3dcompiler_dll.txt = _Notes\boot_error_by_missing_d3dcompiler_dll.txt
 		_Notes\d3d_note.txt = _Notes\d3d_note.txt
 		_Notes\hlsl_note.txt = _Notes\hlsl_note.txt
+		_Notes\precompiled_header_note.txt = _Notes\precompiled_header_note.txt
 		_Notes\programming_note.txt = _Notes\programming_note.txt
 		_Notes\vc_dotnet_target_fx_version.txt = _Notes\vc_dotnet_target_fx_version.txt
 		_Notes\vulkan_sdk_note.txt = _Notes\vulkan_sdk_note.txt

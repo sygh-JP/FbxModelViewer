@@ -1,4 +1,4 @@
-﻿//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
 // File: DXErr.cpp
 //
 // DirectX Error Library
@@ -13,45 +13,28 @@
 
 // This version only supports UNICODE.
 
-
-//#include "pch.h"
-//#include "stdafx.h"
-// プリコンパイル済みヘッダーのファイル名はプロジェクト テンプレートが作成するものを使う場合、
-// デフォルトが異なる（デスクトップ アプリだと stdafx.h、ストア アプリだと pch.h）。
-// いちいちコード側を変えるのが面倒なので、
-// プロジェクトのファイル単位設定 [C/C++]→[詳細設定] の [必ず使用されるインクルード ファイル] で行なう。
 #include "dxerr.h"
 
-#include <cstdio>
+#include <stdio.h>
+#include <algorithm>
 
-
-#ifdef WINAPI_FAMILY_PARTITION
-// New SDK
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
-#define ENABLES_DXERR_DESKTOP_VERSION
-#endif
-#else
-// Old SDK
-#define ENABLES_DXERR_DESKTOP_VERSION
-#endif
-
-
-#ifdef ENABLES_DXERR_DESKTOP_VERSION
+#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
 #include <ddraw.h>
 #include <d3d9.h>
-#include <d3d10_1.h>
-#endif
-#include <d3d11.h>
-#include <wincodec.h>
-#include <d2d1.h>
-#include <dwrite.h>
-#ifdef ENABLES_DXERR_DESKTOP_VERSION
-#include <mmreg.h>
 #include <dsound.h>
 
 #define DIRECTINPUT_VERSION 0x800
 #include <dinput.h>
 #include <dinputd.h>
+#endif
+
+#include <d3d10_1.h>
+#include <d3d11_1.h>
+
+#if !defined(WINAPI_FAMILY) || WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
+#include <wincodec.h>
+#include <d2derr.h>
+#include <dwrite.h>
 #endif
 
 #define XAUDIO2_E_INVALID_CALL          0x88960001
@@ -3026,7 +3009,8 @@ const WCHAR* WINAPI DXGetErrorStringW( _In_ HRESULT hr )
         CHK_ERR_WIN32A(ERROR_IPSEC_IKE_NEGOTIATION_DISABLED)
         CHK_ERR_WIN32A(ERROR_IPSEC_IKE_NEG_STATUS_END)
 
-#ifdef ENABLES_DXERR_DESKTOP_VERSION
+#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
+
 // -------------------------------------------------------------
 // ddraw.h error codes
 // -------------------------------------------------------------
@@ -3289,12 +3273,13 @@ const WCHAR* WINAPI DXGetErrorStringW( _In_ HRESULT hr )
 
     	CHK_ERRA(DSERR_FXUNAVAILABLE)
 
+#endif // !WINAPI_FAMILY || WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP
+
 // -------------------------------------------------------------
 // d3d10.h error codes
 // -------------------------------------------------------------
         CHK_ERRA(D3D10_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS)
         CHK_ERRA(D3D10_ERROR_FILE_NOT_FOUND)
-#endif
 
 // -------------------------------------------------------------
 // dxgi.h error codes
@@ -3330,12 +3315,12 @@ const WCHAR* WINAPI DXGetErrorStringW( _In_ HRESULT hr )
         CHK_ERRA(D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS)
         CHK_ERRA(D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD)
 
+#if !defined(WINAPI_FAMILY) || WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
+
 // -------------------------------------------------------------
 // Direct2D error codes
 // -------------------------------------------------------------
-#ifdef ENABLES_DXERR_DESKTOP_VERSION
-        CHK_ERRA(D2DERR_UNSUPPORTED_PIXEL_FORMAT)
-#endif
+//        CHK_ERRA(D2DERR_UNSUPPORTED_PIXEL_FORMAT)
 //        CHK_ERRA(D2DERR_INSUFFICIENT_BUFFER)
         CHK_ERRA(D2DERR_WRONG_STATE)
         CHK_ERRA(D2DERR_NOT_INITIALIZED)
@@ -3407,7 +3392,7 @@ const WCHAR* WINAPI DXGetErrorStringW( _In_ HRESULT hr )
         CHK_ERRA(WINCODEC_ERR_STREAMWRITE)
         CHK_ERRA(WINCODEC_ERR_STREAMREAD)
         CHK_ERRA(WINCODEC_ERR_STREAMNOTAVAILABLE)
-//        CHK_ERRA(WINCODEC_ERR_UNSUPPORTEDPIXELFORMAT)
+        CHK_ERRA(WINCODEC_ERR_UNSUPPORTEDPIXELFORMAT)
         CHK_ERRA(WINCODEC_ERR_UNSUPPORTEDOPERATION)
         CHK_ERRA(WINCODEC_ERR_INVALIDREGISTRATION)
         CHK_ERRA(WINCODEC_ERR_COMPONENTINITIALIZEFAILURE)
@@ -3421,6 +3406,8 @@ const WCHAR* WINAPI DXGetErrorStringW( _In_ HRESULT hr )
         CHK_ERRA(WINCODEC_ERR_INVALIDQUERYCHARACTER)
         CHK_ERRA(WINCODEC_ERR_WIN32ERROR)
         CHK_ERRA(WINCODEC_ERR_INVALIDPROGRESSIVELEVEL)
+
+#endif // !WINAPI_FAMILY || WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
 
 // -------------------------------------------------------------
 // DXUT error codes
@@ -3448,9 +3435,9 @@ const WCHAR* WINAPI DXGetErrorStringW( _In_ HRESULT hr )
 // xapo.h error codes
 // -------------------------------------------------------------
         CHK_ERRA(XAPO_E_FORMAT_UNSUPPORTED)
-    }
 
-    return L"Unknown";
+        default: return L"Unknown error.";
+    }
 }
 
 //--------------------------------------------------------------------------------------
@@ -3462,11 +3449,11 @@ const WCHAR* WINAPI DXGetErrorStringW( _In_ HRESULT hr )
 
 #define  CHK_ERRA(hrchk) \
         case hrchk: \
-             wcscpy_s( desc, count, L#hrchk );
+             wcscpy_s( desc, count, L#hrchk ); break;
 
 #define  CHK_ERR(hrchk, strOut) \
         case hrchk: \
-             wcscpy_s( desc, count, L##strOut );
+             wcscpy_s( desc, count, L##strOut ); break;
 
 
 //--------------------------------------------------------------------------------------
@@ -3477,38 +3464,21 @@ void WINAPI DXGetErrorDescriptionW( _In_ HRESULT hr, _Out_cap_(count) WCHAR* des
 
     *desc = 0;
 
-//#ifdef ENABLES_DXERR_DESKTOP_VERSION
-#if 0
-
     // First try to see if FormatMessage knows this hr
-    LPWSTR errorText = nullptr;
+    UINT icount = static_cast<UINT>( std::min<size_t>( count, 32767 ) );
 
-    DWORD result = FormatMessageW( FORMAT_MESSAGE_FROM_SYSTEM |FORMAT_MESSAGE_ALLOCATE_BUFFER, nullptr, hr, 
-                                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&errorText, 0, nullptr );
+    DWORD result = FormatMessageW( FORMAT_MESSAGE_FROM_SYSTEM, nullptr, hr, 
+                                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), desc, icount, nullptr );
 
-    if (result > 0 && errorText)
-    {
-        wcscpy_s( desc, count, errorText );
-
-        if ( errorText )
-            LocalFree( errorText );
-
+    if (result > 0)
         return;
-    }
-
-    if ( errorText )
-        LocalFree( errorText );
-	errorText = nullptr;
-#else
-    const DWORD result = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, hr, 
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), desc, static_cast<DWORD>(count), nullptr);
-#endif
 
     switch (hr)
     {
 // Commmented out codes are actually alises for other codes
 
-#ifdef ENABLES_DXERR_DESKTOP_VERSION
+#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
+
 // -------------------------------------------------------------
 // ddraw.h error codes
 // -------------------------------------------------------------
@@ -3772,12 +3742,13 @@ void WINAPI DXGetErrorDescriptionW( _In_ HRESULT hr, _Out_cap_(count) WCHAR* des
 
         CHK_ERR(DSERR_FXUNAVAILABLE, "Requested effects are not available")
 
+#endif // !WINAPI_FAMILY || WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP
+
 // -------------------------------------------------------------
 // d3d10.h error codes
 // -------------------------------------------------------------
         CHK_ERR(D3D10_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS, "There are too many unique state objects.")
         CHK_ERR(D3D10_ERROR_FILE_NOT_FOUND, "File not found")
-#endif
 
 // -------------------------------------------------------------
 // dxgi.h error codes
@@ -3813,12 +3784,12 @@ void WINAPI DXGetErrorDescriptionW( _In_ HRESULT hr, _Out_cap_(count) WCHAR* des
         CHK_ERR(D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS, "Therea are too many unique view objects.")
         CHK_ERR(D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD, "Deferred context requires Map-Discard usage pattern")
 
+#if !defined(WINAPI_FAMILY) || WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
+
 // -------------------------------------------------------------
 // Direct2D error codes
 // -------------------------------------------------------------
-#ifdef ENABLES_DXERR_DESKTOP_VERSION
-        CHK_ERR(D2DERR_UNSUPPORTED_PIXEL_FORMAT, "The pixel format is not supported.")
-#endif
+//        CHK_ERR(D2DERR_UNSUPPORTED_PIXEL_FORMAT, "The pixel format is not supported.")
 //        CHK_ERR(D2DERR_INSUFFICIENT_BUFFER, "The supplied buffer was too small to accomodate the data.")
         CHK_ERR(D2DERR_WRONG_STATE, "The object was not in the correct state to process the method.")
         CHK_ERR(D2DERR_NOT_INITIALIZED, "The object has not yet been initialized.")
@@ -3890,7 +3861,7 @@ void WINAPI DXGetErrorDescriptionW( _In_ HRESULT hr, _Out_cap_(count) WCHAR* des
         CHK_ERR(WINCODEC_ERR_STREAMWRITE, "WIC operation on write stream failed.")
         CHK_ERR(WINCODEC_ERR_STREAMREAD, "WIC operation on read stream failed.")
         CHK_ERR(WINCODEC_ERR_STREAMNOTAVAILABLE, "Required stream is not available." )
-//        CHK_ERRA(WINCODEC_ERR_UNSUPPORTEDPIXELFORMAT)
+        CHK_ERR(WINCODEC_ERR_UNSUPPORTEDPIXELFORMAT, "The pixel format is not supported.")
         CHK_ERR(WINCODEC_ERR_UNSUPPORTEDOPERATION, "This operation is not supported by WIC." )
         CHK_ERR(WINCODEC_ERR_INVALIDREGISTRATION, "Error occurred reading WIC codec registry keys.")
         CHK_ERR(WINCODEC_ERR_COMPONENTINITIALIZEFAILURE, "Failed initializing WIC codec.")
@@ -3904,6 +3875,8 @@ void WINAPI DXGetErrorDescriptionW( _In_ HRESULT hr, _Out_cap_(count) WCHAR* des
         CHK_ERR(WINCODEC_ERR_INVALIDQUERYCHARACTER, "Invalid character in WIC metadata query.")
         CHK_ERR(WINCODEC_ERR_WIN32ERROR, "General Win32 error encountered during WIC operation.")
         CHK_ERR(WINCODEC_ERR_INVALIDPROGRESSIVELEVEL, "Invalid level for progressive WIC image decode.")
+
+#endif // !WINAPI_FAMILY || WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
 
 // -------------------------------------------------------------
 // DXUT error codes
@@ -3931,6 +3904,8 @@ void WINAPI DXGetErrorDescriptionW( _In_ HRESULT hr, _Out_cap_(count) WCHAR* des
 // xapo.h error codes
 // -------------------------------------------------------------
         CHK_ERR(XAPO_E_FORMAT_UNSUPPORTED, "Requested audio format unsupported.")
+
+        default: wcscpy_s( desc, count, L"Unknown error." ); break;
     }
 }
 
@@ -3938,16 +3913,14 @@ void WINAPI DXGetErrorDescriptionW( _In_ HRESULT hr, _Out_cap_(count) WCHAR* des
 HRESULT WINAPI DXTraceW( _In_z_ const WCHAR* strFile, _In_ DWORD dwLine, _In_ HRESULT hr,
                          _In_opt_ const WCHAR* strMsg, _In_ bool bPopMsgBox )
 {
-    WCHAR strBufferFile[MAX_PATH];
     WCHAR strBufferLine[128];
     WCHAR strBufferError[256];
-    WCHAR strBufferMsg[1024];
     WCHAR strBuffer[BUFFER_SIZE];
 
-    swprintf_s( strBufferLine, L"%lu", dwLine );
+    swprintf_s( strBufferLine, 128, L"%lu", dwLine );
     if( strFile )
     {
-       swprintf_s( strBuffer, L"%s(%s): ", strFile, strBufferLine );
+       swprintf_s( strBuffer, BUFFER_SIZE, L"%ls(%ls): ", strFile, strBufferLine );
        OutputDebugStringW( strBuffer );
     }
 
@@ -3958,31 +3931,35 @@ HRESULT WINAPI DXTraceW( _In_z_ const WCHAR* strFile, _In_ DWORD dwLine, _In_ HR
         OutputDebugStringW( L" " );
     }
 
-	swprintf_s( strBufferError, L"%s (0x%0.8x)", DXGetErrorStringW(hr), hr );
-	swprintf_s( strBuffer, L"hr=%s\n", strBufferError );
+    swprintf_s( strBufferError, 256, L"%ls (0x%0.8x)", DXGetErrorStringW(hr), hr );
+    swprintf_s( strBuffer, BUFFER_SIZE, L"hr=%ls", strBufferError );
     OutputDebugStringW( strBuffer );
 
+    OutputDebugStringW( L"\n" );
+
+#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
     if( bPopMsgBox )
     {
-        wcscpy_s( strBufferFile, L"" );
+        WCHAR strBufferFile[MAX_PATH];
+        wcscpy_s( strBufferFile, MAX_PATH, L"" );
         if( strFile )
-            wcscpy_s( strBufferFile, strFile );
+            wcscpy_s( strBufferFile, MAX_PATH, strFile );
 
-        wcscpy_s( strBufferMsg, L"" );
+        WCHAR strBufferMsg[1024];
+        wcscpy_s( strBufferMsg, 1024, L"" );
         if( nMsgLen > 0 )
-            swprintf_s( strBufferMsg, L"Calling: %s\n", strMsg );
+            swprintf_s( strBufferMsg, 1024, L"Calling: %ls\n", strMsg );
 
-        swprintf_s( strBuffer, L"File: %s\nLine: %s\nError Code: %s\n%sDo you want to debug the application?",
+        swprintf_s( strBuffer, BUFFER_SIZE, L"File: %ls\nLine: %ls\nError Code: %ls\n%lsDo you want to debug the application?",
                     strBufferFile, strBufferLine, strBufferError, strBufferMsg );
 
-#ifdef ENABLES_DXERR_DESKTOP_VERSION
         int nResult = MessageBoxW( GetForegroundWindow(), strBuffer, L"Unexpected error encountered", MB_YESNO | MB_ICONERROR );
         if( nResult == IDYES )
             DebugBreak();
-#else
-		// Not Implemented.
-#endif
     }
+#else
+    UNREFERENCED_PARAMETER(bPopMsgBox);
+#endif
 
     return hr;
 }

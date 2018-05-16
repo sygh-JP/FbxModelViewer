@@ -314,6 +314,7 @@ void CPropertiesWnd::SetPropListFont()
 
 	LOGFONT lf = {};
 	// Windows 7 日本語版ではデフォルトでメイリオになるらしい。Windows 8 日本語版ではたぶん Meiryo UI となる。
+	// MFC 14.0 + Windows 10 日本語版では Segoe UI になった。
 	afxGlobalData.fontRegular.GetLogFont(&lf);
 
 	NONCLIENTMETRICS info = {};

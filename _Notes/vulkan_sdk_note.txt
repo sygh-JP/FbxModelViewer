@@ -1,9 +1,9 @@
 ﻿Visual Studioの[カスタム ビルド ツール]でGLSLからSPIR-Vを生成するとき、たとえば下記のように[コマンド ライン]の項目を設定する。
 
-echo Now compiling GLSL source file to SPIR-V...
 "$(VK_SDK_PATH)\Bin32\glslangValidator.exe" -V "%(Identity)" -o "$(OutDir)VKShaders\%(Filename).spv"
 
 [出力ファイル]には「$(OutDir)VKShaders\%(Filename).spv」を指定する。
+[説明]には適当に「Now compiling GLSL source file to SPIR-V...」などを指定する。
 例として "VKShaders" サブフォルダーを挟んでいるが、このフォルダーはVisual Studioが勝手に生成してくれるので便利。
 なお、glslangValidatorはBOM付きUTF-8を扱えないので注意。BOMなしのUTF-8もしくはASCIIを使う必要がある。
 
