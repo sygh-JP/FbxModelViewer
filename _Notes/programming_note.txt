@@ -193,6 +193,7 @@ Windows 上で文字列の検索や置換などを行なう場合、素直にネ
 なお、Visual Studio のビジュアル デバッガは ANSI マルチバイトもしくは UTF-16LE ワイド文字にしか対応していない。UTF-8 は不可。
 他 OS への移植性も考慮すると、ファイル読み込み後のデータ保持などには std::string でなく std::wstring を使っておくのが無難。
 ちなみに Android や iOS の Unicode は UTF-16 で、Linux や Mac OS の Unicode は UTF-32 となっている。
+Lua, Scintilla, Qt なども内部エンコードおよびインターフェイスは UTF-8 前提となっている。
 
 
 [★]
@@ -225,3 +226,20 @@ C#/VB.NETであればポータブルライブラリという方法もあるが�
 デスクトップ用にはC++/CLIでマネージコードとしてラップする、ストアアプリ用にはC++/CXでWinRTコードとしてラップする、
 といった使い分けが必要そう。ラッパーの基本構造コードは共通化して、プリプロセッサーでC++/CLIとC++/CXを使い分けるとよいかも。
 http://answers.flyppdevportal.com/categories/metro/csharpvb.aspx?ID=73a6b511-0181-4032-8f72-6bd1f24e45fd
+
+
+[★]
+C++でXMLを扱うライブラリはいくつかある。著名なものは以下。
+●Windows専用
+　・MSXML - XPathやスキーマをサポートする。ストアアプリからは使えないらしい。
+　・XmlLite - XPathやスキーマはサポートしない。ストアアプリからも使えるらしい。
+　・Windows.Data.Xml.Dom - ストアアプリ向け。SAXのサポートはない。.NETのSystem.Xmlと仕様が異なるのが厄介。XPathはサポートするらしい。スキーマは？
+●クロスプラットフォーム
+・Xerces-C++ - かなり巨大なライブラリ。Apache v2ライセンス。MSXML互換インターフェイスも用意されているらしい。ビルドにはCMakeが必要。
+・libxml2 - C言語インターフェイス。MITライセンス。XPathやスキーマをサポートするらしい。
+　v2.9.8にはVC2010のスタティックライブラリプロジェクトファイルが同梱されている。
+・Boost Property Tree Library (Boost C++) - ヘッダーベース。XPathはサポートしないらしい（独自のxmlattr構文）。スキーマは？
+
+以下も参考に。
+http://lars.ruoff.free.fr/xmlcpp/
+やはりXPathとスキーマのサポートは要件として外せない。
