@@ -23,8 +23,9 @@ namespace MyMath
 	const MyMath::Vector4F COLOR4F_BLACK(0,0,0,1);
 	const MyMath::Vector4F COLOR4F_TRANSPARENT(0,0,0,0);
 
-	// OpenGL ヘルパーの GLM ではデフォルト コンストラクタによりゼロ ベクトルや単位行列が生成されるが、
 	// D3DX Math, XNA Math, DirectXMath のデフォルト コンストラクタは怠惰で、ゴミデータが入ったままになる。
+	// GLM (OpenGL Mathematics) は、以前のバージョンではデフォルト コンストラクタによりゼロ ベクトルや単位行列が生成されていたが、
+	// 新しいバージョンでは未初期化となるように仕様変更された。
 
 	const Vector2I ZERO_VECTOR2I(0, 0);
 	const Vector3I ZERO_VECTOR3I(0, 0, 0);

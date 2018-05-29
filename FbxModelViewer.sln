@@ -13,12 +13,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyWpfGraphLibMfc", "MyWpfGraphLibMfc\MyWpfGraphLibMfc.vcxproj", "{08BFD466-1F43-4466-A46A-0290E5160C37}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7478D0EC-1AD7-42AB-B085-DE9AF63AC847}"
-	ProjectSection(SolutionItems) = preProject
-		MSBuild_FbxModelMonitor_sln_Rebuild.bat = MSBuild_FbxModelMonitor_sln_Rebuild.bat
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FSharpUtilScripts", "FSharpUtilScripts", "{0D8D31B4-87AB-4C75-9D9B-86528889B02D}"
 	ProjectSection(SolutionItems) = preProject
+		FSharpUtilScripts\check_src_file_unicode_bom.fsx = FSharpUtilScripts\check_src_file_unicode_bom.fsx
 		FSharpUtilScripts\copy_dlls_for_exes.fsx = FSharpUtilScripts\copy_dlls_for_exes.fsx
 		FSharpUtilScripts\move_int_files_to_recyclebin.fsx = FSharpUtilScripts\move_int_files_to_recyclebin.fsx
 	EndProjectSection
@@ -38,6 +36,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Notes", "_Notes", "{F1FB36
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfFontBmpWriter", "WpfFontBmpWriter\WpfFontBmpWriter.csproj", "{895B827E-26FE-4C93-AEB8-CE35ACF39AC9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Batches", "_Batches", "{5AC5EF09-67E7-49E8-99B7-976C4E830840}"
+	ProjectSection(SolutionItems) = preProject
+		_Batches\count_cs_cpp_src_file_total_size.bat = _Batches\count_cs_cpp_src_file_total_size.bat
+		_Batches\MSBuild_FbxModelViewer_sln_Rebuild.bat = _Batches\MSBuild_FbxModelViewer_sln_Rebuild.bat
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -122,5 +126,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0D8D31B4-87AB-4C75-9D9B-86528889B02D} = {7478D0EC-1AD7-42AB-B085-DE9AF63AC847}
 		{F1FB3629-EB4A-4B49-84E8-66854D0B1D93} = {7478D0EC-1AD7-42AB-B085-DE9AF63AC847}
+		{5AC5EF09-67E7-49E8-99B7-976C4E830840} = {7478D0EC-1AD7-42AB-B085-DE9AF63AC847}
 	EndGlobalSection
 EndGlobal
