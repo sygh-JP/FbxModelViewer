@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "MyMath.hpp"
 
@@ -7,10 +7,10 @@ namespace MyTextureHelper
 {
 	class TextureDataPack final
 	{
-		// DIB �s�N�Z���̕��т��K��E�ۏ؂�������΁AWICPixelFormatGUID ���g���Ηǂ��̂����c�c�� MS �v���b�g�t�H�[���ւ̈ڐA�������ɂȂ�B
-		// �Ǝ��� enum ��݂���Ȃ肷�ׂ��B���Ȃ݂Ɍ���ł͈��k�o�b�t�@�ɂ͔�Ή��B
-		// �Ȃ��ADirect3D 10 �ȍ~�̓p���b�g �e�N�X�`���i�C���f�b�N�X�摜�j�͑��݂��Ȃ��̂ŁA
-		// �O���[�X�P�[���ȊO�� 256 �F�摜�Ȃǂ��ǂ����Ă��K�v�ł���� Texture1D �Ȃǂ��p���b�g����ɂ��ăV�F�[�_�[�őΉ�����B
+		// DIB ピクセルの並びも規定・保証したければ、WICPixelFormatGUID を使えば良いのだが……非 MS プラットフォームへの移植性が問題になる。
+		// 独自の enum を設けるなりすべき。ちなみに現状では圧縮バッファには非対応。
+		// なお、Direct3D 10 以降はパレット テクスチャ（インデックス画像）は存在しないので、
+		// グレースケール以外の 256 色画像などがどうしても必要であれば Texture1D などをパレット代わりにしてシェーダーで対応する。
 	public:
 		uint32_t TextureWidth;
 		uint32_t TextureHeight;
@@ -51,7 +51,7 @@ namespace MyTextureHelper
 
 	typedef std::shared_ptr<FontTextureDataPack> TFontTextureDataPackPtr;
 
-	// �e�N�X�`�� OFF �ݒ�p�ȂǂɎg���_�~�[ �z���C�g �e�N�X�`���̃T�C�Y�B�Ƃ肠����2�ׂ̂���T�C�Y�ɂ��Ă����B1x1 �ł�������͗l�B
+	// テクスチャ OFF 設定用などに使うダミー ホワイト テクスチャのサイズ。とりあえず2のべき乗サイズにしておく。1x1 でもいける模様。
 #if 0
 	const UINT DUMMY_WHITE_TEX_SIZE = 4;
 #elif 0
@@ -60,9 +60,9 @@ namespace MyTextureHelper
 	const UINT DUMMY_WHITE_TEX_SIZE = 1;
 #endif
 
-	// �e�N�X�`�� �T�C�Y���ő�K�����i�O���f�[�V���� �X�g�b�v���j�ɂȂ�B256 �K������Βʏ�� LDR �Ɠ����V�F�[�f�B���O���\�B
-	// 128 �K�����Ƃ��Ă��T���v�����O����Ƃ��Ƀo�C���j�A��ԂȂǂ̃T���v���[���g���΁A
-	// ���j�A�ȃO���f�[�V�����Ɋւ��Ă͑卷�͂Ȃ��B
+	// テクスチャ サイズが最大階調数（グラデーション ストップ数）になる。256 階調あれば通常の LDR と同じシェーディングも可能。
+	// 128 階調だとしてもサンプリングするときにバイリニア補間などのサンプラーを使えば、
+	// リニアなグラデーションに関しては大差はない。
 #if 0
 	const UINT TOON_SHADING_REF_TEX_SIZE = 128;
 #else
