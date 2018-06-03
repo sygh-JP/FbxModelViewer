@@ -8,7 +8,7 @@ namespace MyUtils
 	//! @brief  簡易トラックボール処理クラス。<br>
 	//! 
 	//! http://marina.sys.wakayama-u.ac.jp/~tokoi/?date=20040321 <br>
-	class MyTrackball final : boost::noncopyable
+	class MyTrackball final
 	{
 		MyMath::Vector2I m_dragStartPos; //!< ドラッグ開始位置。<br>
 		MyMath::Vector2F m_scalingVal; //!< マウスの絶対位置→ウィンドウ内での相対位置の換算係数。<br>

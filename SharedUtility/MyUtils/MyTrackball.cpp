@@ -6,10 +6,12 @@
 namespace MyUtils
 {
 	MyTrackball::MyTrackball()
-		: m_isDragging()
+		: m_dragStartPos()
+		, m_scalingVal()
 		, m_cq(1, 0, 0, 0)
 		, m_tq(1, 0, 0, 0)
 		, m_rotMatrix(MyMath::IDENTITY_MATRIX4X4F)
+		, m_isDragging()
 	{
 	}
 
