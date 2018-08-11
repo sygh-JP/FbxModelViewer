@@ -4,6 +4,14 @@
 
 namespace MyOGL
 {
+	// glGetProgramResourceIndex(), glGetUniformBlockIndex(), glGetUniformIndices() のエラー時戻り値用として
+	// GL_INVALID_INDEX というシンボルが定義されているが、
+	// GL_INVALID_INDEX を glGetUniformLocation() や glGetAttribLocation() の戻り値チェックに使うべきではない。
+	// API リファレンスに即値 -1 が記載されているので、ユーザーコードでは即値を使うか、定数シンボルを明示的に定義しておく。
+	// https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGetUniformLocation.xhtml
+	// https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGetAttribLocation.xhtml
+
+	const GLint InvalidShaderParamLocationVal = -1;
 
 	//! @brief  複数のシェーダープログラムで同様に定義される Uniform 変数の Location (Handle) を管理する。<br>
 	//! UBO で管理できない、スロット番号などを個別管理する。<br>
@@ -454,7 +462,7 @@ namespace MyOGL
 
 
 	//! @brief  <br>
-	class VertexStreamInputLayoutHelperForPC abstract final
+	class VertexStreamInputLayoutHelperForPC final
 	{
 	public:
 		typedef MyVertexTypes::MyVertexPC TVertex;
@@ -492,7 +500,7 @@ namespace MyOGL
 	};
 
 	//! @brief  <br>
-	class VertexStreamInputLayoutHelperForPCT abstract final
+	class VertexStreamInputLayoutHelperForPCT final
 	{
 	public:
 		typedef MyVertexTypes::MyVertexPCT TVertex;
@@ -531,7 +539,7 @@ namespace MyOGL
 	};
 
 	//! @brief  <br>
-	class VertexStreamInputLayoutHelperForPCNT abstract final
+	class VertexStreamInputLayoutHelperForPCNT final
 	{
 	public:
 		typedef MyVertexTypes::MyVertexPCNT TVertex;
@@ -576,7 +584,7 @@ namespace MyOGL
 	};
 
 	//! @brief  <br>
-	class VertexStreamInputLayoutHelperForPNTIW abstract final
+	class VertexStreamInputLayoutHelperForPNTIW final
 	{
 	public:
 		typedef MyVertexTypes::MySkinVertex TVertex;

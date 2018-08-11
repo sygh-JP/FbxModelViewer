@@ -5,6 +5,7 @@
 // 言語のキーワード（予約語）を #define の左辺値にして置換することは NG。
 // 本来は [B] を定義して、MFC アプリケーション プログラマーに対して new ではなく NEW を使うことを推奨するべきだった。
 // http://msdn.microsoft.com/ja-jp/library/cc440188(v=vs.71).aspx
+// https://web.archive.org/web/20140301090452/http://msdn.microsoft.com:80/ja-jp/library/cc440188(v=vs.71).aspx
 
 
 ///////////////////////////////////////////////////////////////////////////////

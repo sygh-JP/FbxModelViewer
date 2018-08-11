@@ -3,7 +3,7 @@
 
 // OpenGL のオブジェクト ハンドルは基本的に整数の ID 値になる。
 // Gen/Delete で生成と破棄を管理する GLuint リソース系は非ゼロが有効値。
-// Get～Location などのインデックスを取得するだけの GLint 系は取得に失敗すると -1 などの無効値が返る。
+// glGetUniformLocation() や glGetAttribLocation() は GLint 型のインデックスを取得するだけだが、取得に失敗すると無効値 -1 が返る。
 // テクスチャに関しては、ID 0 は無効ではなく「無名テクスチャ」という予約された組み込みの有効値になっており、
 // 実際に DIB データをバインドしたり普通のテクスチャとして利用することもできるが、
 // 通例は glBindTexture() で設定値をリセットする用途に使われることが多い。
@@ -29,17 +29,16 @@
 // OpenGL API はごく最近追加された一部を除いてほとんどすべてが直交性の低いステートマシン前提設計になっていて、
 // 忌々しいことこのうえない。
 // 一方、Direct3D 11 のデバイス（主にリソース生成を担当）のメソッドはスレッド セーフ。
+// Direct3D は昔からオブジェクト指向の階層設計になっているので理解しやすい。
 // デバイス インターフェイスと分離されたデバイス コンテキストは各スレッドごとに固有なのは OpenGL と同様だが、
 // サブスレッドのディファード コンテキストでレンダリング コマンドを記録して
 // メインスレッドのイミディエイト コンテキストで再生するという、比較的洗練されたマルチスレッド レンダリング機能を持つ。
-// Direct3D 12 ではマルチスレッド レンダリングのパフォーマンスがさらに強化されるらしい。
+// Direct3D 12 ではマルチスレッド レンダリングのパフォーマンスがさらに強化されている。
+// Vulkan も API 自体は C 言語関数形式だが、OpenGL と違ってちゃんとしたオブジェクト指向ベースの階層設計になっている。
 
 
 namespace MyOGL
 {
-	// GL_INVALID_INDEX というシンボルが定義されているらしい。
-	const GLint InvalidShaderParamLocationVal = -1;
-
 #pragma region // Deleters //
 
 	struct ShaderResourceDeleter
@@ -169,7 +168,7 @@ namespace MyOGL
 	typedef std::unique_ptr<GLuint, GpuQueryResourceDeleter> GpuQueryResourcePtr;
 
 
-	class Factory abstract final
+	class Factory final
 	{
 		static GLuint GenOneBuffer()
 		{
