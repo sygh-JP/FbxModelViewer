@@ -1115,6 +1115,7 @@ bool CMainFrame::InitDirect3DAndOpenGL()
 		_ASSERTE(m_pD3DManager != nullptr);
 		if (!m_pD3DManager->Create(clsize.cx, clsize.cy, m_pWndHostD3D->GetSafeHwnd()))
 		{
+			AfxMessageBox(_T("Failed to create D3D Manager!!"), MB_ICONERROR);
 			return false;
 		}
 	}
@@ -1134,6 +1135,7 @@ bool CMainFrame::InitDirect3DAndOpenGL()
 		_ASSERTE(m_pOGLManager != nullptr);
 		if (!m_pOGLManager->Create(clsize.cx, clsize.cy, m_pWndHostOGL->GetSafeHwnd()))
 		{
+			AfxMessageBox(_T("Failed to create OGL Manager!!"), MB_ICONERROR);
 			return false;
 		}
 	}

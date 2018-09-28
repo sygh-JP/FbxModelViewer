@@ -209,25 +209,36 @@ BOOL CFbxModelMonitorApp::InitInstance()
 	DoMyMathTest();
 	DoMyUnicodeTest();
 
-	// アサーションにはいくつか方法（マクロ）が用意されているが、お勧め順に紹介する。
-	// Visual C++ 環境前提であれば、CRT Debug の _ASSERTE() を使うとよい。
+	// C/C++ のアサーションにはいくつか方法（マクロ）が用意されているが、お勧め順に紹介する。
+	// Visual C++ 環境前提であれば、CRT Debug ライブラリの _ASSERTE() を使うとよい。
 	// ATL が使える有償版の Visual C++（2005/2008 Standard, 2010/2012/2013 Professional エディション以上）では、ATLASSERT() を使ってもよい。
+	// ATLASSERT() は _ASSERTE() に置き換わるようになっている。
 	// なお、MFC 環境であれば ASSERT() を使ってもよいが、MFC はストア アプリでは使えないので、
 	// コードの再利用性が下がる。今後は使用を控えたほうがいい。
 	// 非 MFC 環境では ASSERT が _ASSERTE に置換されるようマクロ定義する手もある。
-	// TRACE() に関しても同様。ATLTRACE() を使ったほうがいい。
 	// 標準 C/C++ の assert() は、アサーションが失敗したときに
 	// MSVC 実装では内部の DebugBreak() 呼び出しまでさかのぼってしまうので使いづらい。
-	// どうしても使わざるをえない状況を除いて、使用は避けたほうがいい。
-	// MSVC 環境では _ASSERTE に、その他の環境では assert に置き換わるようなマクロを定義する手もある。
+	// どうしても使わざるを得ない状況を除いて、使用は避けたほうがいい。
+	// なお、assert() で停止した後は[継続]を選択してもプログラムを続行できずに即座に終了する。abort() が呼ばれる模様。
+	// また、停止位置などのエラーメッセージはコンソール（おそらく標準エラー）に出力される模様。
+	// _ASSERTE() などは[継続]で続行できる。abort() は呼ばれない。
+	// ……と思っていたが、少なくとも Visual C++ 2013 では、assert() マクロでもアサートが失敗した位置で停止するようになっている。
+	// なお、VC2013 までは、どのアサートマクロでも [Microsoft Visual C++ Runtime Library] というタイトルと
+	// [中止(A)]/[再試行(R)]/[無視(I)] のボタンを持つエラーダイアログが出るようになっていたが、
+	// VC2015 では出なくなってしまっている。これでは _ASSERT_EXPR() のメッセージ引数が無意味になってしまう。
+	// 
+	// TRACE() に関しても ASSERT() 同様に MFC 専用。ATLTRACE() を使ったほうがいい。
 	// ちなみに Visual Studio 2013 の ATLTRACE() では、
 	// hoge.cpp(123) : atlTraceGeneral - 出力メッセージ
 	// というような感じで、__FILE__ と __LINE__ と診断レベルが出力メッセージ先頭に付加されるようになった。
 	// Visual Studio IDE には「FilePath(LineNumber):」の形で出力ウィンドウに表示されたメッセージを
 	// ダブルクリックすることで該当行にジャンプできる機能が昔からあったのだが、
 	// プログラマーが特に工夫するまでもなく自動的にこの機能が利用できる形になった。
+	// ただ、常に情報量が増えることでノイズも増え、メッセージ本体が埋もれてしまってうっとうしいと感じるかもしれない。
 
+	//_ASSERT(false);
 	//_ASSERTE(false);
+	//_ASSERT_EXPR(false, L"My assertion failure message!!");
 	//ATLASSERT(false);
 	//ASSERT(false);
 	//assert(false);
