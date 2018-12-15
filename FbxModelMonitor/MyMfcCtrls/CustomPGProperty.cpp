@@ -9,15 +9,15 @@
 
 
 // VARIANT ラッパークラスはいくつかあるが、COleVariant は MFC で使用可能。
-// ATL::CComVariant は MFC/ATL で使用可能。
-// _variant_t は全エディションの MSVC で使用可能（CRT というか C++ 向け Win32 ヘルパーらしい）。
+// ATL::CComVariant は ATL/MFC で使用可能。
+// _variant_t は全エディションの MSVC で使用可能（<comutil.h> は Windows SDK の一部ではなく、CRT の一部というか C++ 向け Win32 ヘルパーらしい）。
 // COleVariant は int や bool を引数にとるコンストラクタをサポートしない代わりに、CByteArray や CLongBinary などを受け取ることができる。
 // CComVariant は int を受け取るコンストラクタを持つが、デフォルトで VT_INT でなく VT_I4 になるので注意。
 // VT_INT や VT_BOOL を気軽にかつ確実に使いたい場合は _variant_t を使ったほうが楽。
 // ちなみに VT_I4 は long 用であり、VT_INT とは異なるので注意。
 // COleVariant, CComVariant, _variant_t はいずれも VARIANT 構造体の public 派生で、
 // さらに VARIANT への参照もしくはポインタを受け取るコンストラクタを持つので、相互に暗黙変換できる。
-// なお、BSTR ラッパーである ATL::CComBSTR は使い方が難しく、_bstr_t を使ったほうがよいらしい。
+// なお、BSTR ラッパーには ATL::CComBSTR と _bstr_t がある。
 
 
 #pragma region // CMyReadonlyPGProperty //
@@ -191,7 +191,7 @@ void CMyDoubleSpinButtonCtrl::OnDeltapos(NMHDR *pNMHDR, LRESULT *pResult)
 	TRACE(__FUNCTIONW__ L"()\n");
 
 	// NOTE: CMFCPropertyGridProperty::SetValue(const _variant_t&) を直接呼び出すと、
-	// "free heap block ? modified at ? after it was freed" のヒープエラーが発生する。
+	// "free heap block xxx modified at yyy after it was freed" のヒープエラーが発生する。
 	// したがって、CMFCPropertyGridProperty::m_varValue および
 	// CMFCPropertyGridProperty::m_pWndInPlace のテキストを直接書き換えるメンバ関数を用意する。
 	if (m_pProp)
