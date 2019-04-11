@@ -335,7 +335,7 @@ namespace MyOGL
 		// GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, ... は連番であることが保証されているらしい。
 		// 変な定義済みシンボルを毎回指定するよりは、glBindSampler() 同様にオフセット（インデックス）数値を指定できたほうが分かりやすい。
 		// それはそうと glActiveTexture() の設計はどうみても失敗作以外の何者でもないと思われる。
-		// OpenGL でマルチテクスチャを使おうとすると、まずこの API のダメ仕様にいらっとさせられる。
+		// OpenGL でマルチテクスチャを使おうとすると、まずこの API のダメ仕様にイラッとさせられる。
 		// OpenGL API 全体に蔓延する絶望的なまでの分かりづらさは、
 		// どうも OpenGL 黎明期にデバイス ドライバーの設計をそのまま API に落とし込んだという
 		// まさにハードウェア屋の都合に基づいた設計になっていることが原因らしい。
@@ -353,11 +353,18 @@ namespace MyOGL
 		// http://richg42.blogspot.jp/2014/05/things-that-drive-me-nuts-about-opengl.html
 		// 元 id Software の伝説のプログラマー、かの John Carmack も OpenGL より Direct3D (Direct3D 11) が優れているという旨の発言をしている。
 		// http://www.bit-tech.net/news/gaming/2011/03/11/carmack-directx-better-opengl/1
-		// SIGGRAPH 2014 にて、ようやく API の作り直しが発表された模様。
-		// たぶん共通バイトコード規格や、マルチスレッド レンダリングといった、
-		// Direct3D が何年も昔からサポートしてきた機能をようやく盛り込むことになったらしい。
-		// マルチ GPU 対応に関しては不明。
+		// SIGGRAPH 2014 にて、ようやく API の作り直し (glNext) が発表された。
+		// 共通バイトコード（中間言語）規格や、マルチスレッド レンダリングといった、
+		// Direct3D が何年も昔からサポートしてきた機能をようやく盛り込むことになった。
 		// http://jp.techcrunch.com/2014/08/12/20140811khronos-group-starts-working-on-the-next-generation-of-its-opengl-3d-specs/
+		// 実際に Vulkan 1.0 として2016年2月に正式リリースされた時点では、
+		// 肝心の SPIR-V に対応した公式オフラインシェーダーコンパイラー glslangValidator の完成度の低さにガッカリしたが、
+		// その後着々と改良が重ねられ、GLSL だけでなく HLSL にも対応するようになっている。
+		// OpenGL 4.6 にも SPIR-V のサポートがバックポートされた。
+		// Vulkan 1.1 は Direct3D 12 が先行していたマルチ GPU 対応も正式にサポートするようになっている。
+		// ただし Vulkan は Direct3D 12 以上にローレベルで、D3D や GL と比べて CPU 側コードの実装量が格段に増えるため、
+		// アプリケーション層から直接利用するのには向いていない。
+		// Direct3D 11 に近い上位ラッパーがないとつらい。
 
 		glActiveTexture(GL_TEXTURE0 + slot);
 	}
@@ -447,6 +454,10 @@ namespace MyOGL
 		//pfd.cStencilBits = 8;
 		// FP16 ターシャリ バッファ（FBO）にレンダリングしたものを転送するだけなので、バック バッファはカラーだけでよい。
 		// MSAA も使わない。
+		// ちなみに PFD_SUPPORT_GDI というフラグも存在するが、これは PFD_DOUBLEBUFFER とは排他的らしい。
+		// GDI の SwapBuffers() は実質的に OpenGL (WGL) 専用？
+		// https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/ns-wingdi-tagpixelformatdescriptor
+		// https://docs.microsoft.com/ja-jp/windows/desktop/api/Wingdi/nf-wingdi-swapbuffers
 
 		// マルチ GPU 環境の場合、Direct3D 10 以降ではデバイス作成時に
 		// DXGI アダプターを列挙して好きなものを使うことができる仕組みが用意されているが、
