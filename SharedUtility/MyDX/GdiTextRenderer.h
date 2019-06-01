@@ -25,7 +25,7 @@
 
 /******************************************************************
 *                                                                 *
-*  GdiTextRenderer                                             *
+*  GdiTextRenderer                                                *
 *                                                                 *
 *  The IDWriteTextRenderer interface is an input parameter to     *
 *  IDWriteTextLayout::Draw.  This interfaces defines a number of  *
@@ -42,16 +42,18 @@
 //#include <intsafe.h>
 //#include <comdef.h>
 
+// https://github.com/microsoft/Windows-classic-samples/tree/master/Samples/Win7Samples/multimedia/DirectWrite/GdiInterop
+
 class GdiTextRenderer : public IDWriteTextRenderer
 {
 public:
     GdiTextRenderer(
         IDWriteBitmapRenderTarget* bitmapRenderTarget,
         IDWriteRenderingParams* renderingParams,
-		COLORREF textColor = RGB(0xFF, 0xFF, 0xFF)
+        COLORREF textColor = RGB(0xFF, 0xFF, 0xFF)
         );
 
-    GdiTextRenderer::~GdiTextRenderer();
+    ~GdiTextRenderer();
 
     IFACEMETHOD(IsPixelSnappingDisabled)(
         __maybenull void* clientDrawingContext,
@@ -116,6 +118,6 @@ private:
     unsigned long cRefCount_;
     IDWriteBitmapRenderTarget* pRenderTarget_;
     IDWriteRenderingParams* pRenderingParams_;
-	COLORREF m_textColor;
+    COLORREF m_textColor;
 };
 

@@ -38,7 +38,7 @@
 GdiTextRenderer::GdiTextRenderer(
     IDWriteBitmapRenderTarget* bitmapRenderTarget,
     IDWriteRenderingParams* renderingParams,
-	COLORREF textColor
+    COLORREF textColor
     )
 :
 cRefCount_(0), 
@@ -52,7 +52,7 @@ m_textColor(textColor)
 
 /******************************************************************
 *                                                                 *
-*  GdiTextRenderer::GdiTextRenderer                               *
+*  GdiTextRenderer::~GdiTextRenderer                              *
 *                                                                 *
 *  Destructor releases the interfaces passed when the class was   *
 *  created.                                                       *
@@ -61,10 +61,8 @@ m_textColor(textColor)
 
 GdiTextRenderer::~GdiTextRenderer()
 {
-	//SafeRelease(&pRenderTarget_);
-	//SafeRelease(&pRenderingParams_);
-	MyUtils::SafeRelease(pRenderTarget_);
-	MyUtils::SafeRelease(pRenderingParams_);
+    MyUtils::SafeRelease(pRenderTarget_);
+    MyUtils::SafeRelease(pRenderingParams_);
 }
 
 
@@ -91,8 +89,8 @@ STDMETHODIMP GdiTextRenderer::DrawGlyphRun(
     // Pass on the drawing call to the render target to do the real work.
     RECT dirtyRect = {};
 
-	// IDWriteTextLayout::Draw() 中、
-	// （自動改行も含めて）改行されるたびにコールバックされる模様。
+    // IDWriteTextLayout::Draw() 中、
+    // （自動改行も含めて）改行されるたびにコールバックされる模様。
     hr = pRenderTarget_->DrawGlyphRun(
         baselineOriginX,
         baselineOriginY,
@@ -124,7 +122,7 @@ STDMETHODIMP GdiTextRenderer::DrawUnderline(
     IUnknown* clientDrawingEffect
     )
 {
-// Not implemented
+    // Not implemented
     return E_NOTIMPL;
 }
 
@@ -145,7 +143,7 @@ STDMETHODIMP GdiTextRenderer::DrawStrikethrough(
     IUnknown* clientDrawingEffect
     )
 {
-// Not implemented
+    // Not implemented
     return E_NOTIMPL;
 }
 
@@ -238,7 +236,7 @@ STDMETHODIMP GdiTextRenderer::GetCurrentTransform(
     __out DWRITE_MATRIX* transform
     )
 {
-    //forward the render target's transform
+    // forward the render target's transform
     pRenderTarget_->GetCurrentTransform(transform);
     return S_OK;
 }

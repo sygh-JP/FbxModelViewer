@@ -133,7 +133,7 @@ namespace
 			m_pGdiInterop = pGdiInteropTemp;
 			if (FAILED(hr) || !m_pGdiInterop)
 			{
-				DXTRACE_ERR(_T("GetGdiInterop()"), hr);
+				DXTRACE_ERR(_T("IDWriteFactory::GetGdiInterop()"), hr);
 				return hr;
 			}
 			Microsoft::WRL::ComPtr<IDWriteRenderingParams> pRenderParamsTemp;
@@ -141,7 +141,7 @@ namespace
 			m_pRenderingParams = pRenderParamsTemp;
 			if (FAILED(hr) || !m_pRenderingParams)
 			{
-				DXTRACE_ERR(_T("CreateRenderingParams()"), hr);
+				DXTRACE_ERR(_T("IDWriteFactory::CreateRenderingParams()"), hr);
 				return hr;
 			}
 			return hr;
@@ -156,13 +156,23 @@ namespace
 			// HACK: Windows ストア アプリでは HDC というか GDI がすべて使えないので、依存を排除する。
 			// Windows ストア アプリで DirectWrite を使ってオフスクリーン描画する場合、GDI ではなく Direct2D を使う必要がある。
 			// DXGI 相互運用を使って、Direct3D テクスチャに直接描画してしまい、CPU 側でのリードバックを排除したほうがよい。
+			// あるいは、IDWriteFactory::CreateGlyphRunAnalysis() と IDWriteFontFace を使って IDWriteGlyphRunAnalysis を生成し、
+			// IDWriteGlyphRunAnalysis の GetAlphaTextureBounds() と CreateAlphaTexture() を使ってグリフのビットマップデータを直接得る方法であれば、
+			// ストア アプリでもオフスクリーン描画できそう。
+			// IDWriteGdiInterop はストア アプリでもサポートされているらしい？
+			// https://docs.microsoft.com/en-us/windows/desktop/api/dwrite/nn-dwrite-idwritegdiinterop
+			// ただしカラーモードはモノクロ2値もしくは ClearType しかサポートされない。グレースケールはない。
+			// https://docs.microsoft.com/en-us/windows/desktop/api/dwrite/ne-dwrite-dwrite_texture_type
+			// Windows 8.1 (DirectWrite 1.2) 以降であれば、IDWriteFactory2::CreateGlyphRunAnalysis() と
+			// DWRITE_TEXT_ANTIALIAS_MODE_GRAYSCALE を使うことでグレースケールアンチエイリアスが使える？
+			// https://docs.microsoft.com/en-us/windows/desktop/directwrite/idwritefactory2-createglyphrunanalysis
 #if 0
 			// デバイス コンテキストに設定されている現在のフォントをもとに作成。
 			CComPtr<IDWriteFontFace> pFontFaceTemp;
 			hr = m_pGdiInterop->CreateFontFaceFromHdc(hdc, &pFontFaceTemp);
 			if (FAILED(hr) || !pFontFaceTemp)
 			{
-				DXTRACE_ERR(_T("CreateFontFaceFromHdc()"), hr);
+				DXTRACE_ERR(_T("IDWriteGdiInterop::CreateFontFaceFromHdc()"), hr);
 				return hr;
 			}
 #endif
@@ -172,38 +182,47 @@ namespace
 			hr = m_pGdiInterop->CreateFontFromLOGFONT(&logFont, pFontTemp.GetAddressOf());
 			if (FAILED(hr) || !pFontTemp)
 			{
-				DXTRACE_ERR(_T("CreateFontFromLOGFONT()"), hr);
+				DXTRACE_ERR(_T("IDWriteGdiInterop::CreateFontFromLOGFONT()"), hr);
 				return hr;
 			}
+#if 0
+			ATL::CComPtr<IDWriteFontFace> pFontFaceTemp;
+			hr = pFontTemp->CreateFontFace(&pFontFaceTemp);
+			if (FAILED(hr) || !pFontFaceTemp)
+			{
+				DXTRACE_ERR(_T("IDWriteFont::CreateFontFace()"), hr);
+				return hr;
+			}
+#endif
 			Microsoft::WRL::ComPtr<IDWriteFontFamily> pFontFamilyTemp;
 			hr = pFontTemp->GetFontFamily(pFontFamilyTemp.GetAddressOf());
 			if (FAILED(hr) || !pFontFamilyTemp)
 			{
-				DXTRACE_ERR(_T("GetFontFamily()"), hr);
+				DXTRACE_ERR(_T("IDWriteFont::GetFontFamily()"), hr);
 				return hr;
 			}
 			Microsoft::WRL::ComPtr<IDWriteLocalizedStrings> pFamilyNames;
 			hr = pFontFamilyTemp->GetFamilyNames(pFamilyNames.GetAddressOf());
 			if (FAILED(hr) || !pFamilyNames)
 			{
-				DXTRACE_ERR(_T("GetFamilyNames()"), hr);
+				DXTRACE_ERR(_T("IDWriteFontFamily::GetFamilyNames()"), hr);
 				return hr;
 			}
 			UINT32 familyNameLength = 0;
 			hr = pFamilyNames->GetStringLength(0, &familyNameLength);
 			if (FAILED(hr) || familyNameLength == 0)
 			{
-				DXTRACE_ERR(_T("GetStringLength()"), hr);
+				DXTRACE_ERR(_T("IDWriteLocalizedStrings::GetStringLength()"), hr);
 				return hr;
 			}
 			std::vector<wchar_t> strBuffer(familyNameLength + 1);
 			hr = pFamilyNames->GetString(0, &strBuffer[0], familyNameLength + 1);
 			if (FAILED(hr))
 			{
-				DXTRACE_ERR(_T("GetString()"), hr);
+				DXTRACE_ERR(_T("IDWriteLocalizedStrings::GetString()"), hr);
 				return hr;
 			}
-#if false
+#if 0
 			const auto fontSize = fabs(static_cast<float>(::MulDiv(logFont.lfHeight, 96, ::GetDeviceCaps(hdc, LOGPIXELSY))));
 #else
 			// IDWriteFactory::CreateTextFormat() が受け取るのは DIP 単位のフォントサイズ。
@@ -217,7 +236,7 @@ namespace
 			m_pTextFormat = pTextFormatTemp;
 			if (FAILED(hr))
 			{
-				DXTRACE_ERR(_T("CreateTextFormat()"), hr);
+				DXTRACE_ERR(_T("IDWriteFactory::CreateTextFormat()"), hr);
 				return hr;
 			}
 			// デフォルトのトリミング設定は DWRITE_TRIMMING_GRANULARITY_NONE となっている模様。
@@ -271,7 +290,7 @@ namespace
 			m_pBitmapRenderTarget = pBitmapRenderTargetTemp;
 			if (FAILED(hr))
 			{
-				DXTRACE_ERR(_T("CreateBitmapRenderTarget()"), hr);
+				DXTRACE_ERR(_T("IDWriteGdiInterop::CreateBitmapRenderTarget()"), hr);
 				return hr;
 			}
 			HDC hMemDC = m_pBitmapRenderTarget->GetMemoryDC();
@@ -299,7 +318,7 @@ namespace
 					pTextLayoutTemp.GetAddressOf());
 				if (FAILED(hr))
 				{
-					DXTRACE_ERR(_T("CreateTextLayout()"), hr);
+					DXTRACE_ERR(_T("IDWriteFactory::CreateTextLayout()"), hr);
 					continue;
 				}
 				DWRITE_TEXT_METRICS textMetrics = {};
@@ -338,10 +357,18 @@ namespace
 				posX += feedX;
 				if (FAILED(hr))
 				{
-					DXTRACE_ERR(_T("Draw()"), hr);
+					DXTRACE_ERR(_T("IDWriteTextLayout::Draw()"), hr);
 					continue;
 				}
 			}
+			// Windows 7 (DirectWrite 1.0) の DirectWrite はグレースケールアンチエイリアスモードをサポートしない。必ず ClearType になる。
+			// DWRITE_TEXT_ANTIALIAS_MODE, IDWriteBitmapRenderTarget1::SetTextAntialiasMode() は Windows 8 (DirectWrite 1.1) で追加された。
+			// https://docs.microsoft.com/en-us/windows/desktop/directwrite/rendering-directwrite
+			// https://docs.microsoft.com/ja-jp/windows/desktop/api/dwrite_1/ne-dwrite_1-dwrite_text_antialias_mode
+			// https://docs.microsoft.com/en-us/windows/desktop/api/dwrite_1/nf-dwrite_1-idwritebitmaprendertarget1-settextantialiasmode
+			// Windows 7 であっても、
+			// IDWriteFactory::CreateCustomRenderingParams() と DWRITE_PIXEL_GEOMETRY_FLAT を使うことでグレースケール描画できる？
+			// https://docs.microsoft.com/en-us/windows/desktop/DirectWrite/introducing-directwrite
 			if (true)
 			{
 				// EXE のあるフォルダーに出力される。

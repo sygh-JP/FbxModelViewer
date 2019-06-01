@@ -1,2 +1,2 @@
 ﻿Downloaded "dxerr_nov2015.zip" from the following site:
-https://blogs.msdn.microsoft.com/chuckw/2012/04/24/wheres-dxerr-lib/
+https://walbourn.github.io/wheres-dxerr-lib/
