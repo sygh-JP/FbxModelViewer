@@ -23,6 +23,7 @@ namespace MyMath
 	template<typename T> bool IsModulo2(T x)
 	{ return x != 0 && (x & (x - 1)) == 0; }
 
+#if 0
 	inline uint32_t CalcStrideInBytes(uint64_t widthInPixel, uint64_t bitsPerPixel)
 	{
 		uint64_t line = (widthInPixel * bitsPerPixel) / 8;
@@ -32,6 +33,15 @@ namespace MyMath
 		}
 		return static_cast<uint32_t>(line);
 	}
+#else
+	//! @brief  ストライドを計算する。4 バイト (32bit) の倍数への切り上げ。<br>
+	inline uint32_t CalcStrideInBytes(uint32_t widthInPixel, uint32_t bitsPerPixel)
+	{
+		_ASSERTE((uint64_t(widthInPixel) * uint64_t(bitsPerPixel) + uint64_t(31)) <= (std::numeric_limits<uint32_t>::max)());
+		// https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/ns-wingdi-bitmapinfoheader
+		return ((((widthInPixel * bitsPerPixel) + uint32_t(31)) & ~uint32_t(31)) >> uint32_t(3));
+	}
+#endif
 
 
 	inline void SetVector4XYZ(Vector4F& vOut, const Vector3F& vIn)
@@ -58,7 +68,7 @@ namespace MyMath
 	// 古い Windows API への依存を断つため、変換メソッドは COLORREF シンボルに直接関係しないようにする。
 
 	// リトルエンディアン表記が基準なので注意。COLORREF からの変換に使える。
-	inline Vector4F ConvertRGBXToColor4F(DWORD colorVal)
+	inline Vector4F ConvertRGBXToColor4F(uint32_t colorVal)
 	{
 		return MyMath::Vector4F(
 			((colorVal) & 0xFF) / 255.0f,
@@ -68,7 +78,7 @@ namespace MyMath
 	}
 
 	// リトルエンディアン表記が基準なので注意。COLORREF からの変換に使える。
-	inline Vector3F ConvertRGBXToColor3F(DWORD colorVal)
+	inline Vector3F ConvertRGBXToColor3F(uint32_t colorVal)
 	{
 		return MyMath::Vector3F(
 			((colorVal) & 0xFF) / 255.0f,
@@ -78,7 +88,7 @@ namespace MyMath
 	}
 
 	// リトルエンディアン表記が基準なので注意。COLORREF への変換に使える。
-	inline DWORD ConvertColor3FToRGBX(const Vector3F& colorVal)
+	inline uint32_t ConvertColor3FToRGBX(const Vector3F& colorVal)
 	{
 		return
 			(uint32_t(MyUtils::Clamp(colorVal.x * 255.0f, 0.0f, 255.0f))) |
@@ -87,7 +97,7 @@ namespace MyMath
 	}
 
 	// リトルエンディアン表記が基準なので注意。COLORREF への変換に使える。
-	inline DWORD ConvertColor4FToRGBX(const Vector4F& colorVal)
+	inline uint32_t ConvertColor4FToRGBX(const Vector4F& colorVal)
 	{
 		return
 			(uint32_t(MyUtils::Clamp(colorVal.x * 255.0f, 0.0f, 255.0f))) |
