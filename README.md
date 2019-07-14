@@ -14,10 +14,11 @@ Also it supports some types of shader effects such as shadow mapping, environmen
 * ATL/MFC 14.0
 * .NET Framework 4.5.2 (WPF)
 * DirectX 11.1 (Direct3D 11.1, Direct2D 1.1)
-* Autodesk FBX SDK 2019.2
-* Boost C++ 1.63.0
-* DirectXTK 2016-04-26
-* DirectXTex 2016-04-26
+* [Autodesk FBX](https://www.autodesk.com/products/fbx/overview) SDK 2019.5
+* [Boost C++](https://www.boost.org/) 1.63.0
+* [DirectXTK](https://github.com/microsoft/DirectXTK) 2016-04-26
+* [DirectXTex](https://github.com/microsoft/DirectXTex) 2016-04-26
+* [Compact Effects11](https://github.com/sygh-JP/CompactEffects11) (derived from the sample in DirectX SDK June 2010)
 
 ## Target Environment (ターゲット環境)
 * Windows 7 SP1 Platform Update/Windows 8.1/Windows 10 (Desktop)
@@ -25,13 +26,13 @@ Also it supports some types of shader effects such as shadow mapping, environmen
 * Graphics driver compatible with Direct3D 11.1 or higher
 
 ## How to Build (ビルド方法)
-1. Install FBX SDK and append the global include and library directory paths to it
-1. Install Boost C++ (not required to build) and append the global include and library directory paths to it
-1. Build DirectXTK (GitHub/CodePlex) and append the global include and library directory paths to it
-1. Build DirectXTex (GitHub/CodePlex) and append the global include and library directory paths to it
-1. Build **Compact Effects11** (derived from the sample in DirectX SDK June 2010) and append the global include and library directory paths to it
+1. Install **FBX SDK** and append the global include and library directory paths to it
+1. Install **Boost C++** (not required to build) and append the global include and library directory paths to it
+1. Build **DirectXTK** (GitHub/CodePlex) and append the global include and library directory paths to it
+1. Build **DirectXTex** (GitHub/CodePlex) and append the global include and library directory paths to it
+1. Build **Compact Effects11** and append the global include and library directory paths to it
 1. Copy "DDSTextureLoader.h" and "DDSTextureLoader.cpp" in DXTK/DXTex to the directory "SharedUtility/DDSTextureLoader"
 1. Build "FbxModelViewer.sln"
 1. Execute the F# script "FSharpUtilScripts/copy_dlls_for_exes.fsx"
 
-2018-12-15, sygh.
+2019-07-15, sygh.
