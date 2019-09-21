@@ -61,6 +61,7 @@
 
 #include "../SharedUtility/PublicInclude/ForPCHeader.hpp"
 #include "../SharedUtility/PublicInclude/SuppressWarning.hpp"
+#include "../SharedUtility/PublicInclude/FatalWarning.hpp"
 //#include "../SharedUtility/PublicInclude/ImportMsXml.hpp"
 
 #pragma endregion

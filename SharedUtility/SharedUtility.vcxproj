@@ -215,6 +215,7 @@
     <ClInclude Include="MyUtils\MyUtil.h" />
     <ClInclude Include="MyUtils\MyUtilTypes.hpp" />
     <ClInclude Include="PublicInclude\DebugNew.h" />
+    <ClInclude Include="PublicInclude\FatalWarning.hpp" />
     <ClInclude Include="PublicInclude\ForPCHeader.hpp" />
     <ClInclude Include="PublicInclude\ImportMsXml.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

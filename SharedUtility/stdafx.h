@@ -47,4 +47,5 @@ using std::max;
 // http://blogs.msdn.com/b/chuckw/archive/2012/04/24/where-s-dxerr-lib.aspx
 
 #include "PublicInclude/SuppressWarning.hpp"
+#include "PublicInclude/FatalWarning.hpp"
 //#include "PublicInclude/ImportMsXml.hpp"

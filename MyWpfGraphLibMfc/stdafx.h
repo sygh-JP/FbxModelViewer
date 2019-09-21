@@ -47,3 +47,4 @@
 
 
 #include "../SharedUtility/PublicInclude/SuppressWarning.hpp"
+#include "../SharedUtility/PublicInclude/FatalWarning.hpp"
