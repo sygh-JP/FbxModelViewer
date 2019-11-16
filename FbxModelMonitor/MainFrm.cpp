@@ -366,11 +366,17 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		// MFC 14.0 において、リボン バーの既定フォントは、Windows 7/10 では日英問わず Segoe UI がデフォルトらしい。
 		// 96 DPI 環境だと height = -11。120 DPI 環境だと height = -14。
 		// CreateFont() において、引数 nHeight は論理単位 (logical units) であり、デバイス単位 (device units) に変換されると書いてある。
+		// デフォルトのマッピングモード MM_TEXT で利用可能な、ポイントサイズからの換算に 72 を基準とした変換処理が例示されている。
+		// DTP の 1 ポイントは 1/72 インチ。
 		// https://msdn.microsoft.com/en-us/library/dd183499.aspx
+		// https://web.archive.org/web/20150111111932/http://msdn.microsoft.com/en-us/library/dd183499.aspx
+		// https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontw
 		// CreateFontIndirect() は LOGFONT を受け取り、また LOGFONT::lfHeight の説明には logical units と書いてある。
 		// また、LOGFONT::lfHeight は正数と負数の両方を許可するが、それぞれ意味が異なるらしい。
 		// https://msdn.microsoft.com/en-us/library/dd145037.aspx
+		// https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw
 		// https://support.microsoft.com/en-us/help/32667/info-font-metrics-and-the-use-of-negative-lfheight
+		// https://web.archive.org/web/20150315042921/https://support.microsoft.com/en-us/kb/74299
 		// しかし、システムの DPI 値によって CFont::GetLogFont() の結果が変動し、
 		// また高 DPI 環境において従来の 96 DPI を前提としたサイズを指定した場合はフォントの見た目が小さくなることから、
 		// CFont::CreateFontIndirect() において、実際には LOGFONT::lfHeight はデバイス単位として解釈されるのではないか？
