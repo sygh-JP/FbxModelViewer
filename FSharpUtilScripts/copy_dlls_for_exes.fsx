@@ -48,7 +48,7 @@ let copyFbxDlls srcArch dstArch isDebug =
         let fileName = sprintf "libfbxsdk.%s" ext
         let configuration = (if isDebug then "Debug" else "Release")
         let programFilesDirPath = @"C:\Program Files"
-        let srcDirPath = sprintf @"%s\Autodesk\FBX\FBX SDK\2019.5\lib\vs2015\%s\%s" programFilesDirPath srcArch configuration
+        let srcDirPath = sprintf @"%s\Autodesk\FBX\FBX SDK\2020.0\lib\vs2015\%s\%s" programFilesDirPath srcArch configuration
         let dstDirPath = sprintf @"..\%s\%s" dstArch configuration
         copyFile fileName srcDirPath dstDirPath
 

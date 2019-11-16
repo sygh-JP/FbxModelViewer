@@ -14,7 +14,7 @@ Also it supports some types of shader effects such as shadow mapping, environmen
 * ATL/MFC 14.0
 * .NET Framework 4.5.2 (WPF)
 * DirectX 11.1 (Direct3D 11.1, Direct2D 1.1)
-* [Autodesk FBX](https://www.autodesk.com/products/fbx/overview) SDK 2019.5
+* [Autodesk FBX](https://www.autodesk.com/products/fbx/overview) SDK 2020.0
 * [Boost C++](https://www.boost.org/) 1.63.0
 * [DirectXTK](https://github.com/microsoft/DirectXTK) 2016-04-26
 * [DirectXTex](https://github.com/microsoft/DirectXTex) 2016-04-26
@@ -35,4 +35,4 @@ Also it supports some types of shader effects such as shadow mapping, environmen
 1. Build "FbxModelViewer.sln"
 1. Execute the F# script "FSharpUtilScripts/copy_dlls_for_exes.fsx"
 
-2019-07-15, sygh.
+2019-11-17, sygh.
