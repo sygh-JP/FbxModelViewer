@@ -1,4 +1,5 @@
 ﻿// http://msdn.microsoft.com/ja-jp/library/vstudio/dd233175.aspx
+// https://docs.microsoft.com/en-us/dotnet/fsharp/tutorials/fsharp-interactive/index
 #if INTERACTIVE
 #r @"Microsoft.VisualBasic.dll"
 #endif
@@ -8,17 +9,21 @@
 open System
 open Microsoft.VisualBasic.FileIO
 
-printfn "バックアップに不要なファイルおよびビルド中間生成物をごみ箱に移動します。"
+//let taskDescMsg = "バックアップに不要なファイルおよびビルド中間生成物をごみ箱に移動します。"
+let taskDescMsg = "Now moving files and internal built products to recycle bin, not required to be backed-up."
+printfn "%s" taskDescMsg
 
 let moveFileFolder fileFolderName moveFunc existsFunc =
     try
+        //let canceledMsg = "移動がキャンセルされました。"
+        let canceledMsg = "Moving canceled."
         try
             // HACK: ファイルなのかフォルダーなのか判断して、呼び出す関数を分けるような分岐を実装してもよい。
             printfn "Now moving : <%s>" fileFolderName
             if existsFunc(fileFolderName) then
                 moveFunc(fileFolderName, UIOption.AllDialogs, RecycleOption.SendToRecycleBin)
         with
-            | :? OperationCanceledException as ex -> printfn "移動がキャンセルされました。Message=\"%s\"" ex.Message
+            | :? OperationCanceledException as ex -> printfn "%s; Message=\"%s\"" canceledMsg ex.Message
             | ex -> printfn "Message=\"%s\"" ex.Message
     finally
         ignore()
@@ -41,16 +46,20 @@ moveFile @"..\FbxModelViewer.VC.db"
 moveFolder @"..\.vs"
 //moveFolder @"..\.svn"
 moveFolder @"..\ipch"
+moveFolder @"..\bin"
 moveFolder @"..\Win32"
 moveFolder @"..\x64"
 //moveFolder @"..\DirectXTexMisc\Win32"
 //moveFolder @"..\DirectXTexMisc\x64"
 //moveFolder @"..\FbxLoader\Win32"
 //moveFolder @"..\FbxLoader\x64"
+moveFolder @"..\FbxModelMonitor\obj"
 moveFolder @"..\FbxModelMonitor\Win32"
 moveFolder @"..\FbxModelMonitor\x64"
+moveFolder @"..\MyWpfGraphLibMfc\obj"
 moveFolder @"..\MyWpfGraphLibMfc\Win32"
 moveFolder @"..\MyWpfGraphLibMfc\x64"
+moveFolder @"..\SharedUtility\obj"
 moveFolder @"..\SharedUtility\Win32"
 moveFolder @"..\SharedUtility\x64"
 
