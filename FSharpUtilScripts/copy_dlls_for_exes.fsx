@@ -14,11 +14,14 @@
 // "C:\Program Files\Autodesk\FBX\FBX SDK\2017.0.1\lib\vs2015\x64\debug\libfbxsdk.pdb"
 // "C:\Program Files\Autodesk\FBX\FBX SDK\2017.0.1\lib\vs2015\x64\release\libfbxsdk.dll"
 
+// FBX SDK 2020.0.1 まではデバッグビルドに pdb ファイルが同梱されていたが、2020.1 には含まれなくなっている模様。
+
 // String.Format() において、パラメータが1つだけの場合、[|var|] として Object 配列に明示的に格納しないと型推論が失敗する。
 // 関数型言語の利点が裏目に出る例。いっそ sprintf を使ったほうがいいかも。
 
 // System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles) は、
 // OS ではなくメソッドを呼び出したプロセスが 32bit か 64bit かで変化するので、今回は使えない。
+// .NET 4 で追加された Environment.Is64BitOperatingSystem プロパティをチェックして、自前でパスを構築する必要がある。
 
 let copyFile fileName srcDirPath dstDirPath =
     let srcFilePath = System.IO.Path.Combine(srcDirPath, fileName)
@@ -48,7 +51,7 @@ let copyFbxDlls srcArch dstArch isDebug =
         let fileName = sprintf "libfbxsdk.%s" ext
         let configuration = (if isDebug then "Debug" else "Release")
         let programFilesDirPath = @"C:\Program Files"
-        let srcDirPath = sprintf @"%s\Autodesk\FBX\FBX SDK\2020.0.1\lib\vs2015\%s\%s" programFilesDirPath srcArch configuration
+        let srcDirPath = sprintf @"%s\Autodesk\FBX\FBX SDK\2020.1\lib\vs2015\%s\%s" programFilesDirPath srcArch configuration
         let dstDirPath = sprintf @"..\bin\%s\%s" dstArch configuration
         copyFile fileName srcDirPath dstDirPath
 
