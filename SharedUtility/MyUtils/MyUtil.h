@@ -42,7 +42,7 @@ namespace MyUtils
 	// Windows API の TCHAR 用に tstring, tformat を定義。
 	// std 名前空間を汚染しないように、std::tstring とはしない。
 	typedef std::basic_string<TCHAR> tstring;
-	typedef boost::basic_format<TCHAR> tformat;
+	//typedef boost::basic_format<TCHAR> tformat;
 
 #pragma region // プリミティブ型のシノニム。C# や MSIL の組込型に似せてある。要は signed, unsigned をいちいち付けたくないだけ。//
 	// C++11 対応環境では、stdint.h, cstdint ヘッダーで定義されている型を使うべき。//
@@ -84,18 +84,26 @@ namespace MyUtils
 } // end of namespace
 
 
+#if 0
+
 // std::string, std::wstring を返す。
 // <boost/format.hpp> のインクルードが必要。
 // Boost.Format() は Legacy C の printf() 系や MFC/ATL の CString::Format() と比べて型安全でありながら、
-// かつ C++ の stream 系よりも記述しやすいのが利点。
+// かつ標準 C++ の stream 系よりも記述しやすいのが利点。
 // また、CStringA が使えない Windows ストア アプリでの文字列フォーマットにも役立つ。
 // ただし、MSVC 拡張である %S 書式による ANSI - Unicode 相互変換は使えないので注意。
+// なお、<boost/format/format_fwd.hpp> にて型定義されているが、Boost 1.74 時点でも char16_t に対応したものは定義されていない。
+// https://github.com/boostorg/format/blob/develop/include/boost/format/format_fwd.hpp
+// こういった部分が C/C++ のダメな点。Boost を含め、文字列処理は現在に至るまで貧弱そのもので、実用途をまるで考えていない。
+// Java や C# のほうが遥かに使いやすく生産的。
 #define STRINGA_FORMAT(asf, pr)  boost::io::str(boost::format(asf) pr)
 #define STRINGW_FORMAT(wsf, pr)  boost::io::str(boost::wformat(wsf) pr)
 #if defined UNICODE || defined _UNICODE
 #define STRINGT_FORMAT STRINGW_FORMAT
 #else
 #define STRINGT_FORMAT STRINGA_FORMAT
+#endif
+
 #endif
 
 // シンボルの文字列リテラル化。

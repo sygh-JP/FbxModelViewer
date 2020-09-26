@@ -148,33 +148,47 @@ namespace
 	typedef std::unordered_map<std::wstring, MyTextureHelper::TTextureDataPackPtr> TTextureFileNameToDibTable;
 
 #if 0
-	std::wstring UuidToStdStringW(GUID guid)
+	CStringW UuidToCStringW(GUID guid)
 	{
 		RPC_WSTR temp = nullptr;
-		UuidToStringW(&guid, &temp);
-		std::wstring outString = reinterpret_cast<const wchar_t*>(temp);
-		::RpcStringFreeW(&temp); // TODO: 解放前に例外が発生したらアウトなので、RAII を書いたほうがよい。
-		return outString;
+		const auto retCode = UuidToStringW(&guid, &temp);
+		if (retCode == RPC_S_OK)
+		{
+			const CStringW outString = reinterpret_cast<const wchar_t*>(temp);
+			::RpcStringFreeW(&temp); // TODO: 解放前に例外が発生したらアウトなので、RAII を書いたほうがよい。
+			return outString;
+		}
+		else
+		{
+			_ASSERTE(false);
+			return CStringW();
+		}
 	}
 #pragma comment(lib, "Rpcrt4.lib")
-#endif
-
-	std::wstring UuidToStdStringW(GUID guid)
+#else
+	CStringW UuidToCStringW(GUID guid)
 	{
-		// バイトオーダーが正しいかどうかは不明。UuidToStringW() の結果と比較したほうが良いかも。
-		return STRINGW_FORMAT(
+		// UuidToStringW() の結果と比較したが、大文字/小文字の違いを除いて、一応同じ結果になる。
+		// エンディアンの異なる環境でも同じとなるかどうかは不明。
+
+		CStringW str;
+		str.Format(
 			L"%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X",
-			% guid.Data1 % guid.Data2 % guid.Data3
-			% guid.Data4[0]
-			% guid.Data4[1]
-			% guid.Data4[2]
-			% guid.Data4[3]
-			% guid.Data4[4]
-			% guid.Data4[5]
-			% guid.Data4[6]
-			% guid.Data4[7]
+			guid.Data1,
+			guid.Data2,
+			guid.Data3,
+			guid.Data4[0],
+			guid.Data4[1],
+			guid.Data4[2],
+			guid.Data4[3],
+			guid.Data4[4],
+			guid.Data4[5],
+			guid.Data4[6],
+			guid.Data4[7]
 			);
+		return str;
 	}
+#endif
 
 	HRESULT CreateTextureDibBuffers(LPCWSTR pTextureRootDirPath, const TTextureFileNameToAlphaUsageTable& texFileNameUsageTable, _Out_ TTextureFileNameToDibTable& textureDibTable)
 	{
@@ -259,7 +273,7 @@ namespace
 			auto fmt = WICPixelFormatGUID();
 			bool isGray = false;
 			hr = wicBmpSrc->GetPixelFormat(&fmt);
-			ATLTRACE(L"Pixel format GUID = <%s>\n", UuidToStdStringW(fmt).c_str());
+			ATLTRACE(L"Pixel format GUID = <%s>\n", UuidToCStringW(fmt).GetString());
 
 			UINT stride = 0;
 			// GUID は構造体なので switch-case は使えないが、C++ では直接の比較演算が可能なようにグローバル演算子オーバーロードが定義されているらしい。

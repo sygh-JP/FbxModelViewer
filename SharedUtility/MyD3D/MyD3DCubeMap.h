@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 
+#include "MyNoncopyable.hpp"
 #include "MyBasicVertexTypes.hpp"
 
 
@@ -32,7 +33,7 @@ namespace MyD3D
 
 
 	// キューブマップ用テクスチャ画像データをもとに作成する。
-	class MyCubeMap final : boost::noncopyable
+	class MyCubeMap final : MyUtils::MyNoncopyable<MyCubeMap>
 	{
 		Microsoft::WRL::ComPtr<ID3D11Texture2D>           m_pEnvMap;           // Environment map
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>  m_pEnvMapSRV;        // Shader resource view for the cubic env map
@@ -61,7 +62,7 @@ namespace MyD3D
 
 
 	// GPU で各面をレンダリング可能なキューブマップ。CPU で書き換えることはできない。
-	class MyRenderTargetCubeMap final : boost::noncopyable
+	class MyRenderTargetCubeMap final : MyUtils::MyNoncopyable<MyRenderTargetCubeMap>
 	{
 		MyMath::MatrixF m_amCubeMapViewAdjust[6]; // Adjustment for view matrices when rendering the cube map
 		Microsoft::WRL::ComPtr<ID3D11Texture2D>           m_pEnvMap;           // Environment map

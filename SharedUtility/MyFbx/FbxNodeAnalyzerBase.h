@@ -11,7 +11,7 @@ namespace MyFbx
 	// 抽象クラスではなく、解析の基本機能はすべて提供しているので、そのままインスタンス化して使用できる。
 	// ノード探索時のコールバック処理をカスタマイズしたい場合は派生クラスを実装する必要がある。
 	// なお、派生クラスでのコールバック処理中に GUI オブジェクトを操作する場合、コールバックは必ず GUI スレッドから呼ばれているとは限らないことに注意。
-	class MyFbxNodeAnalyzerBase : boost::noncopyable
+	class MyFbxNodeAnalyzerBase : MyUtils::MyNoncopyable<MyFbxNodeAnalyzerBase>
 	{
 	public:
 		using TSharedPtr = std::shared_ptr<MyFbxNodeAnalyzerBase>;

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "MyUtil.h"
+#include "MyNoncopyable.hpp"
 #include "MyMathTypes.hpp"
 #include "MyMathConsts.hpp"
 
@@ -801,7 +802,7 @@ namespace MyMath
 	//! @brief  ボーン スケルトン情報。<br>
 	//! あるボーンの親子関係を保持する。<br>
 	//! ポインタで連結するよりも、インデックス ベースで関連付け・管理できたほうがシリアライズ・逆シリアライズしやすい。<br>
-	class BoneSkeletonInfo final : boost::noncopyable
+	class BoneSkeletonInfo final : MyUtils::MyNoncopyable<BoneSkeletonInfo>
 	{
 	public:
 		typedef std::shared_ptr<BoneSkeletonInfo> TSharedPtr;
@@ -887,7 +888,7 @@ namespace MyMath
 	//! 複数のモーションをパーツ別（ボーン別）にブレンドするとき、どのモーションの初期姿勢をベースとするかによって結果が変わってくるはず。<br>
 	//! XNA のアニメーション ライブラリ、XNA ACL はこのパーツ別ブレンドをサポートしているが、初期姿勢の設定は特になかった？<br>
 	//! 独自のスキンメッシュ ファイル フォーマットを設計する場合、情報の過不足がないようにする必要がある。<br>
-	class BoneAnimInfo final : boost::noncopyable
+	class BoneAnimInfo final : MyUtils::MyNoncopyable<BoneAnimInfo>
 	{
 	public:
 		typedef std::shared_ptr<BoneAnimInfo> TSharedPtr;

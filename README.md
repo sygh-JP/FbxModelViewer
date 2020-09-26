@@ -15,7 +15,6 @@ Also it supports some types of shader effects such as shadow mapping, environmen
 * .NET Framework 4.5.2 (WPF)
 * DirectX 11.1 (Direct3D 11.1, Direct2D 1.1)
 * [Autodesk FBX](https://www.autodesk.com/products/fbx/overview) SDK 2020.1.1
-* [Boost C++](https://www.boost.org/) 1.63.0
 * [DirectXTK](https://github.com/microsoft/DirectXTK) 2016-04-26
 * [DirectXTex](https://github.com/microsoft/DirectXTex) 2016-04-26
 * [Compact Effects11](https://github.com/sygh-JP/CompactEffects11) (derived from the sample in DirectX SDK June 2010)
@@ -27,7 +26,6 @@ Also it supports some types of shader effects such as shadow mapping, environmen
 
 ## How to Build (ビルド方法)
 1. Install **FBX SDK** and append the global include and library directory paths to it
-1. Install **Boost C++** (not required to build) and append the global include and library directory paths to it
 1. Build **DirectXTK** (GitHub/CodePlex) and append the global include and library directory paths to it
 1. Build **DirectXTex** (GitHub/CodePlex) and append the global include and library directory paths to it
 1. Build **Compact Effects11** and append the global include and library directory paths to it
@@ -37,4 +35,4 @@ Also it supports some types of shader effects such as shadow mapping, environmen
 
 You can append the global include and library directory paths above by editing "Microsoft.Cpp.Win32.user.props" or "Microsoft.Cpp.x64.user.props" in "%LocalAppData%\Microsoft\MSBuild\v4.0".
 
-2020-09-24, sygh.
+2020-09-26, sygh.

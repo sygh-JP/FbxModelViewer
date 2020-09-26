@@ -55,7 +55,7 @@ namespace MyD3D
 
 	//! @brief  D3D インターフェイスを集中管理する。<br>
 	//! レンダリング エンジンの役割を担う。<br>
-	class MyD3DManager final : boost::noncopyable
+	class MyD3DManager final : MyUtils::MyNoncopyable<MyD3DManager>
 	{
 		//static const UINT MAX_GAUSSIAN_WEIGHTS_KERNEL_HALF = 7;
 	private:

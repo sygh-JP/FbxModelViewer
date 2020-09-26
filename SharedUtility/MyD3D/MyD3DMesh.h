@@ -19,7 +19,7 @@ namespace MyD3D
 	//! 属性ごとに複数の頂点バッファ・複数のインデックス バッファに分けたりしない。<br>
 	//! @attention  現状、プリミティブは D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST のみに対応。<br>
 	//! テッセレーションを行なう場合、D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST が使われる。<br>
-	class MyDeviceMeshPack final : boost::noncopyable
+	class MyDeviceMeshPack final : MyUtils::MyNoncopyable<MyDeviceMeshPack>
 	{
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pIndexBuffer;

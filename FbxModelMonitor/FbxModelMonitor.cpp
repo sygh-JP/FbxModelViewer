@@ -13,7 +13,7 @@
 //
 
 #include "stdafx.h"
-#include "afxwinappex.h"
+#include <afxwinappex.h>
 #include "FbxModelMonitor.h"
 #include "MainFrm.h"
 #include "UserDefWinMsg.hpp"

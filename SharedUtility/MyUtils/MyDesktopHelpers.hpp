@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "MyNoncopyable.hpp"
+
 
 namespace MyDesktopHelpers
 {
@@ -44,12 +46,9 @@ namespace MyDesktopHelpers
 
 	// メインスレッドに処理を委譲するため、カスタム メッセージと std::function を利用する。
 	// System.Windows.Forms.Control.Invoke() や、System.Windows.Threading.Dispatcher.Invoke() に相当する。
-	class MyWin32DelegateWrapper
+	class MyWin32DelegateWrapper : MyUtils::MyNoncopyable<MyWin32DelegateWrapper>
 	{
-		// C++11 による noncopyable 指定。ムーブ コンストラクタのほうはとりあえず放置。
 	private:
-		MyWin32DelegateWrapper(const MyWin32DelegateWrapper&) = delete;
-		MyWin32DelegateWrapper& operator=(const MyWin32DelegateWrapper&) = delete;
 		MyWin32DelegateWrapper() = delete;
 	public:
 		typedef std::function<LRESULT()> TSimpleDelegate;

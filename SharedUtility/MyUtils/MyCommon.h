@@ -2,6 +2,7 @@
 
 
 #include "MyUtil.h"
+#include "MyNoncopyable.hpp"
 #include "MyMath.hpp"
 
 
@@ -112,7 +113,7 @@ namespace MyCommon
 
 	//! @brief  アニメーションのトラック情報（マスターデータ）を管理するクラス。<br>
 	//! 同一のスキンメッシュを使う、すべてのゲーム オブジェクト間で共通のデータ。<br>
-	class MyAnimTrackInfoTable final : boost::noncopyable
+	class MyAnimTrackInfoTable final : MyUtils::MyNoncopyable<MyAnimTrackInfoTable>
 	{
 	public:
 		typedef std::shared_ptr<MyAnimTrackInfoTable> TSharedPtr;
@@ -228,7 +229,7 @@ namespace MyCommon
 	};
 
 
-	class MyAnimMixer final : boost::noncopyable
+	class MyAnimMixer final : MyUtils::MyNoncopyable<MyAnimMixer>
 	{
 	public:
 		using TSharedPtr = std::shared_ptr<MyAnimMixer>;
@@ -287,7 +288,7 @@ namespace MyCommon
 #endif
 
 	//! @brief  OpenGL / Direct3D などのデバイスに依存しない、ModelMesh ごとのスキニング情報・マテリアル情報を管理するクラス。<br>
-	class MyModelMeshDetailInfo final : boost::noncopyable
+	class MyModelMeshDetailInfo final : MyUtils::MyNoncopyable<MyModelMeshDetailInfo>
 	{
 	public:
 		using TSharedPtr = std::shared_ptr<MyModelMeshDetailInfo>;

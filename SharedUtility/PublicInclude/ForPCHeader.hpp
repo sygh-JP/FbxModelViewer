@@ -124,5 +124,5 @@
 // VC 2008 では boost::shared_ptr だとインテリセンスが効かなくなることがある。TR1 を使う場合は OK。
 // using とか using namespace を下手に使った場合も、やはりインテリセンスが効かなくなる。
 // VC 2010 以降は解消されている？
-#include <boost/format.hpp>
-#include <boost/utility.hpp>
+//#include <boost/format.hpp>
+//#include <boost/utility.hpp>

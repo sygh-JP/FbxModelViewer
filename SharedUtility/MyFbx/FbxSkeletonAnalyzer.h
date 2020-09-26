@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "MyUtil.h"
+#include "MyNoncopyable.hpp"
 
 
 namespace MyFbx
@@ -9,7 +10,7 @@ namespace MyFbx
 	// ちなみに BodyPaint 3D のマニュアルによると、CINEMA 4D のボーンは 2 個の連続した FBX スケルトン ノードに相当するらしいが、
 	// おそらく一般的な他の 3D ツールも同様のはず。
 
-	class SkeletonInfo final : boost::noncopyable
+	class SkeletonInfo final : MyUtils::MyNoncopyable<SkeletonInfo>
 	{
 	public:
 		typedef std::shared_ptr<SkeletonInfo> TSharedPtr;

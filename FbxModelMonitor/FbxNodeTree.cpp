@@ -9,9 +9,11 @@
 
 namespace
 {
-	inline std::wstring GetConnectedNamesString(const FbxNode* node, LPCWSTR label)
+	inline CStringW GetConnectedNamesString(const FbxNode* node, LPCWSTR label)
 	{
-		return STRINGW_FORMAT(L"%s : \"%s\"", % label % MyUtils::SafeConvertUtf8toUtf16(node->GetName()).c_str());
+		CStringW str;
+		str.Format(L"%s : \"%s\"", label, MyUtils::SafeConvertUtf8toUtf16(node->GetName()).c_str());
+		return str;
 	}
 
 	// マテリアル属性出力
@@ -24,13 +26,15 @@ namespace
 
 		if (colorExists)
 		{
-			const auto label = STRINGT_FORMAT(_T("Color : R=%f, G=%f, B=%f"), % color.x % color.y % color.z);
-			pTree->InsertItem(label.c_str(), propLabel);
+			CString label;
+			label.Format(_T("Color : R=%f, G=%f, B=%f"), color.x, color.y, color.z);
+			pTree->InsertItem(label.GetString(), propLabel);
 		}
 		if (factorExists)
 		{
-			const auto label = STRINGT_FORMAT(_T("Factor = %f"), % factor);
-			pTree->InsertItem(label.c_str(), propLabel);
+			CString label;
+			label.Format(_T("Factor = %f"), factor);
+			pTree->InsertItem(label.GetString(), propLabel);
 		}
 		const CString texName = CString(_T("TextureName : ")) + inTexName.c_str();
 		pTree->InsertItem(texName, propLabel);
@@ -124,7 +128,7 @@ namespace MyMfcFbx
 
 	void MyFbxNodeTree::OnFindFbxRootNode(FbxNode* root)
 	{
-		this->InsertToLast(GetConnectedNamesString(root, L"Root").c_str());
+		this->InsertToLast(GetConnectedNamesString(root, L"Root").GetString());
 
 		MyMath::MatrixF localTransformMatrix;
 		MyFbx::GetNodeLocalTransformMatrix(root, localTransformMatrix);
@@ -140,22 +144,22 @@ namespace MyMfcFbx
 
 	void MyFbxNodeTree::OnFindFbxUnidentifiedNode(FbxNode* node)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"Unidentified").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"Unidentified").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxNullNode(FbxNode* node, FbxNull* nullNode)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"Null").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"Null").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxMarkerNode(FbxNode* node, FbxMarker* marker)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"Marker").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"Marker").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxSkeletonNode(FbxNode* node, FbxSkeleton* skeleton)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"Skeleton").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"Skeleton").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxMeshNode(FbxNode* node, FbxMesh* mesh, const MyFbx::MyFbxMeshAnalyzer* pMeshAnalyzer)
@@ -166,7 +170,7 @@ namespace MyMfcFbx
 
 		using namespace MyFbx;
 
-		this->InsertToLast(GetConnectedNamesString(node, L"Mesh").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"Mesh").GetString());
 
 		MyMath::MatrixF localTransformMatrix;
 		MyFbx::GetNodeLocalTransformMatrix(node, localTransformMatrix);
@@ -359,87 +363,87 @@ namespace MyMfcFbx
 
 	void MyFbxNodeTree::OnFindFbxNurbsNode(FbxNode* node, FbxNurbs* nurbsNode)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"NURBs").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"NURBs").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxPatchNode(FbxNode* node, FbxPatch* patch)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"Patch").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"Patch").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxCameraNode(FbxNode* node, FbxCamera* camera)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"Camera").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"Camera").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxCameraStereoNode(FbxNode* node, FbxCameraStereo* cameraStereo)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"CameraStereo").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"CameraStereo").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxCameraSwitcherNode(FbxNode* node, FbxCameraSwitcher* cameraSwitcher)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"CameraSwitcher").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"CameraSwitcher").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxLightNode(FbxNode* node, FbxLight* lignt)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"Light").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"Light").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxOpticalReferenceNode(FbxNode* node, FbxOpticalReference* optRef)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"OpticalReference").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"OpticalReference").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxOpticalMarkerNode(FbxNode* node)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"OpticalMarker").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"OpticalMarker").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxNurbsCurveNode(FbxNode* node, FbxNurbsCurve* nurbsCurve)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"NURBsCurve").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"NURBsCurve").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxTrimNurbsSurfaceNode(FbxNode* node, FbxTrimNurbsSurface* trimNurbsSurface)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"TrimNURBsSurface").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"TrimNURBsSurface").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxBoundaryNode(FbxNode* node, FbxBoundary* boundary)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"Boundary").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"Boundary").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxNurbsSurfaceNode(FbxNode* node, FbxNurbsSurface* nurbsSurface)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"NURBsSurface").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"NURBsSurface").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxShapeNode(FbxNode* node, FbxShape* shape)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"Shape").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"Shape").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxLodGroupNode(FbxNode* node, FbxLODGroup* lodGroup)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"LODGroup").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"LODGroup").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxSubDivNode(FbxNode* node, FbxSubDiv* subDiv)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"SubDiv").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"SubDiv").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxCachedEffectNode(FbxNode* node, FbxCachedEffect* cachedEffect)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"CachedEffect").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"CachedEffect").GetString());
 	}
 
 	void MyFbxNodeTree::OnFindFbxLineNode(FbxNode* node, FbxLine* line)
 	{
-		this->InsertToLast(GetConnectedNamesString(node, L"Line").c_str());
+		this->InsertToLast(GetConnectedNamesString(node, L"Line").GetString());
 	}
 
 #if 0

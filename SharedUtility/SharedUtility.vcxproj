@@ -210,6 +210,7 @@
     <ClInclude Include="MyUtils\MyMath.hpp" />
     <ClInclude Include="MyUtils\MyMathConsts.hpp" />
     <ClInclude Include="MyUtils\MyMathTypes.hpp" />
+    <ClInclude Include="MyUtils\MyNoncopyable.hpp" />
     <ClInclude Include="MyUtils\MyProcessHelpers.hpp" />
     <ClInclude Include="MyUtils\MyStopwatch.hpp" />
     <ClInclude Include="MyUtils\MyTextureHelper.hpp" />
