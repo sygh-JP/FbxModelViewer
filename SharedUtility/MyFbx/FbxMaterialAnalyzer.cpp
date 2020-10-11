@@ -269,7 +269,7 @@ namespace MyFbx
 			m_texNameNormalMap, m_texFileNameNormalMap, m_texRelativeFileNameNormalMap);
 
 		// 透過度。
-		MyFbx::ToVector3F(lambert->TransparentColor);
+		MyFbx::ToVector3F(m_fbxRgbTransparentColor, lambert->TransparentColor);
 		//m_fbxTransparencyFactor = static_cast<float>(lambert->GetTransparencyFactor().Get());
 		//m_fbxTransparencyFactor = static_cast<float>(lambert->TransparencyFactor.Get());
 		m_fbxTransparencyFactor = MyFbx::ToFloat(lambert->TransparencyFactor);

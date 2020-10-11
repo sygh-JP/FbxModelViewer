@@ -1096,7 +1096,7 @@ namespace MyMath
 		Vector4F m_specular; // xyz は ColorRGB、w は Level 値（Factor 値）。
 		Vector4F m_emissive; // xyz は ColorRGB、w は Level 値（Factor 値）。
 		//float m_transparency; // オフライン レンダリングでは透明度のほうが一般的だが、リアルタイム レンダリングでは Transparency よりも Opacity のほうが一般的。
-		Vector4F m_opacity;
+		Vector4F m_opacity; // xyz は透過色に使う。w は Opacity で、(1 - Transparency) と等価だが、共通化しないほうがいいかも。
 		float m_specularPower;
 		float m_roughness;
 		float m_reflectivity;
@@ -1130,8 +1130,10 @@ namespace MyMath
 		std::wstring m_strTexFileNameNormalMap;
 		// Windows 環境でアプリケーションの内部文字列エンコードに std::string と UTF-8 を使うことはできなくもないが、
 		// Visual Studio デバッガーなどの対応がされていないなどの問題があるため、ワイド文字列 std::wstring を使う。
-		// FBX SDK 経由で取得できるマルチバイト文字列はおそらく UTF-8 エンコード。
+		// FBX SDK 経由で取得できるマルチバイト文字列は UTF-8 エンコード。
+		// http://docs.autodesk.com/FBX/2014/ENU/FBX-SDK-Documentation/index.html?url=files/GUID-D3844B1D-4E74-4C64-AD79-14B00EB1FE4C.htm,topicNumber=d30e7837
 		// Windows 環境では UTF-16LE に直す処理が必要。
+		// C++11 の char16_t と std::u16string を使う方法もあるが、wchar_t や std::wstring と比べて様々な面でサポートが弱い。
 
 	public:
 		MyMaterial()
@@ -1156,7 +1158,9 @@ namespace MyMath
 		Vector4F GetAmbient() const { return m_ambient; }
 		Vector4F GetSpecular() const { return m_specular; }
 		Vector4F GetEmissive() const { return m_emissive; }
-		Vector4F GetOpacity() const { return m_opacity; }
+		//Vector4F GetOpacity() const { return m_opacity; }
+
+		Vector3F GetTransparentColorRGB() const { return Vector3F(m_opacity.x, m_opacity.y, m_opacity.z); }
 
 		void SetDiffuse(const Vector4F& inVal) { m_diffuse = inVal; }
 		void SetAmbient(const Vector4F& inVal) { m_ambient = inVal; }

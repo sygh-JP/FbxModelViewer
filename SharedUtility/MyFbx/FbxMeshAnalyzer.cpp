@@ -650,6 +650,8 @@ namespace MyFbx
 				pTempMat->SetEmissive(MyMath::CreateVector4(pMaterialAnalyzer->GetFbxRgbEmissive(), emissiveLevel));
 				pTempMat->SetTransparentColorRGB(pMaterialAnalyzer->GetFbxRgbTransparentColor());
 				pTempMat->SetTransparency(pMaterialAnalyzer->GetFbxTransparencyFactor());
+				// FBX では Opacity はカスタム プロパティ扱いらしい。Transparency を優先する。
+				//pTempMat->SetOpacityAlpha(pMaterialAnalyzer->GetFbxOpacity());
 				pTempMat->SetReflectivity(pMaterialAnalyzer->GetFbxReflectivity());
 				pTempMat->SetSpecularPower(pMaterialAnalyzer->GetFbxShininess());
 				pTempMat->SetRoughness(pMaterialAnalyzer->GetFbxRoughness());
