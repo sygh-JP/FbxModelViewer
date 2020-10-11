@@ -25,11 +25,56 @@ namespace
 	}
 #endif
 
+#if 0
 	template<typename T> inline std::string GetNameOf(const T* pSrc)
 	{
 		return pSrc ? pSrc->GetName() : std::string();
 	}
-}
+#endif
+
+	// FbxLayerElement は FbxObject ではない。どうも FBX SDK は設計に一貫性がないように思われる。
+
+	inline std::string GetNameOf(const FbxObject* pSrc)
+	{
+		return pSrc ? pSrc->GetName() : std::string();
+	}
+
+	inline std::string GetNameOf(const FbxLayerElement* pSrc)
+	{
+		return pSrc ? pSrc->GetName() : std::string();
+	}
+
+#if 1
+	void TestLayerElemTexture(const FbxLayerElementTexture* layerElemTexture)
+	{
+		if (layerElemTexture)
+		{
+			const auto mappingMode = layerElemTexture->GetMappingMode();
+			const auto referenceMode = layerElemTexture->GetReferenceMode();
+			if (referenceMode == FbxLayerElement::eDirect)
+			{
+				const auto& directArray = layerElemTexture->GetDirectArray();
+				const int count = directArray.GetCount();
+				for (int i = 0; i < count; ++i)
+				{
+					const auto* texture = directArray[i];
+					const auto* fileTexture = FbxCast<FbxFileTexture>(texture);
+					if (fileTexture)
+					{
+						const char* name = fileTexture->GetName();
+						const char* fileName = fileTexture->GetFileName();
+						const char* relativeFileName = fileTexture->GetRelativeFileName();
+					}
+				}
+			}
+			else if (referenceMode == FbxLayerElement::eIndexToDirect)
+			{
+				const auto& indexArray = layerElemTexture->GetIndexArray();
+			}
+		}
+	}
+#endif
+} // end of namespace
 
 namespace MyFbx
 {
@@ -120,6 +165,8 @@ namespace MyFbx
 		textureNameAry_[TextureType_Specular]             = GetNameOf(specularTexture);
 		textureNameAry_[TextureType_TransparencyFactor]   = GetNameOf(transparencyFactorTexture);
 		textureNameAry_[TextureType_Transparency]         = GetNameOf(transparencyTexture);
+
+		//TestLayerElemTexture(diffuseTexture);
 
 		const auto* material = layer->GetMaterials();
 		materialName_ = GetNameOf(material);

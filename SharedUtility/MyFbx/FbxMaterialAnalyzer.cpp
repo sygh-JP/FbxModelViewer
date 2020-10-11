@@ -9,6 +9,8 @@ namespace
 		std::wstring& outTexName, std::wstring& outTexFileName, std::wstring& outTexRelativeFileName)
 	{
 		const auto prop(material->FindProperty(pMatFlagName));
+		ATLTRACE(__FUNCTION__ "(), Material property \"%s\": valid? %d\n", pMatFlagName, prop.IsValid());
+
 		//const int layerNum = prop.GetSrcObjectCount(KFbxLayeredTexture::ClassId);
 		const int layerNum = prop.GetSrcObjectCount<FbxLayeredTexture>();
 		ATLTRACE(__FUNCTION__ "(), Count of FbxLayeredTexture: %d\n", layerNum);
@@ -52,7 +54,61 @@ namespace
 			}
 		}
 	}
-}
+
+#if 0
+	void TestLayeredTexture(const FbxProperty& prop)
+	{
+		// マルチレイヤー対応のサンプル。
+		// FBX SDK 付属の "samples/ImportScene/DisplayTexture.cxx" を参照。
+		const int generalTextureCount = prop.GetSrcObjectCount<FbxTexture>();
+		ATLTRACE(__FUNCTION__ "(), Count of FbxTexture: %d\n", generalTextureCount);
+		for (int i = 0; i < generalTextureCount; ++i)
+		{
+			const auto* layeredTexture = prop.GetSrcObject<FbxLayeredTexture>(i);
+			if (layeredTexture)
+			{
+				const int textureCount = layeredTexture->GetSrcObjectCount<FbxTexture>();
+				ATLTRACE(__FUNCTION__ "(), Count of FbxTexture in FbxLayeredTexture: %d\n", textureCount);
+				const auto* texture = layeredTexture->GetSrcObject<FbxTexture>(i);
+				if (texture)
+				{
+				}
+				const int fileTextureCount = layeredTexture->GetSrcObjectCount<FbxFileTexture>();
+				ATLTRACE(__FUNCTION__ "(), Count of FbxFileTexture in FbxLayeredTexture: %d\n", fileTextureCount);
+				const auto* fileTexture = layeredTexture->GetSrcObject<FbxFileTexture>(i);
+				if (fileTexture)
+				{
+				}
+			}
+			else
+			{
+				const auto* texture = prop.GetSrcObject<FbxTexture>(i);
+				if (texture)
+				{
+				}
+				const auto* fileTexture = prop.GetSrcObject<FbxFileTexture>(i);
+				if (fileTexture)
+				{
+				}
+			}
+		}
+		const int generalFileTextureCount = prop.GetSrcObjectCount<FbxFileTexture>();
+		ATLTRACE(__FUNCTION__ "(), Count of FbxFileTexture: %d\n", generalFileTextureCount);
+	}
+#endif
+
+#if 0
+	void TestTextureChannelNames()
+	{
+		int textureTypeIndex = 0;
+		FBXSDK_FOR_EACH_TEXTURE(textureTypeIndex)
+		{
+			const char* name = FbxLayerElement::sTextureChannelNames[textureTypeIndex];
+			ATLTRACE(__FUNCTION__ "(), TextureChannelNames[%d] = \"%s\"\n", textureTypeIndex, name);
+		}
+	}
+#endif
+} // end of namespace
 
 namespace MyFbx
 {
@@ -96,18 +152,17 @@ namespace MyFbx
 		if (material->GetClassId().Is(FbxSurfaceLambert::ClassId))
 		{
 			// Lambert.
-			const auto* lambert = StaticDownCast<const FbxSurfaceLambert>(material);
+			const auto* lambert = FbxCast<FbxSurfaceLambert>(material);
+			_ASSERTE(lambert);
 			this->ExtractLambertInfo(lambert);
-			// 昔の FBX SDK では dynamic_cast が使えていたが、
-			// FBX SDK 2013.3 以降の DLL は RTTI を OFF にしてビルドされているらしく、
-			// dynamic_cast が使えない。
 		}
 		// Phong は Lambert の派生クラス。つまり FbxSurfacePhong は FbxSurfaceLambert でもある。
 		// ClassId で照合する場合は注意。
 		if (material->GetClassId().Is(FbxSurfacePhong::ClassId))
 		{
 			// Phong.
-			const auto* phong = StaticDownCast<const FbxSurfacePhong>(material);
+			const auto* phong = FbxCast<FbxSurfacePhong>(material);
+			_ASSERTE(phong);
 
 			// スペキュラー。
 			//MyFbx::ToVector3F(m_fbxRgbSpecular, phong->GetSpecularColor());
@@ -355,4 +410,4 @@ namespace MyFbx
 			return MyUtils::EmptyStdStringW;
 		}
 	}
-}
+} // end of namespace

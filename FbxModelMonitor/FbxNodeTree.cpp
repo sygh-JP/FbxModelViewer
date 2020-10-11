@@ -50,7 +50,7 @@ namespace
 		str.Format(_T("%f, %f, %f"), color.x, color.y, color.z);
 		return str;
 	}
-}
+} // end of namespace
 
 
 namespace MyMfcFbx
@@ -199,7 +199,7 @@ namespace MyMfcFbx
 		// ポリゴン構成
 		const auto& primitiveCountMap = pMeshAnalyzer->GetPrimitiveCountMap();
 
-		for (auto it = primitiveCountMap.begin(); it != primitiveCountMap.end(); ++it)
+		for (auto it = primitiveCountMap.cbegin(); it != primitiveCountMap.cend(); ++it)
 		{
 			label.Format(_T("%d vertices prim. : %d"), it->first, it->second);
 			m_pTreeCtrl->InsertItem(label, polygonLabel);
@@ -672,4 +672,3 @@ namespace MyMfcFbx
 	}
 
 } // end of namespace
-

@@ -12,24 +12,25 @@ namespace
 
 	bool ExtractUV(const FbxLayerElementUV* pElemUV, MyFbx::TUVArray& uvArray, MyFbx::LayerModeData& outModeData)
 	{
+		uvArray.clear();
+		outModeData = {};
+
 		if (!pElemUV)
 		{
 			return false;
 		}
 
-		// UV の数・インデックス。
-		const int uvNum = pElemUV->GetDirectArray().GetCount();
-		const int indexNum = pElemUV->GetIndexArray().GetCount();
-		uvArray.clear();
-
 		// マッピングモード・リファレンスモード別に UV 取得。
-		outModeData.MappingMode = pElemUV->GetMappingMode();
-		outModeData.ReferenceMode = pElemUV->GetReferenceMode();
+		const auto mappingMode = pElemUV->GetMappingMode();
+		const auto referenceMode = pElemUV->GetReferenceMode();
+		outModeData.MappingMode = mappingMode;
+		outModeData.ReferenceMode = referenceMode;
 
-		if (outModeData.MappingMode == FbxLayerElement::eByPolygonVertex)
+		if (mappingMode == FbxLayerElement::eByPolygonVertex)
 		{
-			if (outModeData.ReferenceMode == FbxLayerElement::eDirect)
+			if (referenceMode == FbxLayerElement::eDirect)
 			{
+				const int uvNum = pElemUV->GetDirectArray().GetCount();
 				uvArray.resize(uvNum, MyMath::ZERO_VECTOR2F);
 				// 直接取得。
 				for (int i = 0; i < uvNum; ++i)
@@ -41,13 +42,14 @@ namespace
 					uvArray[i].y = InverseTexCoord(uvArray[i].y);
 				}
 			}
-			else if (outModeData.ReferenceMode == FbxLayerElement::eIndexToDirect)
+			else if (referenceMode == FbxLayerElement::eIndexToDirect)
 			{
+				const int indexNum = pElemUV->GetIndexArray().GetCount();
 				uvArray.resize(indexNum, MyMath::ZERO_VECTOR2F);
 				// UV インデックスから取得。
 				for (int i = 0; i < indexNum; ++i)
 				{
-					const int index = pElemUV->GetIndexArray().GetAt(int(i));
+					const int index = pElemUV->GetIndexArray().GetAt(i);
 					uvArray[i] = MyFbx::ToVector2F(pElemUV->GetDirectArray().GetAt(index));
 					uvArray[i].y = InverseTexCoord(uvArray[i].y);
 				}
@@ -56,31 +58,20 @@ namespace
 
 		return true;
 	}
-}
+} // end of namespace
 
 
 namespace MyFbx
 {
 
-	bool MyFbxUVAnalyzer::Analyze(const FbxLayer* layer)
+	void MyFbxUVAnalyzer::Analyze(const FbxLayer* layer)
 	{
 		_ASSERTE(layer);
-		m_diffuseUVArray.clear();
-		m_specularUVArray.clear();
-		m_ambientUVArray.clear();
-		m_emissiveUVArray.clear();
 
-		bool isAvailable = false;
-		if (ExtractUV(layer->GetUVs(FbxLayerElement::eTextureDiffuse), m_diffuseUVArray, m_diffuseLayerModeData))
-		{ isAvailable = true; }
-		if (ExtractUV(layer->GetUVs(FbxLayerElement::eTextureSpecular), m_specularUVArray, m_specularLayerModeData))
-		{ isAvailable = true; }
-		if (ExtractUV(layer->GetUVs(FbxLayerElement::eTextureAmbient), m_ambientUVArray, m_ambientLayerModeData))
-		{ isAvailable = true; }
-		if (ExtractUV(layer->GetUVs(FbxLayerElement::eTextureEmissive), m_emissiveUVArray, m_emissiveLayerModeData))
-		{ isAvailable = true; }
-
-		return isAvailable;
+		ExtractUV(layer->GetUVs(FbxLayerElement::eTextureDiffuse), m_diffuseUVArray, m_diffuseLayerModeData);
+		ExtractUV(layer->GetUVs(FbxLayerElement::eTextureSpecular), m_specularUVArray, m_specularLayerModeData);
+		ExtractUV(layer->GetUVs(FbxLayerElement::eTextureAmbient), m_ambientUVArray, m_ambientLayerModeData);
+		ExtractUV(layer->GetUVs(FbxLayerElement::eTextureEmissive), m_emissiveUVArray, m_emissiveLayerModeData);
 	}
 
-}
+} // end of namespace

@@ -151,4 +151,4 @@ namespace MyFbx
 		std::vector<MyFbxUVAnalyzer::TSharedPtr> m_uvAnalyzerArray; // （レイヤーごとの）UV
 		std::vector<MyFbxSkinAnalyzer::TSharedPtr> m_skinAnalyzerArray; // スキン
 	};
-}
+} // end of namespace

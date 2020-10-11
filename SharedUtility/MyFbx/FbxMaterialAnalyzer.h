@@ -25,13 +25,10 @@ namespace MyFbx
 		};
 
 	public:
-		// コンストラクタ
 		MyFbxMaterialAnalyzer();
 
-		// デストラクタ
 		virtual ~MyFbxMaterialAnalyzer();
 
-		// 解析
 		void Analyze(const FbxSurfaceMaterial* material);
 
 		const MyMath::Vector3F& GetFbxRgbAmbient() const { return m_fbxRgbAmbient; }
@@ -182,4 +179,4 @@ namespace MyFbx
 		std::wstring m_texRelativeFileNameTransparencyFactor;
 		std::wstring m_texRelativeFileNameReflection;
 	};
-}
+} // end of namespace

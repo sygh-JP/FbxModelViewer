@@ -103,14 +103,14 @@ namespace MyFbx
 				this->OnFindFbxUnidentifiedNode(node);
 				break;
 			case FbxNodeAttribute::eNull:
-				this->OnFindFbxNullNode(node, StaticDownCast<FbxNull>(attrib));
+				this->OnFindFbxNullNode(node, FbxCast<FbxNull>(attrib));
 				break;
 			case FbxNodeAttribute::eMarker:
-				this->OnFindFbxMarkerNode(node, StaticDownCast<FbxMarker>(attrib));
+				this->OnFindFbxMarkerNode(node, FbxCast<FbxMarker>(attrib));
 				break;
 			case FbxNodeAttribute::eSkeleton:
 				{
-					//auto skeleton = StaticDownCast<FbxSkeleton>(attrib);
+					//auto skeleton = FbxCast<FbxSkeleton>(attrib);
 					auto skeleton = node->GetSkeleton();
 					_ASSERTE(skeleton);
 					this->AnalyzeSkeletonNode(node, skeleton);
@@ -119,7 +119,7 @@ namespace MyFbx
 				break;
 			case FbxNodeAttribute::eMesh:
 				{
-					//auto mesh = StaticDownCast<FbxMesh>(attrib);
+					//auto mesh = FbxCast<FbxMesh>(attrib);
 					auto mesh = node->GetMesh();
 					_ASSERTE(mesh);
 					// FBX SDK による三角形化は完全のはずだが重いので、不完全だがより軽量な独自アルゴリズムを後で使う。
@@ -140,55 +140,55 @@ namespace MyFbx
 				}
 				break;
 			case FbxNodeAttribute::eNurbs:
-				this->OnFindFbxNurbsNode(node, StaticDownCast<FbxNurbs>(attrib));
+				this->OnFindFbxNurbsNode(node, FbxCast<FbxNurbs>(attrib));
 				break;
 			case FbxNodeAttribute::ePatch:
-				this->OnFindFbxPatchNode(node, StaticDownCast<FbxPatch>(attrib));
+				this->OnFindFbxPatchNode(node, FbxCast<FbxPatch>(attrib));
 				break;
 			case FbxNodeAttribute::eCamera:
-				this->OnFindFbxCameraNode(node, StaticDownCast<FbxCamera>(attrib));
+				this->OnFindFbxCameraNode(node, FbxCast<FbxCamera>(attrib));
 				break;
 			case FbxNodeAttribute::eCameraStereo:
-				this->OnFindFbxCameraStereoNode(node, StaticDownCast<FbxCameraStereo>(attrib));
+				this->OnFindFbxCameraStereoNode(node, FbxCast<FbxCameraStereo>(attrib));
 				break;
 			case FbxNodeAttribute::eCameraSwitcher:
-				this->OnFindFbxCameraSwitcherNode(node, StaticDownCast<FbxCameraSwitcher>(attrib));
+				this->OnFindFbxCameraSwitcherNode(node, FbxCast<FbxCameraSwitcher>(attrib));
 				break;
 			case FbxNodeAttribute::eLight:
-				this->OnFindFbxLightNode(node, StaticDownCast<FbxLight>(attrib));
+				this->OnFindFbxLightNode(node, FbxCast<FbxLight>(attrib));
 				break;
 			case FbxNodeAttribute::eOpticalReference:
-				this->OnFindFbxOpticalReferenceNode(node, StaticDownCast<FbxOpticalReference>(attrib));
+				this->OnFindFbxOpticalReferenceNode(node, FbxCast<FbxOpticalReference>(attrib));
 				break;
 			case FbxNodeAttribute::eOpticalMarker:
 				this->OnFindFbxOpticalMarkerNode(node);
 				break;
 			case FbxNodeAttribute::eNurbsCurve:
-				this->OnFindFbxNurbsCurveNode(node, StaticDownCast<FbxNurbsCurve>(attrib));
+				this->OnFindFbxNurbsCurveNode(node, FbxCast<FbxNurbsCurve>(attrib));
 				break;
 			case FbxNodeAttribute::eTrimNurbsSurface:
-				this->OnFindFbxTrimNurbsSurfaceNode(node, StaticDownCast<FbxTrimNurbsSurface>(attrib));
+				this->OnFindFbxTrimNurbsSurfaceNode(node, FbxCast<FbxTrimNurbsSurface>(attrib));
 				break;
 			case FbxNodeAttribute::eBoundary:
-				this->OnFindFbxBoundaryNode(node, StaticDownCast<FbxBoundary>(attrib));
+				this->OnFindFbxBoundaryNode(node, FbxCast<FbxBoundary>(attrib));
 				break;
 			case FbxNodeAttribute::eNurbsSurface:
-				this->OnFindFbxNurbsSurfaceNode(node, StaticDownCast<FbxNurbsSurface>(attrib));
+				this->OnFindFbxNurbsSurfaceNode(node, FbxCast<FbxNurbsSurface>(attrib));
 				break;
 			case FbxNodeAttribute::eShape:
-				this->OnFindFbxShapeNode(node, StaticDownCast<FbxShape>(attrib));
+				this->OnFindFbxShapeNode(node, FbxCast<FbxShape>(attrib));
 				break;
 			case FbxNodeAttribute::eLODGroup:
-				this->OnFindFbxLodGroupNode(node, StaticDownCast<FbxLODGroup>(attrib));
+				this->OnFindFbxLodGroupNode(node, FbxCast<FbxLODGroup>(attrib));
 				break;
 			case FbxNodeAttribute::eSubDiv:
-				this->OnFindFbxSubDivNode(node, StaticDownCast<FbxSubDiv>(attrib));
+				this->OnFindFbxSubDivNode(node, FbxCast<FbxSubDiv>(attrib));
 				break;
 			case FbxNodeAttribute::eCachedEffect:
-				this->OnFindFbxCachedEffectNode(node, StaticDownCast<FbxCachedEffect>(attrib));
+				this->OnFindFbxCachedEffectNode(node, FbxCast<FbxCachedEffect>(attrib));
 				break;
 			case FbxNodeAttribute::eLine:
-				this->OnFindFbxLineNode(node, StaticDownCast<FbxLine>(attrib));
+				this->OnFindFbxLineNode(node, FbxCast<FbxLine>(attrib));
 				break;
 			default:
 				// 想定外のノード。
@@ -230,6 +230,4 @@ namespace MyFbx
 		return true;
 	}
 
-
 } // end of namespace
-

@@ -159,10 +159,13 @@ namespace MyFbx
 		}
 	}
 
+	// 昔の FBX SDK では dynamic_cast が使えていたが、
 	// FBX SDK 2013.3 以降の DLL は RTTI を OFF にしてビルドされているらしく、
+	// dynamic_cast が使えない。
 	// DLL 内で生成されたオブジェクトへのポインタを dynamic_cast すると std::__non_rtti_object 例外が送出される。
 	// レガシーだが型情報は enum で保持するようなルールになっているようなので、
 	// それを信用して静的ダウンキャストを使うようにする。
+	// ただ、将来的にどうなるか分からないので、FbxObject 間のキャストには FbxCast() を使うほうがよい。
 	template<typename T> T* StaticDownCast(void* pIntermediate)
 	{ return static_cast<T*>(pIntermediate); }
 

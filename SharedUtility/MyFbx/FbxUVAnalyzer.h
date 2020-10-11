@@ -7,7 +7,7 @@ namespace MyFbx
 {
 	typedef std::vector<MyMath::Vector2F> TUVArray;
 
-	class MyFbxUVAnalyzer
+	class MyFbxUVAnalyzer final
 	{
 	public:
 		typedef std::shared_ptr<MyFbxUVAnalyzer> TSharedPtr;
@@ -17,14 +17,13 @@ namespace MyFbx
 
 		virtual ~MyFbxUVAnalyzer() {}
 
-		// UV解析
-		bool Analyze(const FbxLayer* layer);
+		void Analyze(const FbxLayer* layer);
 
 		const TUVArray& GetDiffuseUVCoordArray() const { return m_diffuseUVArray; }
 
 		void SetDiffuseUVCoordArray(const TUVArray& newUVArray) { m_diffuseUVArray = newUVArray; }
 
-		LayerModeData GetDiffuseUVLayerModeData() const { return m_diffuseLayerModeData; }
+		//LayerModeData GetDiffuseUVLayerModeData() const { return m_diffuseLayerModeData; }
 
 	private:
 		TUVArray m_diffuseUVArray; //!< ディフューズ UV。<br>
@@ -37,4 +36,3 @@ namespace MyFbx
 		LayerModeData m_emissiveLayerModeData;
 	};
 } // end of namespace
-

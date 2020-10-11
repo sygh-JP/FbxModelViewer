@@ -28,7 +28,19 @@ namespace
 		}
 		return std::wstring();
 	}
-}
+
+#if 0
+	void TestMeshElementMaterial(const FbxMesh* mesh)
+	{
+		const int elementMaterialCount = mesh->GetElementMaterialCount();
+		for (int i = 0; i < elementMaterialCount; ++i)
+		{
+			const auto* elementMaterial = mesh->GetElementMaterial(i);
+			const char* name = elementMaterial->GetName();
+		}
+	}
+#endif
+} // end of namespace
 
 
 namespace MyFbx
@@ -278,18 +290,20 @@ namespace MyFbx
 			m_normalBuffer.resize(normalCount, MyMath::ZERO_VECTOR3F);
 
 			// マッピング モードの取得。
-			m_normalLayerModeData.MappingMode = pLayerElemNormal->GetMappingMode();
+			const auto mappingMode = pLayerElemNormal->GetMappingMode();
 			// リファレンス モードの取得。
-			m_normalLayerModeData.ReferenceMode = pLayerElemNormal->GetReferenceMode();
+			const auto referenceMode = pLayerElemNormal->GetReferenceMode();
+			m_normalLayerModeData.MappingMode = mappingMode;
+			m_normalLayerModeData.ReferenceMode = referenceMode;
 
 			// 頂点ごとの法線を取得。
 			if ((
-				m_normalLayerModeData.MappingMode == FbxLayerElement::eByPolygonVertex
+				mappingMode == FbxLayerElement::eByPolygonVertex
 				||
-				m_normalLayerModeData.MappingMode == FbxLayerElement::eByControlPoint
+				mappingMode == FbxLayerElement::eByControlPoint
 				)
 				&&
-				m_normalLayerModeData.ReferenceMode == FbxLayerElement::eDirect)
+				referenceMode == FbxLayerElement::eDirect)
 			{
 				// eDirect & eByPolygonVertex のとき、頂点インデックス バッファの要素数と法線バッファの要素数が一致する。
 				// eDirect & eByControlPoint のとき、頂点バッファの要素数と法線バッファの要素数が一致する。
@@ -342,25 +356,29 @@ namespace MyFbx
 				continue;
 			}
 
+			// FbxMesh::GetMaterialIndices() は使わない？
+
 			// マテリアル インデックス バッファの要素数を取得。
 			const int materialIndexCount = pLayerElemMaterial->GetIndexArray().GetCount();
 			m_materialIndexBuffer.resize(materialIndexCount);
 			// 非対応のモードの場合、とりあえずすべてゼロにしておく。
 
 			// マッピング モードの取得。
-			m_materialLayerModeData.MappingMode = pLayerElemMaterial->GetMappingMode();
+			const auto mappingMode = pLayerElemMaterial->GetMappingMode();
 			// リファレンス モードの取得。
-			m_materialLayerModeData.ReferenceMode = pLayerElemMaterial->GetReferenceMode();
+			const auto referenceMode = pLayerElemMaterial->GetReferenceMode();
+			m_materialLayerModeData.MappingMode = mappingMode;
+			m_materialLayerModeData.ReferenceMode = referenceMode;
 
 			// 法線レイヤー同様に、ポリゴンごとのマテリアル番号を取得する。
 			// 頂点ごとの取得（頂点カラー）は未対応。
 			if ((
-				m_materialLayerModeData.MappingMode == FbxLayerElement::eByPolygon
+				mappingMode == FbxLayerElement::eByPolygon
 				||
-				m_materialLayerModeData.MappingMode == FbxLayerElement::eAllSame
+				mappingMode == FbxLayerElement::eAllSame
 				)
 				&&
-				m_materialLayerModeData.ReferenceMode == FbxLayerElement::eIndexToDirect)
+				referenceMode == FbxLayerElement::eIndexToDirect)
 			{
 				// インデックス バッファを取得。
 				for (int j = 0; j < materialIndexCount; ++j)
@@ -368,6 +386,7 @@ namespace MyFbx
 					// どのポリゴンにどのマテリアル番号が対応するか、が格納される。
 					m_materialIndexBuffer[j] = pLayerElemMaterial->GetIndexArray().GetAt(j);
 				}
+				// ちなみに FbxLayerElementMaterial::GetDirectArray() は private になっていてアクセスできない。
 			}
 
 			break; // 1個だけ取得して終了。
@@ -381,11 +400,10 @@ namespace MyFbx
 		MyFbxUVAnalyzer::TSharedPtr pUVAnalyzer(new MyFbxUVAnalyzer());
 		if (pUVAnalyzer->Analyze(mesh))
 		{
-			// 登録
 			m_uvAnalyzerArray.push_back(pUVAnalyzer);
 		}
 #else
-		// メッシュに含まれるレイヤーをチェック
+		// メッシュに含まれるレイヤーをチェック。
 		const int layerNum = mesh->GetLayerCount();
 
 		for (int i = 0; i < layerNum; ++i)
@@ -399,11 +417,19 @@ namespace MyFbx
 			{
 				pUVAnalyzer->Analyze(layer);
 			}
-			// 登録
+			// 登録。
 			m_uvAnalyzerArray.push_back(pUVAnalyzer);
+
+			// FbxMesh::GetTextureUV() は使わない？
 
 #if 0
 			// テクスチャ ファイル名は FbxLayerElementTexture 経由で取得するものだと思っていたが、FbxLayeredTexture の下の FbxFileTexture で取得するらしい？
+			// FBX SDK 2020.1 以降では、Metasequoia 用の FBX エクスポーターで出力した fbx ファイルのディフューズテクスチャが FbxSurfaceMaterial 経由で取得できない問題がある。
+			// FBX SDK 2020.0.1 以前では FbxSurfaceMaterial 経由で取得できるが、FbxLayer::GetTextures() でディフューズの FbxLayerElementTexture を取得することができない。
+			// FBX SDK のバグなのか、それともファイル側やアプリケーション側に問題があるのか、詳細不明。
+			// なお、FBX SDK 2020.0 以前にはバッファオーバーフローのセキュリティ脆弱性があるらしい。おそらく 2020.0.1 にも存在すると思われる。いずれは移行が必要。
+			// https://www.autodesk.com/trust/security-advisories/adsk-sa-2020-0002
+			// https://forest.watch.impress.co.jp/docs/news/1249104.html
 			MyFbxLayerAnalyzer::TSharedPtr pLayerAnalyzer(new MyFbxLayerAnalyzer());
 			if (layer)
 			{
@@ -421,8 +447,7 @@ namespace MyFbx
 
 		for (int i = 0; i < skinCount; ++i)
 		{
-			//KFbxSkin* skin = dynamic_cast<KFbxSkin*>(mesh->GetDeformer(i));
-			auto* skin = StaticDownCast<FbxSkin>(mesh->GetDeformer(i));
+			auto* skin = FbxCast<FbxSkin>(mesh->GetDeformer(i));
 			MyFbxSkinAnalyzer::TSharedPtr pSkinAnalyzer(new MyFbxSkinAnalyzer());
 			pSkinAnalyzer->Analyze(scene, skin, animTimeInfo);
 			m_skinAnalyzerArray.push_back(pSkinAnalyzer);
@@ -693,4 +718,4 @@ namespace MyFbx
 		return true;
 	}
 
-}
+} // end of namespace
