@@ -88,6 +88,12 @@ namespace MyFbx
 			return false;
 		}
 
+		int fileVersionMajor = 0, fileVersionMinor = 0, fileVersionRevision = 0;
+		pImporter->GetFileVersion(fileVersionMajor, fileVersionMinor, fileVersionRevision);
+		const auto strFileHeaderInfoCreator = MyUtils::SafeConvertUtf8toUtf16(pImporter->GetFileHeaderInfo()->mCreator.Buffer());
+		const int fileVersion = pImporter->GetFileHeaderInfo()->mFileVersion;
+		ATLTRACE(L"FileVersion = %d.%d.%d (%d), Creator = \"%s\"\n", fileVersionMajor, fileVersionMinor, fileVersionRevision, fileVersion, strFileHeaderInfoCreator.c_str());
+
 		// インポータとシーンを関連付ける。
 		pScene = TFbxSdkScenePtr(FbxScene::Create(pSdkManager, ""), MyFbx::Deleter<FbxScene>());
 		pImporter->Import(pScene.get());

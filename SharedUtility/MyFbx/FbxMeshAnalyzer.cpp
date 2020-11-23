@@ -485,10 +485,15 @@ namespace MyFbx
 			// HACK: スムージングを掛ける場合、FBX ファイルの法線モードによってはインデックスを使って平均化法線を計算する必要あり？
 			// Direct3D 10/11 で描画する場合、普通に頂点シェーダーでランバート シェーディングを行なうと補間されてグーローシェーディングとなる。
 			// Direct3D 9 までの D3DSHADEMODE (D3DSHADE_FLAT, D3DSHADE_GOURAUD) は廃止されている。
-			// Direct3D 10/11 でフラット シェーディングを行なうには、ジオメトリ シェーダーを使ってプリミティブごとに面法線を計算する必要があるらしい。
-			// GLSL の場合、3.x 以降では flat 修飾子を使う。
+			// Direct3D 10/11 で正確なフラット シェーディングを行なうには、ジオメトリ シェーダーを使ってプリミティブごとに面法線を計算する必要があるらしい。
 			// http://msdn.microsoft.com/ja-jp/library/ee415655.aspx
 			// http://msdn.microsoft.com/ja-jp/library/ee416406.aspx
+			// https://docs.microsoft.com/ja-jp/previous-versions/direct-x/ee415655%28v=vs.85%29
+			// https://docs.microsoft.com/ja-jp/previous-versions/direct-x/ee416406%28v=vs.85%29
+			// https://docs.microsoft.com/en-us/windows/win32/direct3d10/d3d10-graphics-programming-guide-api-features-deprecated
+			// HLSL の nointerpolation 修飾子を使えばフラット シェーディングができそうだが、複数の面で頂点法線を共有している場合、そのままでは正確な面法線にならない。
+			// https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-struct
+			// GLSL の場合、3.x 以降では flat 修飾子がある。おそらく事情は同じ。
 
 			// NOTE: 位置は同じでも、法線あるいはテクスチャ UV の異なる頂点は分離する（別のインデックスを付ける）。
 			std::vector<MyVertexTypes::MyExtraDataPerSkinVertex> extraDaraArray(indexCount);

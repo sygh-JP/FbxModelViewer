@@ -125,6 +125,9 @@ namespace
 			}
 		}
 		ATLTRACE("StrLen = %Iu, MapSize = %Iu\n", testLen, umap.size());
+		//ATLTRACE("size_t(-1) = %zu, ptrdiff_t(-1) = %td\n", size_t(-1), ptrdiff_t(-1));
+		//CStringW str;
+		//str.Format(L"size_t(-1) = %zu, ptrdiff_t(-1) = %td", size_t(-1), ptrdiff_t(-1));
 		ATLTRACE("---- End of Test ----\n");
 	}
 }

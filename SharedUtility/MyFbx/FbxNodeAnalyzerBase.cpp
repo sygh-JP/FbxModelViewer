@@ -27,6 +27,11 @@ namespace MyFbx
 		_ASSERTE(m_meshAnalyzerArray.empty() && !m_skeletonAnalyzer);
 		_ASSERTE(m_maxLevel == 0 && m_levelCounter == 0);
 
+		//const auto originalAppName = MyUtils::SafeConvertUtf8toUtf16(scene->GetDocumentInfo()->Original_ApplicationName.Get());
+		//const auto originalAppVersion = MyUtils::SafeConvertUtf8toUtf16(scene->GetDocumentInfo()->Original_ApplicationVersion.Get());
+		//const auto lastSavedAppName = MyUtils::SafeConvertUtf8toUtf16(scene->GetDocumentInfo()->LastSaved_ApplicationName.Get());
+		//const auto lastSavedAppVersion = MyUtils::SafeConvertUtf8toUtf16(scene->GetDocumentInfo()->LastSaved_ApplicationVersion.Get());
+
 		// アニメーション時間情報の解析。
 		// メッシュやスキン情報を解析する前に、まず最初に実行する必要がある。
 		m_animTimeInfo.Analyze(scene);

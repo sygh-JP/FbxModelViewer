@@ -59,7 +59,9 @@ namespace MyFbx
 		const int takeCount = takeNameAry.GetCount();
 		for (int i = 0; i < takeCount; ++i)
 		{
-			ATLTRACE("TakeName[%d] = \"%s\"\n", i, takeNameAry[i]->Buffer());
+			// FbxString::mData はゼロ終端らしい。FbxString::Buffer() も明記はされていないがゼロ終端？
+			const auto strTakeName = MyUtils::SafeConvertUtf8toUtf16(takeNameAry[i]->Buffer());
+			ATLTRACE(L"TakeName[%d] = \"%s\"\n", i, strTakeName.c_str());
 			const auto* currentTakeInfo = scene->GetTakeInfo(*(takeNameAry[i]));
 			if (currentTakeInfo)
 			{

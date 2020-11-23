@@ -74,6 +74,10 @@ namespace MyMfcFbx
 		HTREEITEM parent = this->GetLastTreeItem();
 		HTREEITEM item = m_pTreeCtrl->InsertItem(label, parent);
 
+		// TODO: I_CHILDRENCALLBACK と WM_NOTIFY を使って仮想化する。
+		// https://docs.microsoft.com/en-us/windows/win32/controls/tvn-getdispinfo
+		// https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvitemw
+
 		m_itemStack.push_back(item);
 	}
 
@@ -164,9 +168,12 @@ namespace MyMfcFbx
 
 	void MyFbxNodeTree::OnFindFbxMeshNode(FbxNode* node, FbxMesh* mesh, const MyFbx::MyFbxMeshAnalyzer* pMeshAnalyzer)
 	{
-		// MSVC CRT およびそれに依存するライブラリ等では C99 の "%zd", "%zu", "%td", "%tu" が使えないっぽい。
+		// MSVC CRT およびそれに依存するライブラリ等では C99 の "%zd", "%zu", "%td", "%tu" が使えない。
 		// ただし、MS 拡張としては、ptrdiff_t に対しては "%Id"、size_t に対しては "%Iu" などが指定できる。
-		// http://msdn.microsoft.com/ja-jp/library/tcxf1dw6(v=VS.80).aspx
+		// VC2013 までは t, z が実装されていなかったが、VC2015 以降は実装されている模様。
+		// ATLTRACE() や CString::Format() でも使用可能。
+		// https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2013/tcxf1dw6%28v=vs.120%29
+		// https://docs.microsoft.com/en-us/cpp/c-runtime-library/format-specification-syntax-printf-and-wprintf-functions?view=msvc-140
 
 		using namespace MyFbx;
 
