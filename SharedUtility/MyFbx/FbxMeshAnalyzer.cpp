@@ -425,11 +425,14 @@ namespace MyFbx
 #if 0
 			// テクスチャ ファイル名は FbxLayerElementTexture 経由で取得するものだと思っていたが、FbxLayeredTexture の下の FbxFileTexture で取得するらしい？
 			// FBX SDK 2020.1 以降では、Metasequoia 用の FBX エクスポーターで出力した fbx ファイルのディフューズテクスチャが FbxSurfaceMaterial 経由で取得できない問題がある。
+			// エクスポータープラグインには FBX SDK 2009.3 が使われていて、出力される FBX ファイルのバージョンは 6.1.0 となる。
+			// http://horsetail.sakura.ne.jp/mqplugin/mqfbxe.html
 			// FBX SDK 2020.0.1 以前では FbxSurfaceMaterial 経由で取得できるが、FbxLayer::GetTextures() でディフューズの FbxLayerElementTexture を取得することができない。
 			// FBX SDK のバグなのか、それともファイル側やアプリケーション側に問題があるのか、詳細不明。
 			// なお、FBX SDK 2020.0 以前にはバッファオーバーフローのセキュリティ脆弱性があるらしい。おそらく 2020.0.1 にも存在すると思われる。いずれは移行が必要。
 			// https://www.autodesk.com/trust/security-advisories/adsk-sa-2020-0002
 			// https://forest.watch.impress.co.jp/docs/news/1249104.html
+			// → FBX SDK のバグだったらしい。FBX SDK 2020.2 で修正されている。
 			MyFbxLayerAnalyzer::TSharedPtr pLayerAnalyzer(new MyFbxLayerAnalyzer());
 			if (layer)
 			{

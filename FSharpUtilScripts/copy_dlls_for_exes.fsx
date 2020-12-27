@@ -49,9 +49,12 @@ let copyFbxDlls srcArch dstArch isDebug =
     let extensions = (if isDebug then ["dll"; "pdb"] else ["dll"])
     for ext in extensions do
         let fileName = sprintf "libfbxsdk.%s" ext
+        // FBX SDK のほうは configuration がすべて小文字だが、Windows のファイルシステムでは大文字・小文字の違いは無視される。
         let configuration = (if isDebug then "Debug" else "Release")
         let programFilesDirPath = @"C:\Program Files"
-        let srcDirPath = sprintf @"%s\Autodesk\FBX\FBX SDK\2020.0.1\lib\vs2015\%s\%s" programFilesDirPath srcArch configuration
+        let fbxSdkVersionName = "2020.2"
+        let vsVersionName = "vs2015"
+        let srcDirPath = sprintf @"%s\Autodesk\FBX\FBX SDK\%s\lib\%s\%s\%s" programFilesDirPath fbxSdkVersionName vsVersionName srcArch configuration
         let dstDirPath = sprintf @"..\bin\%s\%s" dstArch configuration
         copyFile fileName srcDirPath dstDirPath
 
