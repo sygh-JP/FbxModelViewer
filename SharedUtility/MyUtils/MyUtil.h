@@ -255,10 +255,10 @@ namespace MyUtils
 	extern std::vector<wchar_t> ConvertUtf8toUtf16(const char* srcText);
 
 	inline std::string SafeConvertUtf16toUtf8(const wchar_t* srcText)
-	{ return srcText ? ConvertUtf16toUtf8(srcText).data() : ""; }
+	{ return srcText ? std::string(ConvertUtf16toUtf8(srcText).data()) : std::string(); }
 
 	inline std::wstring SafeConvertUtf8toUtf16(const char* srcText)
-	{ return srcText ? ConvertUtf8toUtf16(srcText).data() : L""; }
+	{ return srcText ? std::wstring(ConvertUtf8toUtf16(srcText).data()) : std::wstring(); }
 
 
 	//! @brief  Windows Unicode (UTF-16) のパスに対応する UTF-8 エンコード MBCS の絶対ファイルパスを取得する。<br>
@@ -301,6 +301,7 @@ namespace MyUtils
 	}
 #endif
 
+	//! @brief  C++17 以降は std::clamp() が実装されている。<br>
 	template<typename T> inline const T& Clamp(const T& a, const T& minVal, const T& maxVal)
 	{
 		if (a < minVal) return minVal;

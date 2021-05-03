@@ -28,8 +28,9 @@
 #include "DebugNew.h"
 
 
-
+#ifdef _DEBUG
 // Math ライブラリのテスト コード。
+// TODO: ユニット テスト専用プロジェクトに移動する。
 namespace
 {
 	void DumpQuat(const char* pName, const MyMath::QuaternionF& quat)
@@ -40,13 +41,22 @@ namespace
 	void DoMyMathTest()
 	{
 		ATLTRACE("---- Begin of Test ----\n");
-		const auto fnan = std::numeric_limits<float>::quiet_NaN();
-		const auto dnan = std::numeric_limits<double>::quiet_NaN();
-		const auto finf = std::numeric_limits<float>::infinity();
-		const auto dinf = std::numeric_limits<double>::infinity();
+		constexpr auto fnan = std::numeric_limits<float>::quiet_NaN();
+		constexpr auto dnan = std::numeric_limits<double>::quiet_NaN();
+		constexpr auto finf = std::numeric_limits<float>::infinity();
+		constexpr auto dinf = std::numeric_limits<double>::infinity();
+		// MSVC 2013 には C99 の isnan() や isfinite() が実装されていないかのように記載されているが、実際にはちゃんと実装されている。
+		// C はマクロ実装。C++ はテンプレート実装。
+		// https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2013/tzthab44(v=vs.120)
+		// https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2013/sb8es7a8(v=vs.120)
+		// https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/finite-finitef?view=msvc-140
+		// https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/isnan-isnan-isnanf?view=msvc-140
 		_ASSERTE(_isnan(fnan) && _isnan(dnan));
 		_ASSERTE(!_finite(fnan) && !_finite(dnan)); // 非数 NaN もまた有限ではない。
 		_ASSERTE(!_finite(finf) && !_finite(dinf));
+		_ASSERTE(std::isnan(fnan) && std::isnan(dnan));
+		_ASSERTE(!std::isfinite(fnan) && !std::isfinite(dnan));
+		_ASSERTE(!std::isfinite(finf) && !std::isfinite(dinf));
 
 		auto testMat1 = MyMath::IDENTITY_MATRIXF;
 		auto testMat2 = MyMath::IDENTITY_MATRIXF;
@@ -99,6 +109,9 @@ namespace
 	{
 		ATLTRACE("---- Begin of Test ----\n");
 
+		_ASSERTE(MyUtils::SafeConvertUtf16toUtf8(nullptr) == "");
+		_ASSERTE(MyUtils::SafeConvertUtf8toUtf16(nullptr) == L"");
+
 		// nullptr と比較するとアサーションが失敗する。
 		//ATLTRACE("CString().Compare(nullptr) = %d\n", CString().Compare(nullptr));
 #if 0
@@ -131,6 +144,7 @@ namespace
 		ATLTRACE("---- End of Test ----\n");
 	}
 }
+#endif
 
 
 // CFbxModelMonitorApp
@@ -209,8 +223,10 @@ BOOL CFbxModelMonitorApp::InitInstance()
 
 	_ASSERTE(CTaskDialog::IsSupported()); // Windows 7 以降がターゲットで、さらに必ず Unicode ビルドしているはずなので保証される。
 
+#ifdef _DEBUG
 	DoMyMathTest();
 	DoMyUnicodeTest();
+#endif
 
 	// Visual C++ のアサーションにはいくつか方法（マクロ）が用意されている。
 	// Visual C++ 環境前提であれば、CRT Debug ライブラリ <crtdbg.h> の _ASSERTE() が使える。

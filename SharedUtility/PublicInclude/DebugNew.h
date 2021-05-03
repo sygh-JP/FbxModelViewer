@@ -6,6 +6,7 @@
 // 本来は [B] を定義して、MFC アプリケーション プログラマーに対して new ではなく NEW を使うことを推奨するべきだった。
 // http://msdn.microsoft.com/ja-jp/library/cc440188(v=vs.71).aspx
 // https://web.archive.org/web/20140301090452/http://msdn.microsoft.com:80/ja-jp/library/cc440188(v=vs.71).aspx
+// https://docs.microsoft.com/ja-jp/visualstudio/debugger/finding-memory-leaks-using-the-crt-library
 
 
 ///////////////////////////////////////////////////////////////////////////////

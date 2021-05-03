@@ -906,14 +906,23 @@ GotoLabel_NextFace:
 		// また D3D 10/11 ではリソース生成に関してはデフォルトでスレッドセーフであるため、
 		// サブスレッドでリソース生成することには何の問題もないが、OpenGL のほうは最悪。
 		// OpenGL 3.2 以降であれば、サブスレッドでリソースを生成するというのは不可能ではないらしいが、非常に手間がかかる。
-		// http://sa-zero.blog.eonet.jp/switchcase/2013/10/multi-thread.html
+		// https://web.archive.org/web/20161019114519/http://sa-zero.blog.eonet.jp/switchcase/2013/10/multi-thread.html
+		// Windows では、おそらく wglShareLists() を使えば、OpenGL 1.x でもサブスレッドでリソースを生成することはできるはず。
+		// サブスレッドでフレームバッファにオフスクリーン描画できるかどうかは不明。
+		// https://www.khronos.org/opengl/wiki/OpenGL_and_multithreading
+		// glXCreateContext() に相当する拡張として wglCreateContextAttribsARB() という関数もある。
+		// wglCreateContextAttribsARB() は、Windows で OpenGL 3.x 以降の機能を利用する GL コンテキストを作成する際にも使用する。
+		// https://stackoverflow.com/questions/55885139/what-is-shareable-between-opengl-contexts-and-how-to-enable-sharing
+		// https://www.khronos.org/registry/OpenGL/extensions/ARB/WGL_ARB_create_context.txt
+		// しかし、これらは標準的かつクロスプラットフォームに利用できるものではない。
 		// OpenGL のスレッドセーフ性、マルチスレッド レンダリングは現行規格では期待できない。次世代規格が待たれる。
 		// http://jp.techcrunch.com/2014/08/12/20140811khronos-group-starts-working-on-the-next-generation-of-its-opengl-3d-specs/
 		// http://msdn.microsoft.com/en-us/library/ff476890.aspx
 		// Windows ストア アプリの場合、UI スレッドでファイル I/O を行なうことはそもそもできない（50ミリ秒以上 UI スレッドを停止させるアプリはリジェクトされるらしい？）し、
 		// ファイル I/O よりは比較的高速なリソース生成でさえも UI スレッドで行なうのは賢明ではないため、
 		// ごっそりサブスレッドに委譲するべき。サブスレッドの起動は PPL を使うとよい。
-		// http://www.infoq.com/jp/news/2013/02/ants-profiler-8-beta
+		// https://www.infoq.com/jp/news/2013/02/ants-profiler-8-beta/
+		// https://www.infoq.com/jp/articles/Async-API-Design/
 
 		for (MyFbx::MyFbxMeshAnalyzer::TConstSharedPtr pMeshAnalyzer : nodeAnalyzer.GetMeshAnalyzerArray())
 		{
