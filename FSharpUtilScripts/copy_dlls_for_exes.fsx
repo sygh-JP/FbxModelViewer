@@ -15,6 +15,7 @@
 // "C:\Program Files\Autodesk\FBX\FBX SDK\2017.0.1\lib\vs2015\x64\release\libfbxsdk.dll"
 
 // FBX SDK 2020.0.1 まではデバッグビルドに pdb ファイルが同梱されていたが、2020.1 には含まれなくなっている模様。
+// 2020.2 以降は FBX PDB として単独で提供されている。
 
 // String.Format() において、パラメータが1つだけの場合、[|var|] として Object 配列に明示的に格納しないと型推論が失敗する。
 // 関数型言語の利点が裏目に出る例。いっそ sprintf を使ったほうがいいかも。
@@ -52,7 +53,7 @@ let copyFbxDlls srcArch dstArch isDebug =
         // FBX SDK のほうは configuration がすべて小文字だが、Windows のファイルシステムでは大文字・小文字の違いは無視される。
         let configuration = (if isDebug then "Debug" else "Release")
         let programFilesDirPath = @"C:\Program Files"
-        let fbxSdkVersionName = "2020.2"
+        let fbxSdkVersionName = "2020.2.1"
         let vsVersionName = "vs2015"
         let srcDirPath = sprintf @"%s\Autodesk\FBX\FBX SDK\%s\lib\%s\%s\%s" programFilesDirPath fbxSdkVersionName vsVersionName srcArch configuration
         let dstDirPath = sprintf @"..\bin\%s\%s" dstArch configuration
