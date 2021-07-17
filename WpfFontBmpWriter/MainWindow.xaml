@@ -43,20 +43,22 @@
             <Image Source="res\font.ico" Width="24" Height="24"/>
             <Label VerticalAlignment="Center" Style="{StaticResource ResourceKey=MyWhiteLabelStyle}" Content="フォント:"/>
             <ComboBox
-				x:Name="comboFonts"
-				MinWidth="300" MaxWidth="300" MinHeight="36"
+                x:Name="comboFonts"
+                MinWidth="300" MaxWidth="300" MinHeight="36"
                 Margin="4,0"
-				IsEditable="True"
-				VerticalAlignment="Center"
-				VerticalContentAlignment="Center"
-				ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}"
-				ItemsPanel="{DynamicResource ItemsPanelTemplateVirtualizingStackPanel}"
+                IsEditable="True"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}"
+                ItemsPanel="{DynamicResource ItemsPanelTemplateVirtualizingStackPanel}"
                 >
                 <!-- VirtualizingStackPanel を適用しないと、初回表示の応答性が悪くなる。 -->
-                <!-- コンボボックス自体のフォントは変えない（記号系だとフォント フェイス名が分からなくなることもある）。 -->
+                <!-- 各フォントを表示するコントロールの FontFamily は、そのフォントにする。 -->
+                <!-- コンボボックス自体（エディットボックス部分）のフォントは変えない（記号系だとフォント フェイス名が分からなくなることもある）。 -->
+                <!-- ワードパッドのように、ツールヒントでもフォント名を表示する。 -->
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Name="innerTextBlock" FontFamily="{Binding .}" Text="{Binding Source}"/>
+                        <TextBlock Name="innerTextBlock" FontFamily="{Binding .}" Text="{Binding Source}" ToolTip="{Binding Source}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
