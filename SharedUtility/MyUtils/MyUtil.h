@@ -31,6 +31,7 @@ namespace MyUtils
 
 	// char の符号は処理系依存なため、オーバーロードを作成できることに注意。
 	// ただのバイナリファイルやバイトコードだけでなく、SPIR-V や Raw 点群データなどにも対応できるよう、基本的なオーバーロードを用意しておく。
+	// 現状、2バイト以上の型は、ファイルのエンディアンがシステムのエンディアンと同じであるという前提でのみ使用可能。
 
 	extern bool LoadBinaryFromFile(LPCWSTR pFilePath, std::vector<char>& outBuffer);
 	extern bool LoadBinaryFromFile(LPCWSTR pFilePath, std::vector<int8_t>& outBuffer);
@@ -278,6 +279,9 @@ namespace MyUtils
 	template<typename T> inline T ToPowerOf4(const T& x)
 	{ return x * x * x * x; }
 
+	// CRT の pow(x, y) 関数は y が整数のときにアンロールする実装になっていたが、VS2015 Update 1 で削除された。
+	// https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/pow-powf-powl
+	// https://docs.microsoft.com/en-us/cpp/porting/visual-cpp-what-s-new-2003-through-2015
 
 	template<typename T> inline void Swap(T& a, T& b)
 	{

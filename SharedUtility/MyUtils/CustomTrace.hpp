@@ -3,6 +3,8 @@
 
 #pragma region // #pragma message() などで使ってください。//
 // http://support.microsoft.com/kb/155196/en-us
+// https://web.archive.org/web/20101121150327/http://support.microsoft.com/kb/155196
+// https://docs.microsoft.com/en-us/cpp/preprocessor/message
 
 //! @brief  マクロ仮引数の値をダブルクォーテーションを付けた状態に置き換えます。（s → L"s"）<br>
 #define MY_SYMBOL_TO_STRINGW(s)  L#s

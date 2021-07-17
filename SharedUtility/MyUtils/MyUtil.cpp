@@ -144,9 +144,18 @@ namespace MyUtils
 		return LoadBinaryFromFileImpl2(pFilePath, outBuffer);
 	}
 
-	// 空の std::vector に対する std::vector.data() は nullptr を返すことに注意。std::string に変換する際、nullptr は渡せない。
+	// std::wstring, ATL::CStringW, Platform::String などの初期化に使えるよう、ゼロ終端の std::vector<wchar_t> を返す。
+	// ただし一時的にヒープが二重に作成されるので、効率はよくない。
+	// 空の std::vector に対する std::vector::data() が返す値は未規定。MSVC では nullptr を返す。
+	// なお、std::string や std::wstring に変換する際、nullptr は渡せない。
+	// https://en.cppreference.com/w/cpp/container/vector/data
+	// https://cpprefjp.github.io/reference/vector/vector/data.html
 	// コピーコンストラクタよりも C++11 ムーブ コンストラクタが優先されることを考慮し、あえて引数ではなく戻り値で返す。
-	// std::move() は書かないでよい。むしろ書くと RVO (Return Value Optimization) が阻害されることがあるらしい？
+	// std::move() は書かないでよい。むしろ書くと RVO (Return Value Optimization) が阻害されることがあるらしい。
+	// C++11 以降では、通例ローカル変数の型と戻り値の型が同じ場合、
+	// NRVO (Named Return Value Optimization) が効かない場合でもコンパイラによって std::move() 呼び出しが自動追加されるらしい。
+	// https://en.cppreference.com/w/cpp/language/copy_elision
+	// https://en.cppreference.com/w/cpp/language/return
 	// std::vector のムーブだとポインタのすげ替えが実行されるので、結果的にムーブ元とムーブ先とでポインタの値は変わらない。
 	// しかし、std::string だと必ずしもポインタのすげ替えにはならない模様。
 	// ムーブを実行した際、ムーブ先の文字列バッファ容量が十分な場合は、memmove() によるメモリブロックのコピーとなる模様。
@@ -156,8 +165,16 @@ namespace MyUtils
 	// なお、C++11 で追加された codecvt は、C++17 で非推奨となってしまった。
 	// せっかく char16_t と std::u16string が標準化されたのに……
 	// C 関数としては mbstowcs(), wcstombs() などが標準化されているが、
-	// これらで UTF-8/UTF-16 間の変換をするにはスレッドのコードページの明示的な事前設定が必要だったりと、使い勝手が悪い。
+	// これらで UTF-8/UTF-16 間の変換をするにはスレッドのロケール（コードページ）の明示的な事前設定が必要だったりと、使い勝手が悪い。
+	// MSVC にはロケールを引数指定できるバージョン _mbstowcs_l(), _wcstombs_l() もあるが、ISO 標準ではない。
 	// そもそも C/C++ においてワイド文字が UTF-16 であるとは限らない（規格で規定されていない）という根本的な問題もある。
+	// https://en.cppreference.com/w/cpp/string/multibyte/mbstowcs
+	// https://en.cppreference.com/w/cpp/string/multibyte/wcstombs
+	// クロスプラットフォームな変換処理のためには、ICU (International Components for Unicode) ライブラリの C/C++ 版 ICU4C を使うべき。
+	// C++11 の char16_t にも対応している。
+	// http://site.icu-project.org/
+	// C11/C++11 以降では mbrtoc16(), c16rtomb() を使うのが良いかも。
+
 	std::vector<char> ConvertUtf16toUtf8(const wchar_t* srcText)
 	{
 		_ASSERTE(srcText != nullptr);
@@ -169,14 +186,17 @@ namespace MyUtils
 		const int reqSize = ::WideCharToMultiByte(CP_UTF8, 0, srcText, textLen, nullptr, 0, nullptr, nullptr);
 		if (reqSize > 0)
 		{
-			std::vector<char> buff(reqSize + 1); // 最後の + 1 は必須らしい。終端 null を含まないサイズが返るらしい。
+			// 最後の + 1 は必須。終端 NUL を含まないサイズが返る。
+			std::vector<char> buff(reqSize + 1);
+			// 第4引数に -1 を指定すると、終端 NUL を含むサイズが返るが、終端 NUL をもとにした長さ取得を複数回実行させるのは冗長。
 			//std::vector<char> buff(reqSize);
 			::WideCharToMultiByte(CP_UTF8, 0, srcText, textLen, &buff[0], reqSize, nullptr, nullptr);
 			return buff;
 		}
 		else
 		{
-			// 完全にエラーなので本来は例外を投げるべき？
+			// 空文字列すなわち第4引数にゼロを指定した場合もゼロが返ってくるが、その可能性は事前に排除している。
+			// それ以外のケースでゼロが返ってくるのは完全にエラーなので、本来は例外を投げるべき？
 			//return std::vector<char>();
 			return{ 0 };
 		}
@@ -193,14 +213,17 @@ namespace MyUtils
 		const int reqSize = ::MultiByteToWideChar(CP_UTF8, 0, srcText, textLen, nullptr, 0);
 		if (reqSize > 0)
 		{
-			std::vector<wchar_t> buff(reqSize + 1); // 最後の + 1 は必須らしい。終端 null を含まないサイズが返るらしい。
+			// 最後の + 1 は必須。終端 NUL を含まないサイズが返る。
+			std::vector<wchar_t> buff(reqSize + 1);
+			// 第4引数に -1 を指定すると、終端 NUL を含むサイズが返るが、終端 NUL をもとにした長さ取得を複数回実行させるのは冗長。
 			//std::vector<wchar_t> buff(reqSize);
 			::MultiByteToWideChar(CP_UTF8, 0, srcText, textLen, &buff[0], reqSize);
 			return buff;
 		}
 		else
 		{
-			// 完全にエラーなので本来は例外を投げるべき？
+			// 空文字列すなわち第4引数にゼロを指定した場合もゼロが返ってくるが、その可能性は事前に排除している。
+			// それ以外のケースでゼロが返ってくるのは完全にエラーなので、本来は例外を投げるべき？
 			//return std::vector<wchar_t>();
 			return{ 0 };
 		}

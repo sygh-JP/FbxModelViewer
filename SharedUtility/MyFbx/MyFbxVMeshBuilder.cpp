@@ -255,6 +255,7 @@ namespace
 			if (width == 0 || height == 0 || width > 4096 || height > 4096)
 			{
 				// HACK: テクスチャ画像サイズの上限はハードウェアに応じて決めたほうがよい。
+				// https://docs.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-downlevel-intro
 				ATLTRACE(L"Image size is not available!!\n");
 				continue;
 			}
