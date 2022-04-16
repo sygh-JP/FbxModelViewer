@@ -53,7 +53,7 @@ let copyFbxDlls srcArch dstArch isDebug =
         // FBX SDK のほうは configuration がすべて小文字だが、Windows のファイルシステムでは大文字・小文字の違いは無視される。
         let configuration = (if isDebug then "Debug" else "Release")
         let programFilesDirPath = @"C:\Program Files"
-        let fbxSdkVersionName = "2020.2.1"
+        let fbxSdkVersionName = "2020.3.1"
         let vsVersionName = "vs2015"
         let srcDirPath = sprintf @"%s\Autodesk\FBX\FBX SDK\%s\lib\%s\%s\%s" programFilesDirPath fbxSdkVersionName vsVersionName srcArch configuration
         let dstDirPath = sprintf @"..\bin\%s\%s" dstArch configuration
