@@ -10,6 +10,12 @@
 // MFC のヘッダーが修正されないかぎり無理。
 // 現状、ユーザーコードでは (std::min)(x, y) や (std::max)(x, y) などのように、
 // プリプロセッサによるマクロ展開を無効にするテクニックを使うとよい。
+// min(x, y) や max(x, y) の形にならなければよいだけなので、
+// std::min<T>(x, y) や std::max<T>(x, y) のように、テンプレート型引数を明示的に指定する方法でも可。
+// BOOST_PREVENT_MACRO_SUBSTITUTION のようなオブジェクト形式マクロを挟んで、関数形式マクロによる置換を阻害する方法もあるが、
+// 可読性が損なわれる。
+// GDI+ のヘッダーに関しては、Windows 10 SDK version 2104 で修正されている。
+// https://developercommunity.visualstudio.com/t/GdiplusTypesh-does-not-compile-with-NOM/727770
 #if 0
 #define NOMINMAX
 #include <algorithm>
