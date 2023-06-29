@@ -3,20 +3,15 @@
 //
 // DirectX Error Library
 //
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-// PARTICULAR PURPOSE.
-//
 // Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 //--------------------------------------------------------------------------------------
 
 // This version only supports UNICODE.
 
 #include "dxerr.h"
 
-#include <stdio.h>
-#include <algorithm>
+#include <cstdio>
 
 #if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
 #include <ddraw.h>
@@ -67,14 +62,14 @@
 
 #define  CHK_ERRA(hrchk) \
         case hrchk: \
-             return L#hrchk;
+             return L## #hrchk;
 
 #define HRESULT_FROM_WIN32b(x) ((HRESULT)(x) <= 0 ? ((HRESULT)(x)) : ((HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000)))
 
 #define  CHK_ERR_WIN32A(hrchk) \
         case HRESULT_FROM_WIN32b(hrchk): \
         case hrchk: \
-             return L#hrchk;
+             return L## #hrchk;
 
 #define  CHK_ERR_WIN32_ONLY(hrchk, strOut) \
         case HRESULT_FROM_WIN32b(hrchk): \
@@ -3449,7 +3444,7 @@ const WCHAR* WINAPI DXGetErrorStringW( _In_ HRESULT hr )
 
 #define  CHK_ERRA(hrchk) \
         case hrchk: \
-             wcscpy_s( desc, count, L#hrchk ); break;
+             wcscpy_s( desc, count, L## #hrchk ); break;
 
 #define  CHK_ERR(hrchk, strOut) \
         case hrchk: \
@@ -3465,13 +3460,21 @@ void WINAPI DXGetErrorDescriptionW( _In_ HRESULT hr, _Out_cap_(count) WCHAR* des
     *desc = 0;
 
     // First try to see if FormatMessage knows this hr
-    UINT icount = static_cast<UINT>( std::min<size_t>( count, 32767 ) );
+    LPWSTR errorText = nullptr;
 
-    DWORD result = FormatMessageW( FORMAT_MESSAGE_FROM_SYSTEM, nullptr, hr, 
-                                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), desc, icount, nullptr );
+    DWORD result = FormatMessageW( FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS| FORMAT_MESSAGE_ALLOCATE_BUFFER,
+                                   nullptr, static_cast<DWORD>(hr),
+                                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPWSTR>(&errorText), 0, nullptr );
 
-    if (result > 0)
+    if (result > 0 && errorText)
+    {
+        wcscpy_s( desc, count, errorText );
+
+        if ( errorText )
+            LocalFree( errorText );
+
         return;
+    }
 
     switch (hr)
     {

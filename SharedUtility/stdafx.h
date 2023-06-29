@@ -51,6 +51,7 @@ using std::max;
 // dxerr.h, dxerr.lib は Windows SDK 8.0 では廃止されている。
 // 代替のコードが MSDN ブログで公開されている。
 // http://blogs.msdn.com/b/chuckw/archive/2012/04/24/where-s-dxerr-lib.aspx
+// https://walbourn.github.io/wheres-dxerr-lib/
 
 #include "PublicInclude/SuppressWarning.hpp"
 #include "PublicInclude/FatalWarning.hpp"
